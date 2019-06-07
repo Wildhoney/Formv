@@ -1,17 +1,21 @@
 const path = require('path');
 
 module.exports = {
-    entry: ['core-js', '@babel/polyfill', path.resolve('./example/js/index.js')],
+    entry: [
+        'core-js',
+        '@babel/polyfill',
+        path.resolve('./example/js/index.js'),
+    ],
     mode: 'development',
     output: {
         filename: 'build.js',
         path: path.resolve('./example/js'),
-        libraryTarget: 'var'
+        libraryTarget: 'var',
     },
     resolve: {
         alias: {
-            'formv': path.resolve('./src'),
-        }
+            formv: path.resolve('./src'),
+        },
     },
     module: {
         rules: [
@@ -19,9 +23,9 @@ module.exports = {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 use: {
-                    loader: 'babel-loader'
-                }
-            }
-        ]
-    }
+                    loader: 'babel-loader',
+                },
+            },
+        ],
+    },
 };
