@@ -6,6 +6,10 @@
   "repository": "git@github.com:Wildhoney/Formv.git",
   "author": "Adam Timberlake <adam.timberlake@gmail.com>",
   "license": "MIT",
+  "peerDependencies": {
+    "prop-types": "^15.0.0",
+    "react": "^16.0.0"
+  },
   "devDependencies": {
     "prop-types": "^15.7.2",
     "react": "^16.8.6"
