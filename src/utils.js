@@ -4,6 +4,7 @@ export const handleValidation = ({
     setMessages,
     formElement,
     onSubmit,
+    onInvalid,
     setDisabled,
 }) => async event => {
     event.preventDefault();
@@ -22,6 +23,7 @@ export const handleValidation = ({
         await onSubmit(event);
     } catch (error) {
         if (error instanceof ValidationError) {
+            onInvalid();
             return void setMessages(error);
         }
 

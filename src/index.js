@@ -36,7 +36,9 @@ export function Form({ className, children, onSubmit, ...props }) {
                 onSubmit={handleSubmit}
                 {...props}
             >
-                <e.Fieldset disabled={isDisabled}>{children}</e.Fieldset>
+                <fieldset style={e.fieldStyles} disabled={isDisabled}>
+                    {children}
+                </fieldset>
             </form>
         </Context.Provider>
     );
@@ -45,10 +47,11 @@ export function Form({ className, children, onSubmit, ...props }) {
 Form.propTypes = {
     className: PropTypes.string,
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+    onInvalid: PropTypes.func,
     onSubmit: PropTypes.func.isRequired,
 };
 
-Form.defaultProps = { className: '' };
+Form.defaultProps = { className: '', onInvalid: () => {} };
 
 export function Field({ children }) {
     const fieldElement = useRef(null);
@@ -63,22 +66,21 @@ export function Field({ children }) {
             : [];
 
     return (
-        <e.Field ref={fieldElement}>
+        <div style={e.fieldStyles} ref={fieldElement}>
             {children}
 
             {messages.length > 0 && (
-                <e.Messages
-                    className="vform-messages"
-                    isMultiple={messages.length > 1}
+                <ul
+                    className={`vform-messages vform-messages-${
+                        messages.length > 1 ? 'multiple' : 'single'
+                    }`}
                 >
                     {messages.map((message, index) => (
-                        <e.Message key={`message_${index}`}>
-                            {message}
-                        </e.Message>
+                        <li key={`message_${index}`}>{message}</li>
                     ))}
-                </e.Messages>
+                </ul>
             )}
-        </e.Field>
+        </div>
     );
 }
 
