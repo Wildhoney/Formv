@@ -9,16 +9,16 @@ module.exports = {
         {
             file: 'dist/formv.cjs.js',
             format: 'cjs',
-            exports: 'named',
             sourcemap: true,
-            external: ['react', 'prop-types'],
+            exports: 'named',
+            external: ['react', 'prop-types', 'styled-components'],
         },
         {
             file: 'dist/formv.esm.js',
             format: 'esm',
             sourcemap: true,
             exports: 'named',
-            external: ['react', 'prop-types'],
+            external: ['react', 'prop-types', 'styled-components'],
         },
     ],
     plugins: [
@@ -29,6 +29,24 @@ module.exports = {
         commonjs({
             namedExports: {
                 include: 'node_modules/**',
+                'node_modules/react/index.js': [
+                    'cloneElement',
+                    'createContext',
+                    'Component',
+                    'createElement',
+                    'useRef',
+                    'useState',
+                    'useCallback',
+                    'useContext',
+                ],
+                'node_modules/react-is/index.js': [
+                    'isElement',
+                    'isValidElementType',
+                    'ForwardRef',
+                ],
+                'node_modules/styled-components/dist/styled-components.esm.js': [
+                    'createContext',
+                ],
             },
         }),
         terser(),
