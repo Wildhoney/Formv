@@ -1,4 +1,9 @@
-export class ValidationError extends Error {}
+export class ValidationError extends Error {
+    constructor(message) {
+        super();
+        this.message = message;
+    }
+}
 
 export const handleValidation = ({
     setMessages,
@@ -23,8 +28,8 @@ export const handleValidation = ({
         await onSubmit(event);
     } catch (error) {
         if (error instanceof ValidationError) {
-            onInvalid();
-            return void setMessages(error);
+            onInvalid(event);
+            return void setMessages(error.message);
         }
 
         // Re-throw the error as it's not one we're able to handle.
@@ -51,4 +56,4 @@ export const getEncapsulatedField = (formElement, fieldElement) =>
         ? null
         : [...formElement.current.elements].find(element =>
               fieldElement.current.contains(element),
-          );
+          ) || null;
