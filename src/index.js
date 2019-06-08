@@ -38,7 +38,7 @@ export function Form({ className, children, onInvalid, onSubmit, ...props }) {
                 {...props}
             >
                 <fieldset style={e.fieldStyles} disabled={isDisabled}>
-                    {children}
+                    {utils.isFunction(children) ? children(messages) : children}
                 </fieldset>
             </form>
         </Context.Provider>
@@ -68,18 +68,24 @@ export function Field({ children }) {
 
     return (
         <div style={e.fieldStyles} ref={fieldElement}>
-            {children}
+            {utils.isFunction(children) ? (
+                children(messages)
+            ) : (
+                <>
+                    {children}
 
-            {messages.length > 0 && (
-                <ul
-                    className={`vform-messages vform-messages-${
-                        messages.length > 1 ? 'multiple' : 'single'
-                    }`}
-                >
-                    {messages.map((message, index) => (
-                        <li key={`message_${index}`}>{message}</li>
-                    ))}
-                </ul>
+                    {messages.length > 0 && (
+                        <ul
+                            className={`vform-messages vform-messages-${
+                                messages.length > 1 ? 'multiple' : 'single'
+                            }`}
+                        >
+                            {messages.map((message, index) => (
+                                <li key={`message_${index}`}>{message}</li>
+                            ))}
+                        </ul>
+                    )}
+                </>
             )}
         </div>
     );

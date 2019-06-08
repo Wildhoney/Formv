@@ -57,3 +57,5 @@ export const getEncapsulatedField = (formElement, fieldElement) =>
         : [...formElement.current.elements].find(element =>
               fieldElement.current.contains(element),
           ) || null;
+
+export const isFunction = a => typeof a === 'function';
