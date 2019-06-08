@@ -1,0 +1,17 @@
+language: node_js
+node_js: stable
+script:
+    - yarn
+    - yarn test
+    - yarn build
+
+after_success: yarn coverage
+
+deploy:
+    provider: heroku
+    skip_cleanup: true
+    api_key:
+        secure: ZoMyPfMxhR3HoKHmwj/naiAuOvg8L4d9nGn0q+enVPTNzsFiZa3A1E7pf6ngJC71V+lonz69PlxgU46W7a/xZOb6namKTezlZF8UtrJZ9VnaMFnllwgsQ/eImrQphO2y2/2A0ocE6RWpdYhvUUerAVPqZtdaXYiHVNjLJbzSXIHcUFIL8M1bezBxUtekOO31THJaGobDNC81k/oRxvVEwnEBUgTXlvoLpECqCawtzDATAmtAFbX7it4W4IfoVQokXZtcZxLraKVcEKuX3hj0FCHljArAtkLIYUZsAnLes/IXP9MIb+/8yJXEqFumXknEwu9EXBpOlvJdmrU/+cZRJ+jdoSmKCFwNnLAtB7Fn2qMUprjnR8QWs9HwcRUv0S7FSepOA5J4HWmdkAI7toziLD10Od0EKIZA0qeh5G/gt43DMjCvM9iLSm1e6twthTD8sFO7rO8jvh+TljgEXG1xoIrJlPIY2XF5ZO8AuXUaxP10QPXjm567ZEcc8J5rjgUjg19TcXVNDmtDqLVQSMVL5/na8Up2j7U6zWisi/EtnC+HXm3yIb3OGpFEH4pEGjWkDaiVx5nT0KSUAVd7Vsl54k4RDx/3A5XSM28nVZXb1RNzUTXbWq2Hz/9PehnL3efg/MwMuSyNkwhcEVjZ0bKmakufo/Ar9WpWwZ4TfGaDFCY=
+    app: formv
+    on:
+        repo: Wildhoney/Formv
