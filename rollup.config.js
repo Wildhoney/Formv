@@ -11,14 +11,14 @@ module.exports = {
             format: 'cjs',
             sourcemap: true,
             exports: 'named',
-            external: ['react', 'prop-types', 'styled-components'],
+            external: ['react', 'prop-types'],
         },
         {
             file: 'dist/formv.esm.js',
             format: 'esm',
             sourcemap: true,
             exports: 'named',
-            external: ['react', 'prop-types', 'styled-components'],
+            external: ['react', 'prop-types'],
         },
     ],
     plugins: [

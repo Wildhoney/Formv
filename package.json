@@ -9,7 +9,7 @@
   "license": "MIT",
   "scripts": {
     "build": "rollup -c",
-    "format": "prettier --write '**/**.js'",
+    "format": "prettier --write '**/**.{js,html,css}'",
     "dev": "concurrently 'webpack --config example/webpack.config.js --watch' 'node --experimental-modules example/server.mjs'"
   },
   "peerDependencies": {
