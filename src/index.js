@@ -13,18 +13,19 @@ const Context = createContext();
 
 export { ValidationError } from './utils';
 
-export function Form({ className, children, onSubmit, ...props }) {
+export function Form({ className, children, onInvalid, onSubmit, ...props }) {
     const formElement = useRef(null);
     const [messages, setMessages] = useState({});
     const [isDisabled, setDisabled] = useState(false);
     const handleSubmit = useCallback(
         utils.handleValidation({
+            onInvalid,
             onSubmit,
             formElement,
             setMessages,
             setDisabled,
         }),
-        [],
+        [onInvalid, onSubmit],
     );
 
     return (
