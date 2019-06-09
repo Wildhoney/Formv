@@ -59,5 +59,11 @@
     "styled-components": "^4.3.1",
     "webpack": "^4.33.0",
     "webpack-cli": "^3.3.3"
+  },
+  "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.4.4",
+    "@babel/runtime": "^7.4.5",
+    "add": "^2.0.6",
+    "yarn": "^1.16.0"
   }
 }

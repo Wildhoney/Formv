@@ -24,6 +24,7 @@ module.exports = {
         resolve(),
         babel({
             exclude: 'node_modules/**',
+            runtimeHelpers: true,
         }),
         commonjs({
             namedExports: {
