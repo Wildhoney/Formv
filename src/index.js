@@ -77,6 +77,7 @@ export function Field({ children }) {
             messages && input.classList.add('invalid');
 
             context.highest === input.name &&
+                field.firstChild.scrollIntoView &&
                 setTimeout(() =>
                     field.firstChild.scrollIntoView({ behavior: 'smooth' }),
                 );
