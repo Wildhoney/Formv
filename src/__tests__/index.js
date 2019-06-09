@@ -170,3 +170,21 @@ test('It should be able to determine whether there are multiple or single messag
         );
     }
 });
+
+test('It should be able to pass an array of `onSubmit` functions;', async t => {
+    const handleSubmitting = sinon.spy();
+    const handleSubmitted = sinon.spy();
+
+    const wrapper = mount(
+        <Form onSubmit={[handleSubmitting, handleSubmitted]}>
+            <Field>
+                <input type="text" name="first" defaultValue="Hello Adam!" />
+            </Field>
+        </Form>,
+    );
+
+    wrapper.find('form').simulate('submit');
+    t.is(handleSubmitting.callCount, 1);
+    await delay(1);
+    t.is(handleSubmitted.callCount, 1);
+});

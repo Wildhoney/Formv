@@ -22,7 +22,7 @@ Formv has a philosophy that it should be easy to opt-out of form validation if a
 
 To get started you need to append the form to the DOM. Formv's `Form` component is a plain `form` element that intercepts the `onSubmit` function. We then nest all of our input fields in the `Form` component as you would normally, and encapsulate each field in the `Field` component which simply wraps your form fields with any corresponding validation messages.
 
-```javascript
+```jsx
 import { Form, Field } from 'formv';
 
 export default function MyForm() {

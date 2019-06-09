@@ -49,7 +49,10 @@ Form.propTypes = {
     className: PropTypes.string,
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
     onInvalid: PropTypes.func,
-    onSubmit: PropTypes.func.isRequired,
+    onSubmit: PropTypes.oneOfType([
+        PropTypes.func,
+        PropTypes.arrayOf(PropTypes.func.isRequired),
+    ]).isRequired,
 };
 
 Form.defaultProps = { className: '', onInvalid: () => {} };

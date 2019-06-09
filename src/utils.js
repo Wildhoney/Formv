@@ -17,6 +17,11 @@ export const handleValidation = ({
     setMessages({});
     setDisabled(true);
 
+    const [onSubmitted, onSubmitting = () => {}] = []
+        .concat(onSubmit)
+        .reverse();
+    onSubmitting(event);
+
     try {
         if (!formElement.current.checkValidity()) {
             const invalidElements = getInvalidElements([
@@ -25,7 +30,7 @@ export const handleValidation = ({
             return void setMessages(getValidationMessages(invalidElements));
         }
 
-        await onSubmit(event);
+        await onSubmitted(event);
     } catch (error) {
         if (error instanceof ValidationError) {
             onInvalid(event);
