@@ -7,9 +7,12 @@ import React, {
 } from 'react';
 import PropTypes from 'prop-types';
 import * as utils from './utils';
-import * as e from './styles';
 
 const Context = createContext();
+
+const styles = {
+    display: 'contents',
+};
 
 export { ValidationError } from './utils';
 
@@ -37,7 +40,7 @@ export function Form({ className, children, onInvalid, onSubmit, ...props }) {
                 onSubmit={handleSubmit}
                 {...props}
             >
-                <fieldset style={e.fieldStyles} disabled={isDisabled}>
+                <fieldset style={styles} disabled={isDisabled}>
                     {utils.isFunction(children) ? children(messages) : children}
                 </fieldset>
             </form>
@@ -70,7 +73,7 @@ export function Field({ children }) {
             : [];
 
     return (
-        <div style={e.fieldStyles} ref={fieldElement}>
+        <div style={styles} ref={fieldElement}>
             {utils.isFunction(children) ? (
                 children(messages)
             ) : (
