@@ -86,3 +86,19 @@ export const getHighestElement = elements => {
 
     return element;
 };
+
+export const formatCustomMessages = (input, customMessages, messages) => {
+    if (!input || input.validity.valid || messages.length === 0) {
+        return messages;
+    }
+
+    const key = (() => {
+        for (var key in input.validity) {
+            if (key !== 'valid' && input.validity[key]) {
+                return key;
+            }
+        }
+    })();
+
+    return messages.map(message => customMessages[key] || message);
+};

@@ -62,19 +62,22 @@ Form.propTypes = {
 
 Form.defaultProps = { className: '', onInvalid: () => {} };
 
-export function Field({ children }) {
+export function Field({ messages, children }) {
     const [field, setField] = useState(null);
     const context = useContext(Context);
     const input = utils.getEncapsulatedField(context.form, field);
-    const messages =
+    const validityMessages = utils.formatCustomMessages(
+        input,
+        messages,
         input && context.messages[input.name]
             ? [].concat(context.messages[input.name])
-            : [];
+            : [],
+    );
 
     useEffect(() => {
         if (input) {
             input.classList.remove('invalid');
-            messages.length > 0 && input.classList.add('invalid');
+            validityMessages.length > 0 && input.classList.add('invalid');
 
             context.highest === input.name &&
                 field.firstChild.scrollIntoView &&
@@ -82,23 +85,25 @@ export function Field({ children }) {
                     field.firstChild.scrollIntoView({ behavior: 'smooth' }),
                 );
         }
-    }, [messages]);
+    }, [validityMessages]);
 
     return (
         <div style={styles} ref={node => node && setField(node)}>
             {utils.isFunction(children) ? (
-                children(messages)
+                children(validityMessages)
             ) : (
                 <>
                     {children}
 
-                    {messages.length > 0 && (
+                    {validityMessages.length > 0 && (
                         <ul
                             className={`vform-messages vform-messages-${
-                                messages.length > 1 ? 'multiple' : 'single'
+                                validityMessages.length > 1
+                                    ? 'multiple'
+                                    : 'single'
                             }`}
                         >
-                            {messages.map((message, index) => (
+                            {validityMessages.map((message, index) => (
                                 <li key={`message_${index}`}>{message}</li>
                             ))}
                         </ul>
@@ -110,5 +115,8 @@ export function Field({ children }) {
 }
 
 Field.propTypes = {
+    messages: PropTypes.object,
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
 };
+
+Field.defaultProps = { messages: {} };

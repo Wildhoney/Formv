@@ -165,3 +165,32 @@ test('It should be able to figure out the element that is highest in the DOM;', 
     const element = utils.getHighestElement([...form.elements]);
     t.is(element, 'second');
 });
+
+test('It should be able to format the message with the passed custom message;', t => {
+    const input = document.createElement('input');
+    input.name = 'first';
+    input.required = true;
+
+    t.deepEqual(
+        utils.formatCustomMessages(input, { valueMissing: 'Where is it?' }, [
+            'required',
+        ]),
+        ['Where is it?'],
+    );
+    t.deepEqual(
+        utils.formatCustomMessages(
+            input,
+            { typeMismatch: 'Why does it not mtch?' },
+            ['required'],
+        ),
+        ['required'],
+    );
+
+    input.value = 'Hello Maria!';
+    t.deepEqual(
+        utils.formatCustomMessages(input, { valueMissing: 'Where is it?' }, [
+            'required',
+        ]),
+        ['required'],
+    );
+});
