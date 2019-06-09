@@ -26,7 +26,7 @@ export const handleValidation = ({
     try {
         if (!form.checkValidity()) {
             const invalidElements = invalidElementsFromForm([...form.elements]);
-            setHighest(invalidElements);
+            setHighest(getHighestElement(invalidElements));
             return void setMessages(getValidationMessages(invalidElements));
         }
 
@@ -34,7 +34,9 @@ export const handleValidation = ({
     } catch (error) {
         if (error instanceof ValidationError) {
             onInvalid(event);
-            setHighest(invalidElementsFromAPI(form, error.message));
+            setHighest(
+                getHighestElement(invalidElementsFromAPI(form, error.message)),
+            );
             return void setMessages(error.message);
         }
 
@@ -75,7 +77,7 @@ export const getHighestElement = elements => {
     const [element] = elements.reduce(
         ([currentName, currentValue], element) => {
             const { top: value } = element.getBoundingClientRect();
-            return value < currentValue
+            return value < currentValue && element.name
                 ? [element.name, value]
                 : [currentName, currentValue];
         },

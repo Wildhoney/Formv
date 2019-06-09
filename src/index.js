@@ -1,4 +1,10 @@
-import React, { useCallback, useState, useContext, createContext } from 'react';
+import React, {
+    useCallback,
+    useState,
+    useContext,
+    useEffect,
+    createContext,
+} from 'react';
 import PropTypes from 'prop-types';
 import * as utils from './utils';
 
@@ -13,7 +19,7 @@ export { ValidationError } from './utils';
 export function Form({ className, children, onInvalid, onSubmit, ...props }) {
     const [form, setForm] = useState(null);
     const [messages, setMessages] = useState({});
-    const [highest, setHighest] = useState({});
+    const [highest, setHighest] = useState(null);
     const [isDisabled, setDisabled] = useState(false);
     const handleSubmit = useCallback(
         utils.handleValidation({
@@ -28,7 +34,7 @@ export function Form({ className, children, onInvalid, onSubmit, ...props }) {
     );
 
     return (
-        <Context.Provider value={{ form, messages }}>
+        <Context.Provider value={{ form, messages, highest }}>
             <form
                 className={`vform ${className}`.trim()}
                 noValidate
@@ -64,6 +70,18 @@ export function Field({ children }) {
         input && context.messages[input.name]
             ? [].concat(context.messages[input.name])
             : [];
+
+    useEffect(() => {
+        if (input) {
+            input.classList.remove('invalid');
+            messages && input.classList.add('invalid');
+
+            context.highest === input.name &&
+                setTimeout(() =>
+                    field.firstChild.scrollIntoView({ behavior: 'smooth' }),
+                );
+        }
+    }, [messages]);
 
     return (
         <div style={styles} ref={node => node && setField(node)}>
