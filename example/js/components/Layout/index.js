@@ -4,12 +4,12 @@ import * as e from './styles';
 
 export default function Layout() {
     const [success, setSuccess] = useState(false);
-    const handleSubmit = useCallback(() => setSuccess(true), []);
-    const handleInvalid = useCallback(() => setSuccess(false), []);
+    const handleSubmitted = useCallback(() => setSuccess(true), []);
+    const handleSubmitting = useCallback(() => setSuccess(false), []);
 
     return (
         <e.Container>
-            <Form onSubmit={handleSubmit} onInvalid={handleInvalid}>
+            <Form onSubmit={[handleSubmitting, handleSubmitted]}>
                 <e.Items>
                     {success && (
                         <e.Message>

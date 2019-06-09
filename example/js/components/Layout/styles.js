@@ -7,16 +7,12 @@ export const Global = createGlobalStyle`
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: rgba(0, 0, 0, 0.05);
-    font-family: Roboto, Arial, Helvetica, sans-serif;
+        font-family: Lato, Arial, Helvetica, sans-serif;
     }
 `;
 
 export const Container = styled.div`
-    background-color: white;
     min-width: 600px;
-    padding: 30px;
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0.15);
 `;
 
 export const Items = styled.main`
@@ -25,8 +21,8 @@ export const Items = styled.main`
 `;
 
 export const Message = styled.div`
-    color: green;
-    background-color: rgba(200, 255, 200, 0.75);
+    color: black;
+    background-color: #aaf0d1;
     padding: 20px;
 `;
 
@@ -34,22 +30,26 @@ export const Label = styled.label`
     font-size: 11px;
     padding: 5px 0;
     text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.35);
 `;
 
 export const Input = styled.input`
     font-size: 15px;
     padding: 15px;
     outline: none;
+    border: 0;
+    background-color: #f1ece9;
 `;
 
 export const Button = styled.button`
     border: 0;
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: #010203;
+    color: white;
     outline: none;
     font-size: 16px;
-    padding: 20px;
+    padding: 25px;
     cursor: pointer;
-    letter-spacing: 1px;
+    font-family: inherit;
     font-weight: bold;
 `;
 
@@ -60,9 +60,10 @@ export const Item = styled.div`
         padding: 0;
         margin: 0;
         list-style-type: square;
-        background-color: rgba(255, 0, 0, 0.15);
+        background-color: #dc5349;
         color: darkred;
         font-size: 12px;
+        color: white;
         padding: 10px;
 
         &.vform-messages-single {
