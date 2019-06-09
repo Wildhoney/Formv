@@ -42,6 +42,8 @@ export default function MyForm() {
 
 Voila! Using the above code you now have everything you need to validate your form. By clicking the `button` all validation rules will be checked, and if you've not filled in the `firstName` field, or the `emailAddress` field is either missing or an invalid e-mail address, you'll see validation messages appear next to the relevant field.
 
+> Note that you may also pass an array of functions (`[handleSubmitting, handleSubmitted]`) to `onSubmit` &ndash; the first would **always** be invoked upon every submission, and the second would be invoked only upon passing validation.
+
 ## Handling API Validation
 
 It's all good and well having the front-end validation for your forms, however there are always cases where the front-end validation passes just fine, whereas the back-end throws a validtion error &ndash; maybe the username is already taken, for instance. In those cases we need to feed the API validation messages back into the `Form` component by using the `ValidationError` exception that Formv exports.
