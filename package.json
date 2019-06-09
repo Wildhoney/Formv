@@ -1,6 +1,6 @@
 {
   "name": "formv",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "React form validation using the validation native to all recent browsers. Also includes support for handling API validation messages.",
   "main": "dist/formv.cjs.js",
   "module": "dist/formv.esm.js",
