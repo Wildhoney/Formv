@@ -74,7 +74,7 @@ export function Field({ children }) {
     useEffect(() => {
         if (input) {
             input.classList.remove('invalid');
-            messages && input.classList.add('invalid');
+            messages.length > 0 && input.classList.add('invalid');
 
             context.highest === input.name &&
                 field.firstChild.scrollIntoView &&

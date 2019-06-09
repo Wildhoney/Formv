@@ -39,6 +39,10 @@ export const Input = styled.input`
     outline: none;
     border: 0;
     background-color: #f1ece9;
+
+    &.invalid {
+        box-shadow: inset 0 0 0 1px #dc5349;
+    }
 `;
 
 export const Button = styled.button`
