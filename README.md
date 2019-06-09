@@ -29,9 +29,13 @@ export default function MyForm() {
     return (
         <Form onSubmit={handleSubmit}>
 
-            <Field><input type="text" name="firstName" required /></Field>
+            <Field>
+                <input type="text" name="firstName" required />
+            </Field>
 
-            <Field><input type="email" name="emailAddress" required /></Field>
+            <Field>
+                <input type="email" name="emailAddress" required />
+            </Field>
 
             <button type="submit">Send Enquiry</button>
 
