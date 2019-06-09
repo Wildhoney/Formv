@@ -28,16 +28,51 @@ import { Form, Field } from 'formv';
 export default function MyForm() {
     return (
         <Form onSubmit={handleSubmit}>
-            <Field>
-                <input type="text" name="firstName" required />
-            </Field>
-            <Field>
-                <input type="email" name="emailAddress" required />
-            </Field>
+
+            <Field><input type="text" name="firstName" required /></Field>
+
+            <Field><input type="email" name="emailAddress" required /></Field>
+
             <button type="submit">Send Enquiry</button>
+
         </Form>
     );
 }
 ```
 
 Voila! Using the above code you now have everything you need to validate your form. By clicking the `button` all validation rules will be checked, and if you've not filled in the `firstName` field, or the `emailAddress` field is either missing or an invalid e-mail address, you'll see validation messages appear next to the relevant field.
+
+## Handling API Validation
+
+It's all good and well having the front-end validation for your forms, however there are always cases where the front-end validation passes just fine, whereas the back-end throws a validtion error &ndash; maybe the username is already taken, for instance. In those cases we need to feed the API validation messages back into the `Form` component by using the `ValidationError` exception that Formv exports.
+
+The validation messages need to be flattened and should map to your field names &ndash; for cases where you have an array of fields, we recommend you name these `names.0.firstName`, `names.1.firstName`, etc...
+
+Continuing from the above example, we'll implement the `handleSubmit` function which handles the submitting of the data to the API.
+
+```javascript
+import { ValidationError } from 'formv';
+
+async function handleSubmit() {
+
+    try {
+
+        // Attempt to send the data to our API endpoint.
+        await api.post('/contact', data);
+
+    } catch (error) {
+
+        const failedValidation = error.response.status === 400;
+
+        if (failedValidation) {
+
+            // Feed the validation errors back into Formv.
+            throw new ValidationError(error.response.data);
+
+        }
+
+        // Handle other error messages gracefully.
+    }
+
+}
+```
