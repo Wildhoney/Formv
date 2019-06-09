@@ -1,10 +1,4 @@
-import React, {
-    useCallback,
-    useRef,
-    useState,
-    useContext,
-    createContext,
-} from 'react';
+import React, { useCallback, useState, useContext, createContext } from 'react';
 import PropTypes from 'prop-types';
 import * as utils from './utils';
 
@@ -17,28 +11,28 @@ const styles = {
 export { ValidationError } from './utils';
 
 export function Form({ className, children, onInvalid, onSubmit, ...props }) {
-    const formElement = useRef(null);
+    const [form, setForm] = useState(null);
     const [messages, setMessages] = useState({});
     const [highest, setHighest] = useState({});
     const [isDisabled, setDisabled] = useState(false);
     const handleSubmit = useCallback(
         utils.handleValidation({
+            form,
             onInvalid,
             onSubmit,
-            formElement,
             setHighest,
             setMessages,
             setDisabled,
         }),
-        [onInvalid, onSubmit],
+        [form, onInvalid, onSubmit],
     );
 
     return (
-        <Context.Provider value={{ formElement, messages }}>
+        <Context.Provider value={{ form, messages }}>
             <form
                 className={`vform ${className}`.trim()}
                 noValidate
-                ref={formElement}
+                ref={node => node && setForm(node)}
                 onSubmit={handleSubmit}
                 {...props}
             >
@@ -63,19 +57,16 @@ Form.propTypes = {
 Form.defaultProps = { className: '', onInvalid: () => {} };
 
 export function Field({ children }) {
-    const fieldElement = useRef(null);
+    const [field, setField] = useState(null);
     const context = useContext(Context);
-    const element = utils.getEncapsulatedField(
-        context.formElement,
-        fieldElement,
-    );
+    const input = utils.getEncapsulatedField(context.form, field);
     const messages =
-        element && context.messages[element.name]
-            ? [].concat(context.messages[element.name])
+        input && context.messages[input.name]
+            ? [].concat(context.messages[input.name])
             : [];
 
     return (
-        <div style={styles} ref={fieldElement}>
+        <div style={styles} ref={node => node && setField(node)}>
             {utils.isFunction(children) ? (
                 children(messages)
             ) : (

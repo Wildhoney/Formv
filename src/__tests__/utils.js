@@ -12,22 +12,22 @@ test.beforeEach(t => {
     };
 
     t.context.initialiseForm = () => {
-        const formElement = { current: document.createElement('form') };
-        const inputElement = document.createElement('input');
-        inputElement.name = 'first';
-        inputElement.required = true;
-        formElement.current.appendChild(inputElement);
-        return [formElement, inputElement];
+        const form = document.createElement('form');
+        const input = document.createElement('input');
+        input.name = 'first';
+        input.required = true;
+        form.appendChild(input);
+        return [form, input];
     };
 });
 
 test('It should be able to handle purely front-end validation when not passing;', async t => {
     const event = { preventDefault: sinon.spy() };
-    const [formElement] = t.context.initialiseForm();
+    const [form] = t.context.initialiseForm();
 
     const onSubmit = utils.handleValidation({
         ...t.context.spies,
-        formElement,
+        form,
     });
 
     await onSubmit(event);
@@ -45,14 +45,14 @@ test('It should be able to handle purely front-end validation when not passing;'
 
 test('It should be able to handle purely front-end validation when passing;', async t => {
     const event = { preventDefault: sinon.spy() };
-    const [formElement, inputElement] = t.context.initialiseForm();
+    const [form, input] = t.context.initialiseForm();
 
     const onSubmit = utils.handleValidation({
         ...t.context.spies,
-        formElement,
+        form,
     });
 
-    inputElement.value = 'Maria';
+    input.value = 'Maria';
     await onSubmit(event);
     t.is(event.preventDefault.callCount, 1);
     t.is(t.context.spies.setMessages.callCount, 1);
@@ -63,20 +63,22 @@ test('It should be able to handle purely front-end validation when passing;', as
 
 test('It should be able to handle purely back-end validation when failing;', async t => {
     const event = { preventDefault: sinon.spy() };
-    const [formElement, inputElement] = t.context.initialiseForm();
+    const [form, input] = t.context.initialiseForm();
 
     {
         const onSubmit = utils.handleValidation({
             ...t.context.spies,
-            formElement,
+            form,
             onSubmit: () => {
                 throw new utils.ValidationError({
                     first: ['Constraints not satisfied'],
                 });
             },
         });
-        inputElement.value = 'Adam';
+
+        input.value = 'Adam';
         await onSubmit(event);
+
         t.is(event.preventDefault.callCount, 1);
         t.is(t.context.spies.setMessages.callCount, 2);
         t.is(t.context.spies.setDisabled.callCount, 2);
@@ -90,15 +92,15 @@ test('It should be able to handle purely back-end validation when failing;', asy
 });
 
 test('It should be able to find the encapsulated field otherwise yield `null`;', t => {
-    const formElement = { current: document.createElement('form') };
-    const fieldElement = { current: document.createElement('div') };
-    formElement.current.appendChild(fieldElement.current);
-    t.is(utils.getEncapsulatedField(formElement, fieldElement), null);
+    const form = document.createElement('form');
+    const field = document.createElement('div');
+    form.appendChild(field);
+    t.is(utils.getEncapsulatedField(form, field), null);
 
-    const inputElement = document.createElement('input');
-    inputElement.name = 'test';
-    fieldElement.current.appendChild(inputElement);
-    t.is(utils.getEncapsulatedField(formElement, fieldElement), inputElement);
+    const input = document.createElement('input');
+    input.name = 'test';
+    field.appendChild(input);
+    t.is(utils.getEncapsulatedField(form, field), input);
 });
 
 test('It should be able to extract the validation messages from the input fields;', t => {
@@ -122,27 +124,44 @@ test('It should be able to find the elements which fail the validation tests fro
 });
 
 test('It should be able to find the elements which fail the validation tests from the API;', t => {
-    const formElement = { current: document.createElement('form') };
+    const form = document.createElement('form');
 
-    const firstNameElement = { current: document.createElement('input') };
-    firstNameElement.current.name = 'firstName';
-    formElement.current.appendChild(firstNameElement.current);
+    const firstName = document.createElement('input');
+    firstName.name = 'firstName';
+    form.appendChild(firstName);
 
-    const lastNameElement = { current: document.createElement('input') };
-    lastNameElement.current.name = 'lastName';
-    formElement.current.appendChild(lastNameElement.current);
+    const lastName = document.createElement('input');
+    lastName.name = 'lastName';
+    form.appendChild(lastName);
 
-    const emailAddressElement = { current: document.createElement('input') };
-    emailAddressElement.current.name = 'emailAddress';
-    formElement.current.appendChild(emailAddressElement.current);
+    const emailAddress = document.createElement('input');
+    emailAddress.name = 'emailAddress';
+    form.appendChild(emailAddress);
 
     const errors = {
         firstName: 'required',
         emailAddress: 'required',
     };
 
-    t.deepEqual(utils.invalidElementsFromAPI(formElement, errors), [
-        firstNameElement.current,
-        emailAddressElement.current,
+    t.deepEqual(utils.invalidElementsFromAPI(form, errors), [
+        firstName,
+        emailAddress,
     ]);
+});
+
+test('It should be able to figure out the element that is highest in the DOM;', t => {
+    const form = document.createElement('form');
+
+    const first = document.createElement('input');
+    first.name = 'first';
+    first.getBoundingClientRect = () => ({ top: 25 });
+    form.appendChild(first);
+
+    const second = document.createElement('input');
+    second.name = 'second';
+    second.getBoundingClientRect = () => ({ top: 5 });
+    form.appendChild(second);
+
+    const element = utils.getHighestElement([...form.elements]);
+    t.is(element, 'second');
 });

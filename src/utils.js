@@ -6,7 +6,7 @@ export class ValidationError extends Error {
 }
 
 export const handleValidation = ({
-    formElement,
+    form,
     onSubmit,
     onInvalid,
     setMessages,
@@ -24,10 +24,8 @@ export const handleValidation = ({
     onSubmitting(event);
 
     try {
-        if (!formElement.current.checkValidity()) {
-            const invalidElements = invalidElementsFromForm([
-                ...formElement.current.elements,
-            ]);
+        if (!form.checkValidity()) {
+            const invalidElements = invalidElementsFromForm([...form.elements]);
             setHighest(invalidElements);
             return void setMessages(getValidationMessages(invalidElements));
         }
@@ -36,7 +34,7 @@ export const handleValidation = ({
     } catch (error) {
         if (error instanceof ValidationError) {
             onInvalid(event);
-            setHighest(invalidElementsFromAPI(formElement, error.message));
+            setHighest(invalidElementsFromAPI(form, error.message));
             return void setMessages(error.message);
         }
 
@@ -50,9 +48,9 @@ export const handleValidation = ({
 export const invalidElementsFromForm = elements =>
     elements.filter(element => !element.validity.valid && element.name);
 
-export const invalidElementsFromAPI = (formElement, message) => {
+export const invalidElementsFromAPI = (form, message) => {
     const invalidElements = Object.keys(message);
-    return [...formElement.current.elements].filter(
+    return [...form.elements].filter(
         element => element.name && invalidElements.includes(element.name),
     );
 };
@@ -66,12 +64,10 @@ export const getValidationMessages = elements =>
         {},
     );
 
-export const getEncapsulatedField = (formElement, fieldElement) =>
-    !formElement.current
+export const getEncapsulatedField = (form, field) =>
+    !form || !field
         ? null
-        : [...formElement.current.elements].find(element =>
-              fieldElement.current.contains(element),
-          ) || null;
+        : [...form.elements].find(element => field.contains(element)) || null;
 
 export const isFunction = a => typeof a === 'function';
 
