@@ -18,7 +18,7 @@ const url = 'http://localhost:3000';
 const getValidationMessage = (page, index) => {
     return page.evaluate(index => {
         const field = document.querySelectorAll('main > div');
-        const message = field[index].querySelector('.vform-messages > li');
+        const message = field[index].querySelector('.formv-messages > li');
         return message ? message.innerHTML : null;
     }, index);
 };

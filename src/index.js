@@ -46,7 +46,7 @@ export function Form({
             <form
                 noValidate
                 ref={node => node && setForm(node)}
-                className={`vform ${className}`.trim()}
+                className={`formv ${className}`.trim()}
                 onSubmit={handleSubmit}
                 onInvalid={onInvalid}
                 {...props}
@@ -117,7 +117,7 @@ export function Field({ messages, children }) {
 
                     {validityMessages.length > 0 && (
                         <ul
-                            className={`vform-messages vform-messages-${
+                            className={`formv-messages formv-messages-${
                                 validityMessages.length > 1
                                     ? 'multiple'
                                     : 'single'

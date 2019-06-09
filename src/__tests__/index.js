@@ -11,7 +11,7 @@ test('It should be able to handle the spready of class names on the form element
             Hello Adam!
         </Form>,
     );
-    t.true(wrapper.find('form').hasClass('vform'));
+    t.true(wrapper.find('form').hasClass('formv'));
     t.true(wrapper.find('form').hasClass('my-form'));
 });
 
@@ -68,7 +68,7 @@ test('It should be able to the validation messages for the relevant input fields
         wrapper
             .find(Field)
             .at(0)
-            .find('ul.vform-messages')
+            .find('ul.formv-messages')
             .text(),
         'Constraints not satisfied',
     );
@@ -76,7 +76,7 @@ test('It should be able to the validation messages for the relevant input fields
         wrapper
             .find(Field)
             .at(1)
-            .find('ul.vform-messages')
+            .find('ul.formv-messages')
             .text(),
         'Constraints not satisfied',
     );
@@ -92,7 +92,7 @@ test('It should be able to the validation messages for the relevant input fields
         wrapper
             .find(Field)
             .at(0)
-            .find('ul.vform-messages')
+            .find('ul.formv-messages')
             .text(),
         'Constraints not satisfied',
     );
@@ -100,7 +100,7 @@ test('It should be able to the validation messages for the relevant input fields
         wrapper
             .find(Field)
             .at(1)
-            .find('ul.vform-messages').length,
+            .find('ul.formv-messages').length,
         0,
     );
 });
@@ -123,7 +123,7 @@ test('It should be able to handle custom ValidationError exceptions;', t => {
         wrapper
             .find(Field)
             .at(0)
-            .find('ul.vform-messages')
+            .find('ul.formv-messages')
             .text(),
         'Please enter your first name',
     );
@@ -148,8 +148,8 @@ test('It should be able to determine whether there are multiple or single messag
         wrapper
             .find(Field)
             .at(0)
-            .find('ul.vform-messages')
-            .hasClass('vform-messages-single'),
+            .find('ul.formv-messages')
+            .hasClass('formv-messages-single'),
     );
 
     {
@@ -165,8 +165,8 @@ test('It should be able to determine whether there are multiple or single messag
             wrapper
                 .find(Field)
                 .at(0)
-                .find('ul.vform-messages')
-                .hasClass('vform-messages-multiple'),
+                .find('ul.formv-messages')
+                .hasClass('formv-messages-multiple'),
         );
     }
 });

@@ -69,7 +69,7 @@ export const Button = styled.button`
 export const Item = styled.div`
     display: grid;
 
-    ul.vform-messages {
+    ul.formv-messages {
         padding: 0;
         margin: 0;
         list-style-type: square;
@@ -79,11 +79,11 @@ export const Item = styled.div`
         color: white;
         padding: 10px;
 
-        &.vform-messages-single {
+        &.formv-messages-single {
             list-style-type: none;
         }
 
-        &.vform-messages-multiple {
+        &.formv-messages-multiple {
             list-style-type: square;
             margin-left: 20px;
         }
