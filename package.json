@@ -8,7 +8,7 @@
   "author": "Adam Timberlake <adam.timberlake@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c && webpack --config example/webpack.config.js",
     "test": "ava --verbose",
     "coverage": "nyc ava && nyc report --reporter=text-lcov | coveralls",
     "format": "NODE_ENV=production prettier --write '**/**.{js,html}'",
