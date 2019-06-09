@@ -19,12 +19,14 @@ export { ValidationError } from './utils';
 export function Form({ className, children, onInvalid, onSubmit, ...props }) {
     const formElement = useRef(null);
     const [messages, setMessages] = useState({});
+    const [highest, setHighest] = useState({});
     const [isDisabled, setDisabled] = useState(false);
     const handleSubmit = useCallback(
         utils.handleValidation({
             onInvalid,
             onSubmit,
             formElement,
+            setHighest,
             setMessages,
             setDisabled,
         }),

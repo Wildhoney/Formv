@@ -6,11 +6,12 @@ export class ValidationError extends Error {
 }
 
 export const handleValidation = ({
-    setMessages,
     formElement,
     onSubmit,
     onInvalid,
+    setMessages,
     setDisabled,
+    setHighest,
 }) => async event => {
     event.preventDefault();
 
@@ -24,9 +25,10 @@ export const handleValidation = ({
 
     try {
         if (!formElement.current.checkValidity()) {
-            const invalidElements = getInvalidElements([
+            const invalidElements = invalidElementsFromForm([
                 ...formElement.current.elements,
             ]);
+            setHighest(invalidElements);
             return void setMessages(getValidationMessages(invalidElements));
         }
 
@@ -34,6 +36,7 @@ export const handleValidation = ({
     } catch (error) {
         if (error instanceof ValidationError) {
             onInvalid(event);
+            setHighest(invalidElementsFromAPI(formElement, error.message));
             return void setMessages(error.message);
         }
 
@@ -44,8 +47,15 @@ export const handleValidation = ({
     }
 };
 
-export const getInvalidElements = elements =>
+export const invalidElementsFromForm = elements =>
     elements.filter(element => !element.validity.valid && element.name);
+
+export const invalidElementsFromAPI = (formElement, message) => {
+    const invalidElements = Object.keys(message);
+    return [...formElement.current.elements].filter(
+        element => element.name && invalidElements.includes(element.name),
+    );
+};
 
 export const getValidationMessages = elements =>
     elements.reduce(
@@ -64,3 +74,17 @@ export const getEncapsulatedField = (formElement, fieldElement) =>
           ) || null;
 
 export const isFunction = a => typeof a === 'function';
+
+export const getHighestElement = elements => {
+    const [element] = elements.reduce(
+        ([currentName, currentValue], element) => {
+            const { top: value } = element.getBoundingClientRect();
+            return value < currentValue
+                ? [element.name, value]
+                : [currentName, currentValue];
+        },
+        [null, Infinity],
+    );
+
+    return element;
+};

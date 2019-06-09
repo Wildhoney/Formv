@@ -8,6 +8,7 @@ test.beforeEach(t => {
         onSubmit: sinon.spy(),
         onInvalid: sinon.spy(),
         setDisabled: sinon.spy(),
+        setHighest: sinon.spy(),
     };
 
     t.context.initialiseForm = () => {
@@ -111,11 +112,37 @@ test('It should be able to extract the validation messages from the input fields
     });
 });
 
-test('It should be able to find the elements which fail the validation tests;', t => {
+test('It should be able to find the elements which fail the validation tests from the form;', t => {
     const elements = [
         { name: 'first', validity: { valid: false } },
         { validity: { valid: false } },
         { name: 'third', validity: { valid: true } },
     ];
-    t.deepEqual(utils.getInvalidElements(elements), [elements[0]]);
+    t.deepEqual(utils.invalidElementsFromForm(elements), [elements[0]]);
+});
+
+test('It should be able to find the elements which fail the validation tests from the API;', t => {
+    const formElement = { current: document.createElement('form') };
+
+    const firstNameElement = { current: document.createElement('input') };
+    firstNameElement.current.name = 'firstName';
+    formElement.current.appendChild(firstNameElement.current);
+
+    const lastNameElement = { current: document.createElement('input') };
+    lastNameElement.current.name = 'lastName';
+    formElement.current.appendChild(lastNameElement.current);
+
+    const emailAddressElement = { current: document.createElement('input') };
+    emailAddressElement.current.name = 'emailAddress';
+    formElement.current.appendChild(emailAddressElement.current);
+
+    const errors = {
+        firstName: 'required',
+        emailAddress: 'required',
+    };
+
+    t.deepEqual(utils.invalidElementsFromAPI(formElement, errors), [
+        firstNameElement.current,
+        emailAddressElement.current,
+    ]);
 });
