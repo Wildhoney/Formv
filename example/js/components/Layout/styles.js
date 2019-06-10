@@ -55,6 +55,15 @@ export const Button = styled.button`
     cursor: pointer;
     font-family: inherit;
     font-weight: bold;
+    transition: background-color 0.25s;
+
+    &:disabled {
+        background-color: darkgray;
+
+        &::after {
+            content: 'ting...';
+        }
+    }
 `;
 
 export const Item = styled.div`

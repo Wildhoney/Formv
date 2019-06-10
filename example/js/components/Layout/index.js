@@ -1,10 +1,24 @@
 import React, { useState, useCallback } from 'react';
-import { Form, Field } from 'formv';
+import { Form, Field, ValidationError } from 'formv';
+import delay from 'delay';
 import * as e from './styles';
 
 export default function Layout() {
     const [success, setSuccess] = useState(false);
-    const handleSubmitted = useCallback(() => setSuccess(true), []);
+    const handleSubmitted = useCallback(async () => {
+        if (
+            window.confirm('Pretend the API could not validate e-mail address?')
+        ) {
+            await delay(2500);
+            throw new ValidationError({
+                emailAddress:
+                    'We were unable to validate the supplied e-mail address. Please try again later.',
+            });
+        }
+
+        await delay(2500);
+        setSuccess(true);
+    }, []);
     const handleSubmitting = useCallback(() => setSuccess(false), []);
 
     return (
