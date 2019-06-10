@@ -188,3 +188,23 @@ test('It should be able to pass an array of `onSubmit` functions;', async t => {
     await delay(1);
     t.is(handleSubmitted.callCount, 1);
 });
+
+test('It should be able to display the passed custom messages;', async t => {
+    const wrapper = mount(
+        <Form onSubmit={() => {}}>
+            <Field messages={{ valueMissing: 'Where are thou?' }}>
+                <input type="text" name="first" required />
+            </Field>
+        </Form>,
+    );
+
+    wrapper.find('form').simulate('submit');
+    await delay(1);
+    t.is(
+        wrapper
+            .find('li')
+            .at(0)
+            .text(),
+        'Where are thou?',
+    );
+});
