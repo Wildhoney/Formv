@@ -82,3 +82,34 @@ async function handleSubmit() {
 
 }
 ```
+
+## Custom Validation Messages
+
+You'll find that validation messages differ between browsers, which means your native messages are inconsitent. With Formv you are able to pass a `messages` prop to the `Field` component which is a map of [the `ValidityState` object](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState). In our above example if we want to me more descriptive when the user forgets to enter their first name, we can do that with `messages` by supplying the `valueMissing` item &ndash; for the email field we'll also add the `patternMismatch` which indicates the email address is invalid.
+
+```jsx
+import { Form, Field } from 'formv';
+
+export default function MyForm() {
+    return (
+        <Form onSubmit={handleSubmit}>
+
+            <Field messages={{ valueMissing: 'Please enter your first name.' }}>
+                <input type="text" name="firstName" required />
+            </Field>
+            
+            <Field
+                messages={{
+                    valueMissing: 'Please enter your email address.',
+                    patternMismatch: 'Please enter a valid email address.'
+                }}
+            >
+                <input type="email" name="emailAddress" required />
+            </Field>
+
+            <button type="submit">Send Enquiry</button>
+
+        </Form>
+    );
+}
+```
