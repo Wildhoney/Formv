@@ -50,7 +50,7 @@ Voila! Using the above code you now have everything you need to validate your fo
 
 ## Handling API Validation
 
-It's all good and well having the front-end validation for your forms, however there are always cases where the front-end validation passes just fine, whereas the back-end throws a validtion error &ndash; maybe the username is already taken, for instance. In those cases we need to feed the API validation messages back into the `Form` component by using the `ValidationError` exception that Formv exports.
+It's all good and well having the front-end validation for your forms, however there are always cases where the front-end validation passes just fine, whereas the back-end throws a validation error &ndash; maybe the username is already taken, for instance. In those cases we need to feed the API validation messages back into the `Form` component by using the `ValidationError` exception that Formv exports.
 
 The validation messages need to be flattened and should map to your field names &ndash; for cases where you have an array of fields, we recommend you name these `names.0.firstName`, `names.1.firstName`, etc...
 
@@ -115,3 +115,7 @@ export default function MyForm() {
 ```
 
 > Note that the custom validation messages are **only** applicable to front-end validation &ndash; when you feed API validation messages back into Formv the wording of the messages is the responsibility of the back-end. At the very least messages should be corrected using front-end find and replace if the back-end cannot be changed.
+
+## Disabling Default Behaviours
+
+By default Formv disables the form when it's being submitted, which includes the buttons you attach to your form which can be styled with the `:disabled` pseudo-class &ndash; you can disable this by adding `noDisable` to the `Form`. Likewise with the scrolling to the highest invalid element &ndash; that functionality can be disabled by adding `noScroll` to `Form`.
