@@ -36,10 +36,11 @@ export function Form({ className, children, onInvalid, onSubmit, ...props }) {
     return (
         <Context.Provider value={{ form, messages, highest }}>
             <form
-                className={`vform ${className}`.trim()}
                 noValidate
                 ref={node => node && setForm(node)}
+                className={`vform ${className}`.trim()}
                 onSubmit={handleSubmit}
+                onInvalid={onInvalid}
                 {...props}
             >
                 <fieldset style={styles} disabled={isDisabled}>
