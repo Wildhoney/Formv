@@ -114,4 +114,4 @@ export default function MyForm() {
 }
 ```
 
-> Note that the custom validaiton messages are **only** applicable to front-end validation &ndash; when you feed API validation messages back into Formv the wording of the messages is the responsibility of the back-end. At the very least messages should be corrected using front-end find and replace if the back-end cannot be changed.
+> Note that the custom validation messages are **only** applicable to front-end validation &ndash; when you feed API validation messages back into Formv the wording of the messages is the responsibility of the back-end. At the very least messages should be corrected using front-end find and replace if the back-end cannot be changed.

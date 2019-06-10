@@ -16,7 +16,15 @@ const styles = {
 
 export { ValidationError } from './utils';
 
-export function Form({ className, children, onInvalid, onSubmit, ...props }) {
+export function Form({
+    className,
+    noDisable,
+    noScroll,
+    children,
+    onInvalid,
+    onSubmit,
+    ...props
+}) {
     const [form, setForm] = useState(null);
     const [messages, setMessages] = useState({});
     const [highest, setHighest] = useState(null);
@@ -34,7 +42,7 @@ export function Form({ className, children, onInvalid, onSubmit, ...props }) {
     );
 
     return (
-        <Context.Provider value={{ form, messages, highest }}>
+        <Context.Provider value={{ form, messages, highest, noScroll }}>
             <form
                 noValidate
                 ref={node => node && setForm(node)}
@@ -43,7 +51,10 @@ export function Form({ className, children, onInvalid, onSubmit, ...props }) {
                 onInvalid={onInvalid}
                 {...props}
             >
-                <fieldset style={styles} disabled={isDisabled}>
+                <fieldset
+                    style={styles}
+                    disabled={noDisable ? false : isDisabled}
+                >
                     {utils.isFunction(children) ? children(messages) : children}
                 </fieldset>
             </form>
@@ -54,6 +65,8 @@ export function Form({ className, children, onInvalid, onSubmit, ...props }) {
 Form.propTypes = {
     className: PropTypes.string,
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+    noDisable: PropTypes.bool,
+    noScroll: PropTypes.bool,
     onInvalid: PropTypes.func,
     onSubmit: PropTypes.oneOfType([
         PropTypes.func,
@@ -61,7 +74,12 @@ Form.propTypes = {
     ]).isRequired,
 };
 
-Form.defaultProps = { className: '', onInvalid: () => {} };
+Form.defaultProps = {
+    className: '',
+    noDisable: false,
+    noScroll: false,
+    onInvalid: () => {},
+};
 
 export function Field({ messages, children }) {
     const [field, setField] = useState(null);
@@ -80,7 +98,8 @@ export function Field({ messages, children }) {
             input.classList.remove('invalid');
             validityMessages.length > 0 && input.classList.add('invalid');
 
-            context.highest === input.name &&
+            !context.noScroll &&
+                context.highest === input.name &&
                 field.firstChild.scrollIntoView &&
                 setTimeout(() =>
                     field.firstChild.scrollIntoView({ behavior: 'smooth' }),
