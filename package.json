@@ -22,11 +22,13 @@
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
+    "@babel/plugin-transform-runtime": "^7.4.4",
     "@babel/polyfill": "^7.4.4",
     "@babel/preset-env": "^7.4.5",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.4.4",
-    "ava": "^2.0.0",
+    "@babel/runtime": "^7.4.5",
+    "ava": "^2.1.0",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.6",
     "browser-env": "^3.2.6",
@@ -59,11 +61,5 @@
     "styled-components": "^4.3.1",
     "webpack": "^4.33.0",
     "webpack-cli": "^3.3.3"
-  },
-  "dependencies": {
-    "@babel/plugin-transform-runtime": "^7.4.4",
-    "@babel/runtime": "^7.4.5",
-    "add": "^2.0.6",
-    "yarn": "^1.16.0"
   }
 }

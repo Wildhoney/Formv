@@ -64,9 +64,9 @@ export function Form({
 
 Form.propTypes = {
     className: PropTypes.string,
-    children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
     noDisable: PropTypes.bool,
     noScroll: PropTypes.bool,
+    children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
     onInvalid: PropTypes.func,
     onSubmit: PropTypes.oneOfType([
         PropTypes.func,
