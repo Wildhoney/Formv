@@ -38,6 +38,7 @@ module.exports = {
                     'useState',
                     'useCallback',
                     'useContext',
+                    'useEffect',
                 ],
                 'node_modules/react-is/index.js': [
                     'isElement',
