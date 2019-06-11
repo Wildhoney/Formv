@@ -13,6 +13,30 @@ export const Global = createGlobalStyle`
 
 export const Container = styled.div`
     min-width: 600px;
+
+    ul.formv-messages {
+        padding: 0;
+        margin: 0;
+        list-style-type: square;
+        background-color: #dc5349;
+        color: darkred;
+        font-size: 12px;
+        color: white;
+        padding: 10px;
+
+        &.formv-messages-generic {
+            margin-bottom: 10px;
+        }
+
+        &.formv-messages-single {
+            list-style-type: none;
+        }
+
+        &.formv-messages-multiple {
+            list-style-type: square;
+            padding-left: 30px;
+        }
+    }
 `;
 
 export const Items = styled.main`
@@ -68,26 +92,6 @@ export const Button = styled.button`
 
 export const Item = styled.div`
     display: grid;
-
-    ul.formv-messages {
-        padding: 0;
-        margin: 0;
-        list-style-type: square;
-        background-color: #dc5349;
-        color: darkred;
-        font-size: 12px;
-        color: white;
-        padding: 10px;
-
-        &.formv-messages-single {
-            list-style-type: none;
-        }
-
-        &.formv-messages-multiple {
-            list-style-type: square;
-            margin-left: 20px;
-        }
-    }
 `;
 
 export const Reference = styled.div`

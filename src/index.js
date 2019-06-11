@@ -10,7 +10,7 @@ import * as utils from './utils';
 
 const Context = createContext();
 
-export { ValidationError } from './utils';
+export { GenericError, ValidationError } from './utils';
 
 export function Form({
     className,
@@ -22,23 +22,34 @@ export function Form({
     ...props
 }) {
     const [form, setForm] = useState(null);
-    const [messages, setMessages] = useState({});
+    const [genericMessages, setGenericMessages] = useState([]);
+    const [validityMessages, setValidityMessages] = useState({});
     const [highest, setHighest] = useState(null);
     const [isDisabled, setDisabled] = useState(false);
+
     const handleSubmit = useCallback(
         utils.handleValidation({
             form,
             onInvalid,
             onSubmit,
             setHighest,
-            setMessages,
+            setGenericMessages,
+            setValidityMessages,
             setDisabled,
         }),
         [form, onInvalid, onSubmit],
     );
 
+    useEffect(() => {
+        !noScroll &&
+            highest &&
+            highest === form &&
+            form.scrollIntoView &&
+            setTimeout(() => form.scrollIntoView({ behavior: 'smooth' }));
+    }, [highest, validityMessages]);
+
     return (
-        <Context.Provider value={{ form, messages, highest, noScroll }}>
+        <Context.Provider value={{ form, validityMessages, highest, noScroll }}>
             <form
                 noValidate
                 ref={node => node && setForm(node)}
@@ -53,7 +64,10 @@ export function Form({
                     }}
                     disabled={noDisable ? false : isDisabled}
                 >
-                    {utils.isFunction(children) ? children(messages) : children}
+                    <Messages className="generic" values={genericMessages} />
+                    {utils.isFunction(children)
+                        ? children(validityMessages)
+                        : children}
                 </fieldset>
             </form>
         </Context.Provider>
@@ -86,8 +100,8 @@ export function Field({ messages, className, children }) {
     const validityMessages = utils.formatCustomMessages(
         input,
         messages,
-        input && context.messages[input.name]
-            ? [].concat(context.messages[input.name])
+        input && context.validityMessages[input.name]
+            ? [].concat(context.validityMessages[input.name])
             : [],
     );
 
@@ -111,8 +125,8 @@ export function Field({ messages, className, children }) {
             style={{ display: 'var(--formv-field-display, contents)' }}
             ref={node => node && setField(node)}
         >
-            {utils.isFunction(children) ? children() : children}
-            <Messages values={validityMessages} />
+            {utils.isFunction(children) ? children(validityMessages) : children}
+            <Messages className="validity" values={validityMessages} />
         </div>
     );
 }
@@ -125,10 +139,10 @@ Field.propTypes = {
 
 Field.defaultProps = { messages: {}, className: '' };
 
-function Messages({ values }) {
+function Messages({ values, className }) {
     return values.length === 0 ? null : (
         <ul
-            className={`formv-messages formv-messages-${
+            className={`formv-messages formv-messages-${className} formv-messages-${
                 values.length > 1 ? 'multiple' : 'single'
             }`}
         >
@@ -141,6 +155,7 @@ function Messages({ values }) {
 
 Messages.propTypes = {
     values: PropTypes.array.isRequired,
+    className: PropTypes.string,
 };
 
-Messages.defaultProps = { values: [] };
+Messages.defaultProps = { values: [], className: '' };

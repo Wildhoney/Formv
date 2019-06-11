@@ -4,7 +4,8 @@ import * as utils from '../utils';
 
 test.beforeEach(t => {
     t.context.spies = {
-        setMessages: sinon.spy(),
+        setGenericMessages: sinon.spy(),
+        setValidityMessages: sinon.spy(),
         onSubmit: sinon.spy(),
         onInvalid: sinon.spy(),
         setDisabled: sinon.spy(),
@@ -32,12 +33,12 @@ test('It should be able to handle purely front-end validation when not passing;'
 
     await onSubmit(event);
     t.is(event.preventDefault.callCount, 1);
-    t.is(t.context.spies.setMessages.callCount, 2);
+    t.is(t.context.spies.setValidityMessages.callCount, 2);
     t.is(t.context.spies.setDisabled.callCount, 2);
     t.is(t.context.spies.onInvalid.callCount, 0);
-    t.true(t.context.spies.setMessages.calledWith({}));
+    t.true(t.context.spies.setValidityMessages.calledWith({}));
     t.true(
-        t.context.spies.setMessages.calledWith({
+        t.context.spies.setValidityMessages.calledWith({
             first: 'Constraints not satisfied',
         }),
     );
@@ -55,10 +56,10 @@ test('It should be able to handle purely front-end validation when passing;', as
     input.value = 'Maria';
     await onSubmit(event);
     t.is(event.preventDefault.callCount, 1);
-    t.is(t.context.spies.setMessages.callCount, 1);
+    t.is(t.context.spies.setValidityMessages.callCount, 1);
     t.is(t.context.spies.setDisabled.callCount, 2);
     t.is(t.context.spies.onInvalid.callCount, 0);
-    t.true(t.context.spies.setMessages.calledWith({}));
+    t.true(t.context.spies.setValidityMessages.calledWith({}));
 });
 
 test('It should be able to handle purely back-end validation when failing;', async t => {
@@ -80,13 +81,41 @@ test('It should be able to handle purely back-end validation when failing;', asy
         await onSubmit(event);
 
         t.is(event.preventDefault.callCount, 1);
-        t.is(t.context.spies.setMessages.callCount, 2);
+        t.is(t.context.spies.setValidityMessages.callCount, 2);
         t.is(t.context.spies.setDisabled.callCount, 2);
         t.is(t.context.spies.onInvalid.callCount, 1);
         t.true(
-            t.context.spies.setMessages.calledWith({
+            t.context.spies.setValidityMessages.calledWith({
                 first: ['Constraints not satisfied'],
             }),
+        );
+    }
+});
+
+test('It should be able to handle purely back-end errors when failing;', async t => {
+    const event = { preventDefault: sinon.spy() };
+    const [form, input] = t.context.initialiseForm();
+
+    {
+        const onSubmit = utils.handleValidation({
+            ...t.context.spies,
+            form,
+            onSubmit: () => {
+                throw new utils.GenericError(['Constraints not satisfied']);
+            },
+        });
+
+        input.value = 'Adam';
+        await onSubmit(event);
+
+        t.is(event.preventDefault.callCount, 1);
+        t.is(t.context.spies.setGenericMessages.callCount, 2);
+        t.is(t.context.spies.setDisabled.callCount, 2);
+        t.is(t.context.spies.onInvalid.callCount, 1);
+        t.true(
+            t.context.spies.setGenericMessages.calledWith([
+                'Constraints not satisfied',
+            ]),
         );
     }
 });

@@ -1,7 +1,14 @@
 export class ValidationError extends Error {
-    constructor(message) {
+    constructor(messages) {
         super();
-        this.message = message;
+        this.messages = messages;
+    }
+}
+
+export class GenericError extends Error {
+    constructor(messages) {
+        super();
+        this.messages = messages;
     }
 }
 
@@ -9,13 +16,15 @@ export const handleValidation = ({
     form,
     onSubmit,
     onInvalid,
-    setMessages,
+    setGenericMessages,
+    setValidityMessages,
     setDisabled,
     setHighest,
 }) => async event => {
     event.preventDefault();
 
-    setMessages({});
+    setGenericMessages([]);
+    setValidityMessages({});
     setDisabled(true);
 
     const [onSubmitted, onSubmitting = () => {}] = []
@@ -27,7 +36,9 @@ export const handleValidation = ({
         if (!form.checkValidity()) {
             const invalidElements = invalidElementsFromForm([...form.elements]);
             setHighest(getHighestElement(invalidElements));
-            return void setMessages(getValidationMessages(invalidElements));
+            return void setValidityMessages(
+                getValidationMessages(invalidElements),
+            );
         }
 
         await onSubmitted(event);
@@ -35,9 +46,15 @@ export const handleValidation = ({
         if (error instanceof ValidationError) {
             onInvalid(event);
             setHighest(
-                getHighestElement(invalidElementsFromAPI(form, error.message)),
+                getHighestElement(invalidElementsFromAPI(form, error.messages)),
             );
-            return void setMessages(error.message);
+            return void setValidityMessages(error.messages);
+        }
+
+        if (error instanceof GenericError) {
+            onInvalid(event);
+            setHighest(form);
+            return void setGenericMessages(error.messages);
         }
 
         // Re-throw the error as it's not one we're able to handle.
