@@ -48,7 +48,9 @@ export function Form({
                 {...props}
             >
                 <fieldset
-                    style={{ display: 'var(--formv-fieldset-display, contents)' }}
+                    style={{
+                        display: 'var(--formv-fieldset-display, contents)',
+                    }}
                     disabled={noDisable ? false : isDisabled}
                 >
                     {utils.isFunction(children) ? children(messages) : children}
@@ -109,27 +111,8 @@ export function Field({ messages, className, children }) {
             style={{ display: 'var(--formv-field-display, contents)' }}
             ref={node => node && setField(node)}
         >
-            {utils.isFunction(children) ? (
-                children(validityMessages)
-            ) : (
-                <>
-                    {children}
-
-                    {validityMessages.length > 0 && (
-                        <ul
-                            className={`formv-messages formv-messages-${
-                                validityMessages.length > 1
-                                    ? 'multiple'
-                                    : 'single'
-                            }`}
-                        >
-                            {validityMessages.map((message, index) => (
-                                <li key={`message_${index}`}>{message}</li>
-                            ))}
-                        </ul>
-                    )}
-                </>
-            )}
+            {utils.isFunction(children) ? children() : children}
+            <Messages values={validityMessages} />
         </div>
     );
 }
@@ -140,6 +123,24 @@ Field.propTypes = {
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
 };
 
-Form.defaultProps = { className: '' };
+Field.defaultProps = { messages: {}, className: '' };
 
-Field.defaultProps = { messages: {} };
+function Messages({ values }) {
+    return values.length === 0 ? null : (
+        <ul
+            className={`formv-messages formv-messages-${
+                values.length > 1 ? 'multiple' : 'single'
+            }`}
+        >
+            {values.map((message, index) => (
+                <li key={`message_${index}`}>{message}</li>
+            ))}
+        </ul>
+    );
+}
+
+Messages.propTypes = {
+    values: PropTypes.array.isRequired,
+};
+
+Messages.defaultProps = { values: [] };
