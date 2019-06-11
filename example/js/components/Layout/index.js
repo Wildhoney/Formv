@@ -26,13 +26,19 @@ export default function Layout() {
             <Form onSubmit={[handleSubmitting, handleSubmitted]}>
                 <e.Items>
                     {success && (
-                        <e.Message>
+                        <e.Message className="message">
                             You&apos;ve successfully submitted the form!
                         </e.Message>
                     )}
 
                     <e.Item>
-                        <Field>
+                        <Field
+                            messages={{
+                                valueMissing: 'Please enter your first name.',
+                                tooShort:
+                                    'Please ensure your first name is at least 5 characters.',
+                            }}
+                        >
                             <e.Label htmlFor="contactName">Name:</e.Label>
                             <e.Input
                                 type="text"
@@ -45,7 +51,14 @@ export default function Layout() {
                     </e.Item>
 
                     <e.Item>
-                        <Field>
+                        <Field
+                            messages={{
+                                valueMissing:
+                                    'Please enter your email address.',
+                                typeMismatch:
+                                    'Please enter a valid email address.',
+                            }}
+                        >
                             <e.Label htmlFor="emailAddress">Email:</e.Label>
                             <e.Input
                                 type="email"
