@@ -81,7 +81,7 @@ Form.defaultProps = {
     onInvalid: () => {},
 };
 
-export function Field({ messages, children }) {
+export function Field({ messages, className, children }) {
     const [field, setField] = useState(null);
     const context = useContext(Context);
     const input = utils.getEncapsulatedField(context.form, field);
@@ -108,7 +108,11 @@ export function Field({ messages, children }) {
     }, [validityMessages]);
 
     return (
-        <div style={styles} ref={node => node && setField(node)}>
+        <div
+            className={`formv-field ${className}`.trim()}
+            style={styles}
+            ref={node => node && setField(node)}
+        >
             {utils.isFunction(children) ? (
                 children(validityMessages)
             ) : (
@@ -136,6 +140,7 @@ export function Field({ messages, children }) {
 
 Field.propTypes = {
     messages: PropTypes.object,
+    className: PropTypes.string,
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
 };
 
