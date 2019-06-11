@@ -112,11 +112,7 @@ test('It should be able to handle purely back-end errors when failing;', async t
         t.is(t.context.spies.setGenericMessages.callCount, 2);
         t.is(t.context.spies.setDisabled.callCount, 2);
         t.is(t.context.spies.onInvalid.callCount, 1);
-        t.true(
-            t.context.spies.setGenericMessages.calledWith([
-                'Constraints not satisfied',
-            ]),
-        );
+        t.true(t.context.spies.setGenericMessages.calledWith(['Constraints not satisfied']));
     }
 });
 
@@ -133,10 +129,7 @@ test('It should be able to find the encapsulated field otherwise yield `null`;',
 });
 
 test('It should be able to extract the validation messages from the input fields;', t => {
-    const elements = [
-        { name: 'first', validationMessage: 'Adam' },
-        { name: 'second', validationMessage: 'Maria' },
-    ];
+    const elements = [{ name: 'first', validationMessage: 'Adam' }, { name: 'second', validationMessage: 'Maria' }];
     t.deepEqual(utils.getValidationMessages(elements), {
         first: 'Adam',
         second: 'Maria',
@@ -172,10 +165,7 @@ test('It should be able to find the elements which fail the validation tests fro
         emailAddress: 'required',
     };
 
-    t.deepEqual(utils.invalidElementsFromAPI(form, errors), [
-        firstName,
-        emailAddress,
-    ]);
+    t.deepEqual(utils.invalidElementsFromAPI(form, errors), [firstName, emailAddress]);
 });
 
 test('It should be able to figure out the element that is highest in the DOM;', t => {
@@ -200,26 +190,11 @@ test('It should be able to format the message with the passed custom message;', 
     input.name = 'first';
     input.required = true;
 
-    t.deepEqual(
-        utils.formatCustomMessages(input, { valueMissing: 'Where is it?' }, [
-            'required',
-        ]),
-        ['Where is it?'],
-    );
-    t.deepEqual(
-        utils.formatCustomMessages(
-            input,
-            { typeMismatch: 'Why does it not mtch?' },
-            ['required'],
-        ),
-        ['required'],
-    );
+    t.deepEqual(utils.formatCustomMessages(input, { valueMissing: 'Where is it?' }, ['required']), ['Where is it?']);
+    t.deepEqual(utils.formatCustomMessages(input, { typeMismatch: 'Why does it not mtch?' }, ['required']), [
+        'required',
+    ]);
 
     input.value = 'Hello Maria!';
-    t.deepEqual(
-        utils.formatCustomMessages(input, { valueMissing: 'Where is it?' }, [
-            'required',
-        ]),
-        ['required'],
-    );
+    t.deepEqual(utils.formatCustomMessages(input, { valueMissing: 'Where is it?' }, ['required']), ['required']);
 });

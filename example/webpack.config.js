@@ -1,11 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    entry: [
-        'core-js',
-        '@babel/polyfill',
-        path.resolve('./example/js/index.js'),
-    ],
+    entry: ['core-js', '@babel/polyfill', path.resolve('./example/js/index.js')],
     mode: 'development',
     output: {
         filename: 'build.js',

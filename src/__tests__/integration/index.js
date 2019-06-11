@@ -23,87 +23,54 @@ const getValidationMessage = (page, index) => {
     }, index);
 };
 
-test(
-    'It should be able to validate all of the fields;',
-    withPage,
-    async (t, page) => {
-        await page.goto(url);
-        await page.click('button');
-        t.is(
-            await getValidationMessage(page, 0),
-            'Please enter your first name.',
-        );
+test('It should be able to validate all of the fields;', withPage, async (t, page) => {
+    await page.goto(url);
+    await page.click('button');
+    t.is(await getValidationMessage(page, 0), 'Please enter your first name.');
 
-        await page.type('input[type="text"]', 'Adam');
-        await page.click('button');
-        t.is(
-            await getValidationMessage(page, 0),
-            'Please ensure your first name is at least 5 characters.',
-        );
-        t.is(
-            await getValidationMessage(page, 1),
-            'Please enter your email address.',
-        );
-    },
-);
+    await page.type('input[type="text"]', 'Adam');
+    await page.click('button');
+    t.is(await getValidationMessage(page, 0), 'Please ensure your first name is at least 5 characters.');
+    t.is(await getValidationMessage(page, 1), 'Please enter your email address.');
+});
 
-test(
-    'It should be able to validate only the email field;',
-    withPage,
-    async (t, page) => {
-        await page.goto(url);
-        await page.type('input[type="text"]', 'Hello Maria');
-        await page.click('button');
-        t.is(await getValidationMessage(page, 0), null);
-        t.is(
-            await getValidationMessage(page, 1),
-            'Please enter your email address.',
-        );
+test('It should be able to validate only the email field;', withPage, async (t, page) => {
+    await page.goto(url);
+    await page.type('input[type="text"]', 'Hello Maria');
+    await page.click('button');
+    t.is(await getValidationMessage(page, 0), null);
+    t.is(await getValidationMessage(page, 1), 'Please enter your email address.');
 
-        await page.type('input[type="email"]', 'Adam');
-        await page.click('button');
-        t.is(
-            await getValidationMessage(page, 1),
-            'Please enter a valid email address.',
-        );
-    },
-);
+    await page.type('input[type="email"]', 'Adam');
+    await page.click('button');
+    t.is(await getValidationMessage(page, 1), 'Please enter a valid email address.');
+});
 
-test(
-    'It should be able to submit the form when validation passes;',
-    withPage,
-    async (t, page) => {
-        await page.goto(url);
-        await page.type('input[type="text"]', 'Hello Maria');
-        await page.type('input[type="email"]', 'maria@example.org');
+test('It should be able to submit the form when validation passes;', withPage, async (t, page) => {
+    await page.goto(url);
+    await page.type('input[type="text"]', 'Hello Maria');
+    await page.type('input[type="email"]', 'maria@example.org');
 
-        page.on('dialog', dialog => dialog.dismiss());
-        await page.click('button');
-        await page.waitFor('main > div.message');
-        t.is(
-            await page.evaluate(
-                () => document.querySelector('main > div.message').innerHTML,
-            ),
-            "You've successfully submitted the form!",
-        );
-    },
-);
+    page.on('dialog', dialog => dialog.dismiss());
+    await page.click('button');
+    await page.waitFor('main > div.message');
+    t.is(
+        await page.evaluate(() => document.querySelector('main > div.message').innerHTML),
+        "You've successfully submitted the form!",
+    );
+});
 
-test(
-    'It should be able to handle API validation errors;',
-    withPage,
-    async (t, page) => {
-        await page.goto(url);
-        await page.type('input[type="text"]', 'Hello Maria');
-        await page.type('input[type="email"]', 'maria@example.org');
+test('It should be able to handle API validation errors;', withPage, async (t, page) => {
+    await page.goto(url);
+    await page.type('input[type="text"]', 'Hello Maria');
+    await page.type('input[type="email"]', 'maria@example.org');
 
-        page.on('dialog', dialog => dialog.accept());
-        await page.click('button');
-        await page.waitForSelector('ul li');
-        t.is(await getValidationMessage(page, 0), null);
-        t.is(
-            await getValidationMessage(page, 1),
-            'We were unable to validate the supplied e-mail address. Please try again later.',
-        );
-    },
-);
+    page.on('dialog', dialog => dialog.accept());
+    await page.click('button');
+    await page.waitForSelector('ul li');
+    t.is(await getValidationMessage(page, 0), null);
+    t.is(
+        await getValidationMessage(page, 1),
+        'We were unable to validate the supplied e-mail address. Please try again later.',
+    );
+});
