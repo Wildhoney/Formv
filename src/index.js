@@ -10,10 +10,6 @@ import * as utils from './utils';
 
 const Context = createContext();
 
-const styles = {
-    display: 'contents',
-};
-
 export { ValidationError } from './utils';
 
 export function Form({
@@ -52,7 +48,7 @@ export function Form({
                 {...props}
             >
                 <fieldset
-                    style={styles}
+                    style={{ display: 'var(--formv-fieldset-display, contents)' }}
                     disabled={noDisable ? false : isDisabled}
                 >
                     {utils.isFunction(children) ? children(messages) : children}
@@ -110,7 +106,7 @@ export function Field({ messages, className, children }) {
     return (
         <div
             className={`formv-field ${className}`.trim()}
-            style={styles}
+            style={{ display: 'var(--formv-field-display, contents)' }}
             ref={node => node && setField(node)}
         >
             {utils.isFunction(children) ? (
@@ -143,5 +139,7 @@ Field.propTypes = {
     className: PropTypes.string,
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
 };
+
+Form.defaultProps = { className: '' };
 
 Field.defaultProps = { messages: {} };
