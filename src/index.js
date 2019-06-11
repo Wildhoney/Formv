@@ -64,7 +64,7 @@ export function Form({
                     }}
                     disabled={noDisable ? false : isDisabled}
                 >
-                    <Messages className="generic" values={genericMessages} />
+                    <Messages className="generic" values={[].concat(genericMessages)} />
                     {utils.isFunction(children)
                         ? children(validityMessages)
                         : children}

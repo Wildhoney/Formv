@@ -1,16 +1,3 @@
-export class ValidationError extends Error {
-    constructor(messages) {
-        super();
-        this.messages = messages;
-    }
-}
-
-export class GenericError extends Error {
-    constructor(messages) {
-        super();
-        this.messages = messages;
-    }
-}
 
 export const handleValidation = ({
     form,
@@ -119,3 +106,14 @@ export const formatCustomMessages = (input, customMessages, messages) => {
 
     return messages.map(message => customMessages[key] || message);
 };
+
+class FormError extends Error {
+    constructor(messages) {
+        super();
+        this.messages = messages;
+    }
+}
+
+export class GenericError extends FormError {}
+
+export class ValidationError extends FormError {}
