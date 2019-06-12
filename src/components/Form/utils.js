@@ -75,15 +75,13 @@ export function handleValidation({ form, onSubmit, onInvalid, dispatch }) {
 }
 
 export function handleScroll(form, state, noScroll) {
-    return () => {
-        !noScroll &&
-            state.highestElement &&
-            state.highestElement === form.current &&
-            form.current.scrollIntoView &&
-            setTimeout(() =>
-                state.elements.form.scrollIntoView({ behavior: 'smooth' }),
-            );
-    };
+    !noScroll &&
+        state.highestElement &&
+        state.highestElement === form.current &&
+        form.current.scrollIntoView &&
+        setTimeout(() =>
+            state.elements.form.scrollIntoView({ behavior: 'smooth' }),
+        );
 }
 
 export function getInvalidFormElements(form) {

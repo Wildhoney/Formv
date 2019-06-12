@@ -19,7 +19,6 @@ const styles = {
 };
 
 export default function Form({
-    noDisable,
     noScroll,
     children,
     onInvalid,
@@ -40,7 +39,7 @@ export default function Form({
         [form, onInvalid, onSubmit],
     );
 
-    useEffect(utils.handleScroll(form, state ,noScroll), [
+    useEffect(() => utils.handleScroll(form, state, noScroll), [
         state.highestElement,
         state.messages.validity,
     ]);
@@ -57,7 +56,7 @@ export default function Form({
             >
                 <fieldset
                     style={styles}
-                    disabled={noDisable ? false : state.isDisabled}
+                    disabled={props.noDisable ? false : state.isDisabled}
                 >
                     <Messages
                         className="generic"
