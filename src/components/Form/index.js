@@ -20,6 +20,7 @@ const styles = {
 
 export default function Form({
     noScroll,
+    noDisable,
     children,
     onInvalid,
     onSubmit,
@@ -56,7 +57,7 @@ export default function Form({
             >
                 <fieldset
                     style={styles}
-                    disabled={props.noDisable ? false : state.isDisabled}
+                    disabled={noDisable ? false : state.isDisabled}
                 >
                     <Messages
                         className="generic"
