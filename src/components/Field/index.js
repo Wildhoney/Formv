@@ -7,8 +7,8 @@ import * as utils from './utils';
 export default function Field({ children, ...props }) {
     const context = useContext(Context);
     const [field, setField] = useState(null);
-    const input = utils.findInput(context.form.current, field);
-    const messages = utils.formatMessages(
+    const input = utils.findContainedInput(context.form, field);
+    const messages = utils.mapCustomMessages(
         input,
         props.messages,
         input && context.messages.validity[input.name]
@@ -16,13 +16,16 @@ export default function Field({ children, ...props }) {
             : [],
     );
 
-    useEffect(utils.handleScroll(input, messages, context, field), [messages]);
+    useEffect(
+        () => utils.handleInputInvalidation(input, messages, context, field),
+        [messages],
+    );
 
     return (
         <div
+            ref={node => node && setField(node)}
             className={`formv-field ${props.className}`.trim()}
             style={{ display: 'var(--formv-field-display, contents)' }}
-            ref={node => node && setField(node)}
         >
             {typeof children === 'function' ? children(messages) : children}
             <Messages className="validity" values={messages} />
