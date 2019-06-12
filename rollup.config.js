@@ -40,8 +40,14 @@ module.exports = {
                     'useContext',
                     'useEffect',
                 ],
-                'node_modules/react-is/index.js': ['isElement', 'isValidElementType', 'ForwardRef'],
-                'node_modules/styled-components/dist/styled-components.esm.js': ['createContext'],
+                'node_modules/react-is/index.js': [
+                    'isElement',
+                    'isValidElementType',
+                    'ForwardRef',
+                ],
+                'node_modules/styled-components/dist/styled-components.esm.js': [
+                    'createContext',
+                ],
             },
         }),
         terser(),

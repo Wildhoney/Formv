@@ -6,10 +6,13 @@ import * as e from './styles';
 export default function Layout() {
     const [success, setSuccess] = useState(false);
     const handleSubmitted = useCallback(async () => {
-        if (window.confirm('Pretend the API could not validate e-mail address?')) {
+        if (
+            window.confirm('Pretend the API could not validate e-mail address?')
+        ) {
             await delay(2500);
             throw new ValidationError({
-                emailAddress: 'We were unable to validate the supplied e-mail address. Please try again later.',
+                emailAddress:
+                    'We were unable to validate the supplied e-mail address. Please try again later.',
             });
         }
 
@@ -22,29 +25,47 @@ export default function Layout() {
         <e.Container>
             <Form onSubmit={[handleSubmitting, handleSubmitted]}>
                 <e.Items>
-                    {success && <e.Message className="message">You&apos;ve successfully submitted the form!</e.Message>}
+                    {success && (
+                        <e.Message className="message">
+                            You&apos;ve successfully submitted the form!
+                        </e.Message>
+                    )}
 
                     <e.Item>
                         <Field
                             messages={{
                                 valueMissing: 'Please enter your first name.',
-                                tooShort: 'Please ensure your first name is at least 5 characters.',
+                                tooShort:
+                                    'Please ensure your first name is at least 5 characters.',
                             }}
                         >
                             <e.Label htmlFor="contactName">Name:</e.Label>
-                            <e.Input type="text" id="contactName" name="contactName" required minLength={5} />
+                            <e.Input
+                                type="text"
+                                id="contactName"
+                                name="contactName"
+                                required
+                                minLength={5}
+                            />
                         </Field>
                     </e.Item>
 
                     <e.Item>
                         <Field
                             messages={{
-                                valueMissing: 'Please enter your email address.',
-                                typeMismatch: 'Please enter a valid email address.',
+                                valueMissing:
+                                    'Please enter your email address.',
+                                typeMismatch:
+                                    'Please enter a valid email address.',
                             }}
                         >
                             <e.Label htmlFor="emailAddress">Email:</e.Label>
-                            <e.Input type="email" id="emailAddress" name="emailAddress" required />
+                            <e.Input
+                                type="email"
+                                id="emailAddress"
+                                name="emailAddress"
+                                required
+                            />
                         </Field>
                     </e.Item>
 
