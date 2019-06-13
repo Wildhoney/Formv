@@ -1,7 +1,3 @@
-export function getClassNames(className) {
-    return ['formv', className].join(' ').trim();
-}
-
 class FormError extends Error {
     constructor(messages) {
         super();
@@ -13,7 +9,7 @@ export class GenericError extends FormError {}
 
 export class ValidationError extends FormError {}
 
-export function handleValidation({ form, onSubmit, onInvalid, dispatch }) {
+export function handleValidation({ form, dispatch, onSubmit, onInvalid }) {
     return async event => {
         event.preventDefault();
 
@@ -74,14 +70,15 @@ export function handleValidation({ form, onSubmit, onInvalid, dispatch }) {
     };
 }
 
-export function handleScroll(form, state, noScroll) {
+export function getClassNames(className) {
+    return ['formv', className].join(' ').trim();
+}
+
+export function handleScroll({ current: form }, state, noScroll) {
     !noScroll &&
         state.highestElement &&
-        state.highestElement === form.current &&
-        form.current.scrollIntoView &&
-        setTimeout(() =>
-            state.elements.form.scrollIntoView({ behavior: 'smooth' }),
-        );
+        state.highestElement === form &&
+        setTimeout(() => form.scrollIntoView({ behavior: 'smooth' }));
 }
 
 export function getInvalidFormElements(form) {
@@ -109,11 +106,11 @@ export function getValidationMessages(elements) {
 
 export function determineHighestElement(elements) {
     const [element] = elements.reduce(
-        ([currentName, currentValue], element) => {
+        ([currentElement, currentValue], element) => {
             const { top: value } = element.getBoundingClientRect();
             return value < currentValue && element.name
-                ? [element.name, value]
-                : [currentName, currentValue];
+                ? [element, value]
+                : [currentElement, currentValue];
         },
         [null, Infinity],
     );
