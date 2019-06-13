@@ -24,6 +24,7 @@ export function handleInputInvalidation(input, messages, context, field) {
         messages.length > 0 && input.classList.add('invalid');
         !context.noScroll &&
             context.highestElement === input &&
+            field.firstChild.scrollIntoView &&
             setTimeout(() =>
                 field.firstChild.scrollIntoView({ behavior: 'smooth' }),
             );
