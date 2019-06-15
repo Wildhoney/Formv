@@ -1,6 +1,13 @@
 import test from 'ava';
 import * as duck from '../duck';
 
+test.afterEach(t => {
+    const newState = duck.reducer(duck.initialState, {
+        type: 'reset',
+    });
+    t.deepEqual(newState, { ...duck.initialState, isDisabled: true });
+});
+
 test('It should be able to change the state to disabled;', t => {
     const newState = duck.reducer(duck.initialState, {
         type: 'disabled',
@@ -13,6 +20,7 @@ test('It should be able to change the state to disabled;', t => {
         payload: false,
     });
     t.deepEqual(newState_, { ...duck.initialState, isDisabled: false });
+    t.context.state = newState_;
 });
 
 test('It should be able to set the generic and validity messages with highest element;', t => {
@@ -50,5 +58,7 @@ test('It should be able to set the generic and validity messages with highest el
                 validity: { name: 'More constraints failed' },
             },
         });
+
+        t.context.state = newState_;
     }
 });

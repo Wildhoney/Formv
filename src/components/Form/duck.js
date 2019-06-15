@@ -21,6 +21,9 @@ export function reducer(state, action) {
 
         case 'disabled':
             return { ...state, isDisabled: action.payload };
+
+        case 'reset':
+            return { ...initialState, isDisabled: true };
     }
 
     return state;

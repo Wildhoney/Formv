@@ -30,8 +30,13 @@ test('It should be able to handle the form submission process;', async t => {
     handler({ preventDefault: preventDefaultSpy });
     await delay(1);
 
-    // These two functions should always be called.
+    // These functions should always be called.
     t.is(preventDefaultSpy.callCount, 1);
+    t.true(
+        actions.dispatch.calledWith({
+            type: 'reset',
+        }),
+    );
     t.true(
         actions.dispatch.calledWith({
             type: 'disabled',

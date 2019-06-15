@@ -12,7 +12,7 @@ export class ValidationError extends FormError {}
 export function handleFormValidation({ form, dispatch, onSubmit, onInvalid }) {
     return async event => {
         event.preventDefault();
-        dispatch({ type: 'disabled', payload: true });
+        dispatch({ type: 'reset' });
 
         // Invoke the developer's `onSubmit` handler if specified as an array of functions.
         const [onSubmitted, onSubmitting = () => {}] = []
