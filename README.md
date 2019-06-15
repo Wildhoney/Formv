@@ -16,7 +16,7 @@
 
 ## Getting Started
 
-[![Edit proud-shape-pe1yp](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/proud-shape-pe1yp?fontsize=14)
+[![Edit proud-shape-pe1yp](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/hungry-hofstadter-3c6uh)
 
 Formv utilises the native [form validation](https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Form_validation) which is built-in to all recent browsers &ndash; as such, all validation rules are set on the relevant form fields using `required`, `pattern`, `minLength`, etc...
 
