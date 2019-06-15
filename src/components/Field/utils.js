@@ -1,6 +1,9 @@
-export function findContainedInput({ current: form }, field) {
-    if (!form || !field) return null;
-    return [...form.elements].find(element => field.contains(element)) || null;
+export function findContainedInput(form, field) {
+    if (!form.current || !field) return null;
+    return (
+        [...form.current.elements].find(element => field.contains(element)) ||
+        null
+    );
 }
 
 export function mapCustomMessages(input, customMessages, messages = []) {

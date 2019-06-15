@@ -26,11 +26,11 @@ export default function Form({
     onSubmit,
     ...props
 }) {
-    const form = useRef();
+    const form = useRef('abc');
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const handleSubmit = useCallback(
-        utils.handleValidation({
+        utils.handleFormValidation({
             form,
             onInvalid,
             onSubmit,

@@ -12,7 +12,160 @@ test.beforeEach(t => {
     t.context.elements = { form, field, input };
 });
 
-test.todo('It should be able to handle the form submission process;');
+test('It should be able to handle the form submission process;', async t => {
+    const { form, input } = t.context.elements;
+    form.checkValidity = sinon.spy(form.checkValidity);
+
+    const preventDefaultSpy = sinon.spy();
+    const actions = {
+        dispatch: sinon.spy(),
+        onSubmit: sinon.spy(),
+        onInvalid: sinon.spy(),
+    };
+
+    const handler = utils.handleFormValidation({
+        form: { current: form },
+        ...actions,
+    });
+    handler({ preventDefault: preventDefaultSpy });
+    await delay(1);
+
+    // These two functions should always be called.
+    t.is(preventDefaultSpy.callCount, 1);
+    t.true(
+        actions.dispatch.calledWith({
+            type: 'reset',
+        }),
+    );
+    t.true(
+        actions.dispatch.calledWith({
+            type: 'disabled',
+            payload: false,
+        }),
+    );
+
+    // Form is valid in this instance.
+    t.is(form.checkValidity.callCount, 1);
+    t.is(actions.onSubmit.callCount, 1);
+
+    // Form invalid because of front-end validation.
+    input.name = 'example';
+    input.required = true;
+    handler({ preventDefault: preventDefaultSpy });
+    await delay(1);
+
+    t.is(actions.onSubmit.callCount, 1);
+    t.true(
+        actions.dispatch.calledWith({
+            type: 'messages/validity',
+            payload: {
+                highest: input,
+                messages: { example: 'Constraints not satisfied' },
+            },
+        }),
+    );
+
+    {
+        // Fails back-end validation because we're now throwing the ValidationError.
+        const validationErrorActions = {
+            ...actions,
+            onSubmit: sinon.spy(() => {
+                throw new utils.ValidationError({
+                    example: 'Please fill in this field.',
+                });
+            }),
+        };
+        const handler = utils.handleFormValidation({
+            form: { current: form },
+            ...validationErrorActions,
+        });
+        input.value = 'Hello Maria!';
+        handler({ preventDefault: preventDefaultSpy });
+        await delay(1);
+        t.is(actions.onSubmit.callCount, 1);
+        t.is(validationErrorActions.onInvalid.callCount, 1);
+        t.true(
+            actions.dispatch.calledWith({
+                type: 'messages/validity',
+                payload: {
+                    highest: input,
+                    messages: { example: 'Please fill in this field.' },
+                },
+            }),
+        );
+    }
+
+    {
+        // Back-end validation is now passing but a GenericError is now being thrown instead.
+        const genericErrorActions = {
+            ...actions,
+            onSubmit: sinon.spy(() => {
+                throw new utils.GenericError([
+                    'Something terribly bad happened.',
+                ]);
+            }),
+        };
+        const handler = utils.handleFormValidation({
+            form: { current: form },
+            ...genericErrorActions,
+        });
+        handler({ preventDefault: preventDefaultSpy });
+        await delay(1);
+        t.is(actions.onSubmit.callCount, 1);
+        t.is(genericErrorActions.onInvalid.callCount, 2);
+        t.true(
+            actions.dispatch.calledWith({
+                type: 'messages/generic',
+                payload: {
+                    highest: form,
+                    messages: ['Something terribly bad happened.'],
+                },
+            }),
+        );
+    }
+
+    {
+        // Any other errors from the `onSubmit` handler should be re-thrown.
+        const otherErrorActions = {
+            ...actions,
+            onSubmit: sinon.spy(() => {
+                throw new Error('What just happened?');
+            }),
+        };
+        const handler = utils.handleFormValidation({
+            form: { current: form },
+            ...otherErrorActions,
+        });
+
+        const error = await t.throwsAsync(() =>
+            handler({ preventDefault: preventDefaultSpy }),
+        );
+        t.is(error.message, 'What just happened?');
+    }
+});
+
+test('It should be able to provide an array of `onSubmit` functions for submission;', async t => {
+    const { form } = t.context.elements;
+    form.checkValidity = sinon.spy(form.checkValidity);
+
+    const preventDefaultSpy = sinon.spy();
+    const onSubmittingSpy = sinon.spy();
+    const onSubmittedSpy = sinon.spy();
+    const actions = {
+        dispatch: sinon.spy(),
+        onInvalid: sinon.spy(),
+    };
+    const handler = utils.handleFormValidation({
+        form: { current: form },
+        ...actions,
+        onSubmit: [onSubmittingSpy, onSubmittedSpy],
+    });
+
+    handler({ preventDefault: preventDefaultSpy });
+    t.is(onSubmittingSpy.callCount, 1);
+    await delay(1);
+    t.is(onSubmittedSpy.callCount, 1);
+});
 
 test('It should be able to construct the class names for the component;', t => {
     t.is(utils.getClassNames(), 'formv');

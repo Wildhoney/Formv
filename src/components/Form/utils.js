@@ -9,10 +9,9 @@ export class GenericError extends FormError {}
 
 export class ValidationError extends FormError {}
 
-export function handleValidation({ form, dispatch, onSubmit, onInvalid }) {
+export function handleFormValidation({ form, dispatch, onSubmit, onInvalid }) {
     return async event => {
         event.preventDefault();
-
         dispatch({ type: 'reset' });
 
         // Invoke the developer's `onSubmit` handler if specified as an array of functions.
@@ -56,7 +55,7 @@ export function handleValidation({ form, dispatch, onSubmit, onInvalid }) {
                 return void dispatch({
                     type: 'messages/generic',
                     payload: {
-                        highest: form,
+                        highest: form.current,
                         messages: error.messages,
                     },
                 });
