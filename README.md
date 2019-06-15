@@ -145,4 +145,4 @@ By default Formv disables the form when it's being submitted, which includes the
 
 You can also skip the front-end validation entirely on a button-by-button basis with the native `formNoValidate` attribute on your chosen button.
 
-> Note that if you need anything from state, Formv exports the `Context` which you can use in the `useState` hook or via the more traditional `Context.Consumer` approach.
+> Note that if you need anything from state, Formv exports the `Context` which you can use in the `useContext` hook or via the more traditional `Context.Consumer` approach.
