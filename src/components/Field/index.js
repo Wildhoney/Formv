@@ -4,7 +4,7 @@ import Messages from '../Messages';
 import { Context } from '../Form';
 import * as utils from './utils';
 
-export default function Field({ children, ...props }) {
+export default function Field({ position, children, ...props }) {
     const context = useContext(Context);
     const [field, setField] = useState(null);
     const input = utils.findContainedInput(context.form, field);
@@ -27,16 +27,22 @@ export default function Field({ children, ...props }) {
             className={`formv-field ${props.className}`.trim()}
             style={{ display: 'var(--formv-field-display, contents)' }}
         >
+            {position === 'before' && (
+                <Messages className="validity" values={messages} />
+            )}
             {typeof children === 'function' ? children(messages) : children}
-            <Messages className="validity" values={messages} />
+            {position === 'after' && (
+                <Messages className="validity" values={messages} />
+            )}
         </div>
     );
 }
 
 Field.propTypes = {
     messages: PropTypes.object,
+    position: PropTypes.oneOf(['before', 'after']),
     className: PropTypes.string,
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
 };
 
-Field.defaultProps = { messages: {}, className: '' };
+Field.defaultProps = { messages: {}, position: 'after', className: '' };
