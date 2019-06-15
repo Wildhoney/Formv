@@ -144,3 +144,5 @@ By default Formv applies the `Messages` component after your `children` in the `
 By default Formv disables the form when it's being submitted, which includes the buttons you attach to your form which can be styled with the `:disabled` pseudo-class &ndash; you can disable this by adding `noDisable` to the `Form`. Likewise with the scrolling to the highest invalid element &ndash; that functionality can be disabled by adding `noScroll` to `Form`.
 
 You can also skip the front-end validation entirely on a button-by-button basis with the native `formNoValidate` attribute on your chosen button.
+
+> Note that if you need anything from state, Formv exports the `Context` which you can use in the `useState` hook or via the more traditional `Context.Consumer` approach.
