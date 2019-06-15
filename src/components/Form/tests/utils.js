@@ -7,13 +7,15 @@ test.beforeEach(t => {
     const form = document.createElement('form');
     const field = document.createElement('div');
     const input = document.createElement('input');
+    const button = document.createElement('button');
     form.appendChild(field);
     field.appendChild(input);
-    t.context.elements = { form, field, input };
+    form.appendChild(button);
+    t.context.elements = { form, field, input, button };
 });
 
 test('It should be able to handle the form submission process;', async t => {
-    const { form, input } = t.context.elements;
+    const { form, input, button } = t.context.elements;
     form.checkValidity = sinon.spy(form.checkValidity);
 
     const preventDefaultSpy = sinon.spy();
@@ -65,6 +67,14 @@ test('It should be able to handle the form submission process;', async t => {
         }),
     );
 
+    // Explicitly bypassing the validation from the button.
+    button.setAttribute('formnovalidate', '');
+    handler({ preventDefault: preventDefaultSpy });
+    await delay(1);
+    t.is(form.checkValidity.callCount, 2);
+    t.is(actions.onSubmit.callCount, 2);
+    button.removeAttribute('formnovalidate');
+
     {
         // Fails back-end validation because we're now throwing the ValidationError.
         const validationErrorActions = {
@@ -82,7 +92,7 @@ test('It should be able to handle the form submission process;', async t => {
         input.value = 'Hello Maria!';
         handler({ preventDefault: preventDefaultSpy });
         await delay(1);
-        t.is(actions.onSubmit.callCount, 1);
+        t.is(actions.onSubmit.callCount, 2);
         t.is(validationErrorActions.onInvalid.callCount, 1);
         t.true(
             actions.dispatch.calledWith({
@@ -111,7 +121,7 @@ test('It should be able to handle the form submission process;', async t => {
         });
         handler({ preventDefault: preventDefaultSpy });
         await delay(1);
-        t.is(actions.onSubmit.callCount, 1);
+        t.is(actions.onSubmit.callCount, 2);
         t.is(genericErrorActions.onInvalid.callCount, 2);
         t.true(
             actions.dispatch.calledWith({
@@ -282,4 +292,36 @@ test('It should be able to extend the native Error class to create specific erro
     } catch (error) {
         t.deepEqual(error.messages, { name: 'Please fill in this field.' });
     }
+});
+
+test('It should be able to find the first submit button in the form;', t => {
+    const { form } = t.context.elements;
+
+    const resetButton = document.createElement('button');
+    resetButton.type = 'reset';
+    const submitButton = document.createElement('button');
+    submitButton.type = 'submit';
+    form.appendChild(resetButton);
+    form.appendChild(submitButton);
+
+    t.deepEqual(utils.findSubmitButton({ current: form }), submitButton);
+    t.is(
+        utils.findSubmitButton({ current: document.createElement('form') }),
+        null,
+    );
+});
+
+test('It should be able to determine when form is validatable;', t => {
+    const { form } = t.context.elements;
+
+    const submitButton = document.createElement('button');
+    form.appendChild(submitButton);
+    t.true(utils.isFormValidatable({ current: form }));
+
+    form.querySelector('button').setAttribute('formnovalidate', '');
+    t.false(utils.isFormValidatable({ current: form }));
+
+    submitButton.type = 'submit';
+    form.querySelector('button').removeAttribute('formnovalidate');
+    t.true(utils.isFormValidatable({ current: form }));
 });

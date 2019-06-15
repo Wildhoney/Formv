@@ -9,6 +9,24 @@ export class GenericError extends FormError {}
 
 export class ValidationError extends FormError {}
 
+export function findSubmitButton(form) {
+    return (
+        [...form.current.elements].find(element => {
+            const name = element.nodeName.toLowerCase();
+            const type = element.getAttribute('type');
+            const isInput = name === 'input' && type === 'submit';
+            const isButton =
+                !['reset', 'button'].includes(type) && name === 'button';
+            return isInput || isButton || false;
+        }) || null
+    );
+}
+
+export function isFormValidatable(form) {
+    const button = findSubmitButton(form);
+    return button ? !button.hasAttribute('formnovalidate') : true;
+}
+
 export function handleFormValidation({ form, dispatch, onSubmit, onInvalid }) {
     return async event => {
         event.preventDefault();
@@ -21,7 +39,7 @@ export function handleFormValidation({ form, dispatch, onSubmit, onInvalid }) {
         onSubmitting(event);
 
         try {
-            if (!form.current.checkValidity()) {
+            if (isFormValidatable(form) && !form.current.checkValidity()) {
                 const elements = getInvalidFormElements(form.current);
                 return void dispatch({
                     type: 'messages/validity',
