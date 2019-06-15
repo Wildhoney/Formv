@@ -1,4 +1,5 @@
 import React, {
+    Fragment,
     useCallback,
     useEffect,
     useRef,
@@ -77,7 +78,7 @@ Form.propTypes = {
     className: PropTypes.string,
     noDisable: PropTypes.bool,
     noScroll: PropTypes.bool,
-    children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+    children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
     onInvalid: PropTypes.func,
     onSubmit: PropTypes.oneOfType([
         PropTypes.func,
@@ -89,5 +90,6 @@ Form.defaultProps = {
     className: '',
     noDisable: false,
     noScroll: false,
+    children: <Fragment />,
     onInvalid: () => {},
 };
