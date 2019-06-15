@@ -309,6 +309,26 @@ test('It should be able to find the first submit button in the form;', t => {
         utils.findSubmitButton({ current: document.createElement('form') }),
         null,
     );
+
+    // Reset buttons irrespective of focus should not count.
+    resetButton.focus();
+    t.deepEqual(utils.findSubmitButton({ current: form }), submitButton);
+
+    // Nor should submit buttons not attached to the form.
+    const randomButton = document.createElement('submit');
+    randomButton.focus();
+    document.body.appendChild(randomButton);
+    t.deepEqual(utils.findSubmitButton({ current: form }), submitButton);
+
+    // Second button with focus should be considered the submit button.
+    const submitButtonAlternative = document.createElement('button');
+    submitButtonAlternative.type = 'submit';
+    form.appendChild(submitButtonAlternative);
+    submitButtonAlternative.focus();
+    t.deepEqual(
+        utils.findSubmitButton({ current: form }),
+        submitButtonAlternative,
+    );
 });
 
 test('It should be able to determine when form is validatable;', t => {
