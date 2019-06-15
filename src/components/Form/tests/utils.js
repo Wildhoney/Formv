@@ -34,11 +34,6 @@ test('It should be able to handle the form submission process;', async t => {
     t.is(preventDefaultSpy.callCount, 1);
     t.true(
         actions.dispatch.calledWith({
-            type: 'reset',
-        }),
-    );
-    t.true(
-        actions.dispatch.calledWith({
             type: 'disabled',
             payload: false,
         }),

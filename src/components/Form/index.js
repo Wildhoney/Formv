@@ -27,7 +27,7 @@ export default function Form({
     onSubmit,
     ...props
 }) {
-    const form = useRef('abc');
+    const form = useRef();
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const handleSubmit = useCallback(
