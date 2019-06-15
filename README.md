@@ -83,6 +83,8 @@ async function handleSubmit() {
 }
 ```
 
+Interestingly Formv also comes bundled with a `GenericError` class that allows you to display any non-validation messages gracefully at the top of your form &ndash; simply throw `GenericError` with a string of an array of strings, Formv will take care of the rendering, and you take care of the styling.
+
 ## Custom Validation Messages
 
 You'll find that validation messages differ between browsers, which means your native messages are inconsistent. With Formv you are able to pass a `messages` prop to the `Field` component which is a map of [the `ValidityState` object](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState). In our above example if we want to be more descriptive when the user forgets to enter their first name, we can do that with `messages` by supplying the `valueMissing` item &ndash; for the email field we'll also add the `typeMismatch` which indicates the email address is invalid.
@@ -115,6 +117,25 @@ export default function MyForm() {
 ```
 
 > Note that the custom validation messages are **only** applicable to front-end validation &ndash; when you feed API validation messages back into Formv the wording of the messages is the responsibility of the back-end. At the very least messages should be corrected using front-end find and replace if the back-end cannot be changed.
+
+## Applying Custom Styles
+
+Although Formv uses the [`display: contents`](https://caniuse.com/#feat=css-display-contents) on the `fieldset` and `Field` container to make styling easier, support is still lacking in pre-Chromium versions of Edge. Therefore to support those browsers you'll need to *normalise* the `fieldset` and `Field` container elements by using the following two CSS variables.
+
+```css
+--formv-field-display: block;
+--formv-fieldset-display: block;
+```
+
+You can then style consistently across all browsers regardless of `contents` support.
+
+By default Formv applies the `Messages` component after your `children` in the `Field` component &ndash; for cases where styling is easier if the `Messages` appears before, you can use the `position` prop on `Field` &ndash; it accepts two possible options: `before` and `after` (default).
+
+```jsx
+<Field position="before">
+    <input type="text" name="firstName" required />
+</Field>
+```
 
 ## Disabling Default Behaviours
 
