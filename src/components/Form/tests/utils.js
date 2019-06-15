@@ -172,9 +172,10 @@ test('It should be able to construct the class names for the component;', t => {
     t.is(utils.getClassNames('my-form'), 'formv my-form');
 });
 
-test('It should be able to handle scrolling to the form when it is the highest element;', async t => {
+test('It should be able to handle scrolling when there is a highest element;', async t => {
     const { form, input } = t.context.elements;
     form.scrollIntoView = sinon.spy();
+    input.scrollIntoView = sinon.spy();
 
     // Form reference has not yet been captured
     utils.handleScroll({ current: null }, { highestElement: form }, true);
@@ -186,15 +187,15 @@ test('It should be able to handle scrolling to the form when it is the highest e
     await delay(1);
     t.is(form.scrollIntoView.callCount, 0);
 
-    // Form is not the highest element.
-    utils.handleScroll({ current: form }, { highestElement: input }, false);
-    await delay(1);
-    t.is(form.scrollIntoView.callCount, 0);
-
     // Should now scroll to the element.
     utils.handleScroll({ current: form }, { highestElement: form }, false);
     await delay(1);
     t.is(form.scrollIntoView.callCount, 1);
+
+    // Should now scroll to the input.
+    utils.handleScroll({ current: input }, { highestElement: input }, false);
+    await delay(1);
+    t.is(input.scrollIntoView.callCount, 1);
 });
 
 test('It should be able to obtain a list of the invalid elements;', t => {

@@ -21,15 +21,9 @@ export function mapCustomMessages(input, customMessages, messages = []) {
     return messages.map(message => customMessages[key] || message);
 }
 
-export function handleInputInvalidation(input, messages, context, field) {
+export function applyInputClassNames(input, messages) {
     if (input) {
         input.classList.remove('invalid');
         messages.length > 0 && input.classList.add('invalid');
-        !context.noScroll &&
-            context.highestElement === input &&
-            field.firstChild.scrollIntoView &&
-            setTimeout(() =>
-                field.firstChild.scrollIntoView({ behavior: 'smooth' }),
-            );
     }
 }

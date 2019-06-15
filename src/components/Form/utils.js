@@ -76,7 +76,6 @@ export function getClassNames(className) {
 export function handleScroll({ current: form }, state, noScroll) {
     !noScroll &&
         state.highestElement &&
-        state.highestElement === form &&
         form.scrollIntoView &&
         setTimeout(() => form.scrollIntoView({ behavior: 'smooth' }));
 }

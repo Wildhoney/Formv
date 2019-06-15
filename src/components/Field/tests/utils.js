@@ -1,6 +1,4 @@
 import test from 'ava';
-import sinon from 'sinon';
-import delay from 'delay';
 import * as utils from '../utils';
 
 test.beforeEach(t => {
@@ -68,69 +66,11 @@ test(`It should be able to invalidate the input when it's considered invalid;`, 
 
     // Class name removed as no validation messages.
     input.classList.add('invalid');
-    utils.handleInputInvalidation(input, [], context, field);
+    utils.applyInputClassNames(input, [], context, field);
     t.false(input.classList.contains('invalid'));
 
     // Class name retained as contains invalidation messages.
     input.classList.add('invalid');
-    utils.handleInputInvalidation(input, messages, context, field);
+    utils.applyInputClassNames(input, messages, context, field);
     t.true(input.classList.contains('invalid'));
-});
-
-test('It should be able to scroll to the element if the element is the highest;', async t => {
-    const { input, field } = t.context.elements;
-    input.scrollIntoView = sinon.spy();
-    const messages = ['Please fill in the value.'];
-    const context = { noScroll: false, highestElement: null };
-
-    // Highest element is null and therefore not scrolled.
-    input.classList.add('invalid');
-    utils.handleInputInvalidation(input, messages, context, field);
-    await delay(1);
-    t.is(input.scrollIntoView.callCount, 0);
-
-    // Element is the highest of all the elements.
-    input.classList.add('invalid');
-    utils.handleInputInvalidation(
-        input,
-        messages,
-        { ...context, highestElement: input },
-        field,
-    );
-    await delay(1);
-    t.is(input.scrollIntoView.callCount, 1);
-
-    // Scrolling has been disabled.
-    input.classList.add('invalid');
-    utils.handleInputInvalidation(
-        input,
-        messages,
-        { ...context, highestElement: input, noScroll: true },
-        field,
-    );
-    await delay(1);
-    t.is(input.scrollIntoView.callCount, 1);
-
-    // Elements do not match so no scrolling takes place.
-    input.classList.add('invalid');
-    const secondInput = document.createElement('input');
-    utils.handleInputInvalidation(
-        input,
-        messages,
-        { ...context, highestElement: secondInput },
-        field,
-    );
-    await delay(1);
-    t.is(input.scrollIntoView.callCount, 1);
-
-    // Input not passed so nothing happens.
-    input.classList.add('invalid');
-    utils.handleInputInvalidation(
-        null,
-        messages,
-        { ...context, highestElement: input },
-        field,
-    );
-    await delay(1);
-    t.is(input.scrollIntoView.callCount, 1);
 });

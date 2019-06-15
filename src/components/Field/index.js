@@ -16,10 +16,7 @@ export default function Field({ position, children, ...props }) {
             : [],
     );
 
-    useEffect(
-        () => utils.handleInputInvalidation(input, messages, context, field),
-        [messages],
-    );
+    useEffect(() => utils.applyInputClassNames(input, messages), [messages]);
 
     return (
         <div
