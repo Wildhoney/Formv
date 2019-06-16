@@ -12,15 +12,17 @@ export class ValidationError extends FormError {}
 export function findSubmitButton(form) {
     return (
         [document.activeElement || null, ...form.current.elements].find(
-            element => {
+            (element, index) => {
                 if (!element) return false;
                 const name = element.nodeName.toLowerCase();
                 const type = element.getAttribute('type');
-                const isInForm = Boolean(
-                    [...form.current.elements].find(
-                        currentElement => currentElement === element,
-                    ),
-                );
+                const isInForm =
+                    index > 0 ||
+                    Boolean(
+                        [...form.current.elements].find(
+                            currentElement => currentElement === element,
+                        ),
+                    );
                 const isInput = name === 'input' && type === 'submit';
                 const isButton =
                     !['reset', 'button'].includes(type) && name === 'button';
