@@ -206,6 +206,12 @@ test('It should be able to handle scrolling when there is a highest element;', a
     utils.handleScroll({ current: input }, { highestElement: input }, false);
     await delay(1);
     t.is(input.scrollIntoView.callCount, 1);
+
+    // Should prioritise `scrollIntoViewIfNeeded` when available.
+    input.scrollIntoViewIfNeeded = sinon.spy();
+    utils.handleScroll({ current: input }, { highestElement: input }, false);
+    await delay(1);
+    t.is(input.scrollIntoViewIfNeeded.callCount, 1);
 });
 
 test('It should be able to obtain a list of the invalid elements;', t => {

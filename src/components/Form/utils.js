@@ -101,11 +101,15 @@ export function getClassNames(className) {
     return ['formv', className].join(' ').trim();
 }
 
-export function handleScroll({ current: form }, state, noScroll) {
+export function handleScroll({ current: element }, state, noScroll) {
     !noScroll &&
         state.highestElement &&
-        form.scrollIntoView &&
-        setTimeout(() => form.scrollIntoView({ behavior: 'smooth' }));
+        setTimeout(() => {
+            const options = { behavior: 'smooth' };
+            if (element.scrollIntoViewIfNeeded)
+                element.scrollIntoViewIfNeeded(options);
+            else if (element.scrollIntoView) element.scrollIntoView(options);
+        });
 }
 
 export function getInvalidFormElements(form) {
