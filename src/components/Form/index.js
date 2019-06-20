@@ -5,6 +5,7 @@ import React, {
     useRef,
     useReducer,
     createContext,
+    forwardRef,
 } from 'react';
 import PropTypes from 'prop-types';
 import Messages from '../Messages';
@@ -19,16 +20,23 @@ const styles = {
     display: 'var(--formv-fieldset-display, contents)',
 };
 
-export default function Form({
-    noScroll,
-    noDisable,
-    children,
-    onInvalid,
-    onSubmit,
-    ...props
-}) {
+const Form = forwardRef(function Form(
+    { noScroll, noDisable, children, onInvalid, onSubmit, ...props },
+    ref,
+) {
     const form = useRef();
     const [state, dispatch] = useReducer(reducer, initialState);
+
+    const handleRef = useCallback(
+        node => {
+            if (node) {
+                form.current = node;
+                ref && typeof ref === 'function' && ref(node);
+                ref && 'current' in ref && (ref.current = node);
+            }
+        },
+        [form.current],
+    );
 
     const handleSubmit = useCallback(
         utils.handleFormValidation({
@@ -49,7 +57,7 @@ export default function Form({
     return (
         <Context.Provider value={{ ...state, form, noScroll }}>
             <form
-                ref={form}
+                ref={handleRef}
                 noValidate
                 className={utils.getClassNames(props.className)}
                 onSubmit={handleSubmit}
@@ -72,7 +80,7 @@ export default function Form({
             </form>
         </Context.Provider>
     );
-}
+});
 
 Form.propTypes = {
     className: PropTypes.string,
@@ -93,3 +101,5 @@ Form.defaultProps = {
     children: <Fragment />,
     onInvalid: () => {},
 };
+
+export default Form;
