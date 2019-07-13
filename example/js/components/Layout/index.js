@@ -1,78 +1,88 @@
 import React, { useState, useCallback } from 'react';
-import { Form, Field, ValidationError } from 'formv';
 import delay from 'delay';
+import * as fv from 'formv';
+import Form from '../Form';
 import * as e from './styles';
 
+const formStateTypes = {
+    idle: Symbol('idle'),
+    submitting: Symbol('submitting'),
+    submitted: Symbol('submitted'),
+};
+
 export default function Layout() {
-    const [success, setSuccess] = useState(false);
+    const [formState, setFormState] = useState(formStateTypes.idle);
+    const [mockErrors, setMockErrors] = useState(false);
+
+    const handleSubmitting = useCallback(() =>
+        setFormState(formStateTypes.submitting),
+    );
+    const handleInvalid = useCallback(() => setFormState(formStateTypes.idle));
+
     const handleSubmitted = useCallback(async () => {
-        if (
-            window.confirm('Pretend the API could not validate e-mail address?')
-        ) {
-            await delay(2500);
-            throw new ValidationError({
-                emailAddress:
+        await delay(2500);
+
+        if (mockErrors) {
+            setFormState(formStateTypes.idle);
+            throw new fv.ValidationError({
+                email:
                     'We were unable to validate the supplied e-mail address. Please try again later.',
             });
         }
 
-        await delay(2500);
-        setSuccess(true);
-    }, []);
-    const handleSubmitting = useCallback(() => setSuccess(false), []);
+        setFormState(formStateTypes.submitted);
+    });
 
     return (
         <e.Container>
-            <Form onSubmit={[handleSubmitting, handleSubmitted]}>
-                <e.Items>
-                    {success && (
-                        <e.Message className="message">
-                            You&apos;ve successfully submitted the form!
-                        </e.Message>
-                    )}
+        <e.Image src="/images/logo.png" alt="Formv" />
 
-                    <e.Item>
-                        <Field
-                            messages={{
-                                valueMissing: 'Please enter your first name.',
-                                tooShort:
-                                    'Please ensure your first name is at least 5 characters.',
-                            }}
+            <e.Text>
+                Try and submit the form below to see how the validation is
+                handled by Formv using the browser&apos;s native validation
+                capabilities.
+            </e.Text>
+
+            <e.Information>
+                {!mockErrors && (
+                    <e.Text>
+                        You can even mock API errors by{' '}
+                        <e.Anchor
+                            className="enable"
+                            onClick={() => setMockErrors(true)}
                         >
-                            <e.Label htmlFor="contactName">Name:</e.Label>
-                            <e.Input
-                                type="text"
-                                id="contactName"
-                                name="contactName"
-                                required
-                                minLength={5}
-                            />
-                        </Field>
-                    </e.Item>
-
-                    <e.Item>
-                        <Field
-                            messages={{
-                                valueMissing:
-                                    'Please enter your email address.',
-                                typeMismatch:
-                                    'Please enter a valid email address.',
-                            }}
+                            enabling
+                        </e.Anchor>{' '}
+                        them which will feed validation errors back into the
+                        form when the form passes browser validation.
+                    </e.Text>
+                )}
+                {mockErrors && (
+                    <e.Text>
+                        You can enable a successful form submission by{' '}
+                        <e.Anchor
+                            className="disable"
+                            onClick={() => setMockErrors(false)}
                         >
-                            <e.Label htmlFor="emailAddress">Email:</e.Label>
-                            <e.Input
-                                type="email"
-                                id="emailAddress"
-                                name="emailAddress"
-                                required
-                            />
-                        </Field>
-                    </e.Item>
+                            disabling
+                        </e.Anchor>{' '}
+                        mock API errors which will cause the form to submit when
+                        it passes browser validation.
+                    </e.Text>
+                )}
+            </e.Information>
 
-                    <e.Button type="submit">Submit</e.Button>
-                </e.Items>
-            </Form>
-            <e.Global />
+            {formState === formStateTypes.submitted && (
+                <e.Success className="success">
+                    We have successfully pretended to send your message!
+                </e.Success>
+            )}
+
+            <Form
+                isSubmitting={formState === formStateTypes.submitting}
+                onSubmit={[handleSubmitting, handleSubmitted]}
+                onInvalid={handleInvalid}
+            />
         </e.Container>
     );
 }

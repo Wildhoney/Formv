@@ -1,99 +1,36 @@
-import styled, { createGlobalStyle } from 'styled-components';
-
-export const Global = createGlobalStyle`
-    body {
-        height: 100vh;
-        overflow: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-family: Lato, Arial, Helvetica, sans-serif;
-    }
-`;
+import styled from 'styled-components';
 
 export const Container = styled.div`
-    min-width: 600px;
-
-    ul.formv-messages {
-        padding: 0;
-        margin: 0;
-        list-style-type: square;
-        background-color: #dc5349;
-        color: darkred;
-        font-size: 12px;
-        color: white;
-        padding: 10px;
-
-        &.formv-messages-generic {
-            margin-bottom: 10px;
-        }
-
-        &.formv-messages-single {
-            list-style-type: none;
-        }
-
-        &.formv-messages-multiple {
-            list-style-type: square;
-            padding-left: 30px;
-        }
-    }
-`;
-
-export const Items = styled.main`
+    max-width: 700px;
+    padding: 20px;
     display: grid;
     grid-gap: 20px;
 `;
 
-export const Message = styled.div`
-    color: black;
-    background-color: #aaf0d1;
-    padding: 20px;
+export const Image = styled.img`
+    width: 100px;
 `;
 
-export const Label = styled.label`
-    font-size: 11px;
-    padding: 5px 0;
-    text-transform: uppercase;
-    color: rgba(0, 0, 0, 0.35);
+export const Text = styled.p`
+    font-size: 1em;
+    margin: 0;
 `;
 
-export const Input = styled.input`
-    font-size: 15px;
-    padding: 15px;
-    outline: none;
-    border: 0;
-    background-color: #f1ece9;
-
-    &.invalid {
-        box-shadow: inset 0 0 0 1px #dc5349;
-    }
-`;
-
-export const Button = styled.button`
-    border: 0;
-    background-color: #010203;
-    color: white;
-    outline: none;
-    font-size: 16px;
-    padding: 25px;
+export const Anchor = styled.a`
+    text-decoration: underline;
     cursor: pointer;
-    font-family: inherit;
-    font-weight: bold;
-    transition: background-color 0.25s;
-
-    &:disabled {
-        background-color: darkgray;
-
-        &::after {
-            content: 'ting...';
-        }
-    }
 `;
 
-export const Item = styled.div`
-    display: grid;
+export const Success = styled.p`
+    background-color: #e5f9e5;
+    padding: 20px;
+    color: #002800;
 `;
 
-export const Reference = styled.div`
-    display: none;
+export const Information = styled.div`
+    background: url('/images/information.svg') no-repeat 10px center;
+    background-size: 20px;
+    padding-left: 50px;
+    font-size: 0.75em;
+    color: #666;
 `;
