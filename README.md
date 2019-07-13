@@ -1,4 +1,4 @@
-# Formv
+<center><img src="example/images/logo.png" alt="Formv" width="150px" /></center>
 
 > React form validation using the validation native to all recent browsers. Also includes support for handling API validation messages.
 
@@ -15,8 +15,6 @@
 ---
 
 ## Getting Started
-
-<img src="example/images/logo.png" alt="Formv" width="150px" />
 
 Formv utilises the native [form validation](https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Form_validation) which is built-in to all recent browsers &ndash; as such, all validation rules are set on the relevant form fields using `required`, `pattern`, `minLength`, etc...
 
