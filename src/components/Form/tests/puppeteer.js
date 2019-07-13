@@ -17,7 +17,7 @@ const url = 'http://localhost:3000';
 
 const getValidationMessage = (page, index) => {
     return page.evaluate(index => {
-        const field = document.querySelectorAll('main > div');
+        const field = document.querySelectorAll('div.formv-field');
         const message = field[index].querySelector('.formv-messages > li');
         return message ? message.innerHTML : null;
     }, index);
@@ -37,12 +37,12 @@ test(
         await page.type('input[type="text"]', 'Adam');
         await page.click('button');
         t.is(
-            await getValidationMessage(page, 0),
-            'Please ensure your first name is at least 5 characters.',
-        );
-        t.is(
             await getValidationMessage(page, 1),
             'Please enter your email address.',
+        );
+        t.is(
+            await getValidationMessage(page, 2),
+            'Please ensure your message is at least 20 characters.',
         );
     },
 );
@@ -76,15 +76,18 @@ test(
         await page.goto(url);
         await page.type('input[type="text"]', 'Hello Maria');
         await page.type('input[type="email"]', 'maria@example.org');
+        await page.type(
+            'textarea',
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tellus nulla, sodales non nisl ut, finibus ornare nisi. Mauris varius, sapien vitae hendrerit rhoncus, neque risus aliquet justo, vitae dapibus est velit ut quam. Nunc sapien neque, tincidunt at congue quis, varius vel mauris.',
+        );
 
-        page.on('dialog', dialog => dialog.dismiss());
         await page.click('button');
-        await page.waitFor('main > div.message');
+        await page.waitFor('p.success');
         t.is(
             await page.evaluate(
-                () => document.querySelector('main > div.message').innerHTML,
+                () => document.querySelector('p.success').innerHTML,
             ),
-            "You've successfully submitted the form!",
+            'We have successfully pretended to send your message!',
         );
     },
 );
@@ -96,8 +99,13 @@ test(
         await page.goto(url);
         await page.type('input[type="text"]', 'Hello Maria');
         await page.type('input[type="email"]', 'maria@example.org');
+        await page.type(
+            'textarea',
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tellus nulla, sodales non nisl ut, finibus ornare nisi. Mauris varius, sapien vitae hendrerit rhoncus, neque risus aliquet justo, vitae dapibus est velit ut quam. Nunc sapien neque, tincidunt at congue quis, varius vel mauris.',
+        );
 
         page.on('dialog', dialog => dialog.accept());
+        await page.click('a.enable');
         await page.click('button');
         await page.waitForSelector('ul li');
         t.is(await getValidationMessage(page, 0), null);
