@@ -1,4 +1,4 @@
-<center><img src="example/images/logo.png" alt="Formv" width="150px" /></center>
+<img src="example/images/logo.png" alt="Formv" width="150px" />
 
 > React form validation using the validation native to all recent browsers. Also includes support for handling API validation messages.
 
@@ -28,21 +28,27 @@ To get started you need to append the form to the DOM. Formv's `Form` component 
 import { Form, Field } from 'formv';
 
 export default function MyForm() {
+
     return (
         <Form onSubmit={handleSubmit}>
 
             <Field>
-                <input type="text" name="firstName" required />
+                <input type="text" name="name" required />
             </Field>
 
             <Field>
-                <input type="email" name="emailAddress" required />
+                <input type="email" name="email" required />
             </Field>
 
-            <button type="submit">Send Enquiry</button>
+            <Field>
+                <textarea name="message" required minLength={20}></textarea>
+            </Field>
+
+            <button type="submit">Submit</button>
 
         </Form>
     );
+
 }
 ```
 
