@@ -41,7 +41,7 @@ export default function MyForm() {
             </Field>
 
             <Field>
-                <textarea name="message" required minLength={20}></textarea>
+                <textarea name="message" required minLength={20} />
             </Field>
 
             <button type="submit">Submit</button>
