@@ -65,7 +65,7 @@ The validation messages need to be flattened and should map to your field names 
 Continuing from the above example, we'll implement the `handleSubmit` function which handles the submitting of the data to the API.
 
 ```javascript
-import { ValidationError } from 'formv';
+import { ValidationError, GenericError } from 'formv';
 
 async function handleSubmit() {
 
@@ -86,6 +86,8 @@ async function handleSubmit() {
         }
 
         // Handle other error messages gracefully.
+        throw new GenericError (error.response.data);
+
     }
 
 }
