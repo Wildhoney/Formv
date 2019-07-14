@@ -86,7 +86,7 @@ async function handleSubmit() {
         }
 
         // Handle other error messages gracefully.
-        throw new GenericError (error.response.data);
+        throw new GenericError(error.response.data);
 
     }
 
