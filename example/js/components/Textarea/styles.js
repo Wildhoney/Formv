@@ -6,4 +6,5 @@ export const Textarea = styled.textarea`
     min-height: 150px;
     border: 1px solid lightgray;
     resize: none;
+    border-radius: 0;
 `;

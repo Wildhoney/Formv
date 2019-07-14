@@ -35,7 +35,7 @@ export default function Layout() {
 
     return (
         <e.Container>
-        <e.Image src="/images/logo.png" alt="Formv" />
+            <e.Image src="/images/logo.png" alt="Formv" />
 
             <e.Text>
                 Try and submit the form below to see how the validation is

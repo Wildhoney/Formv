@@ -10,7 +10,6 @@ export default function Form({ isSubmitting, ...props }) {
     return (
         <fv.Form {...props}>
             <e.Container>
-                
                 <Field
                     messages={{
                         valueMissing: 'Please enter your first name.',
