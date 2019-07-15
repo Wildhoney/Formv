@@ -37,7 +37,7 @@ export default function Form({ isSubmitting, ...props }) {
                 </Field>
 
                 <e.Button type="submit">
-                    {isSubmitting ? 'Submititng...' : 'Submit'}
+                    {isSubmitting ? 'Submitting...' : 'Submit'}
                 </e.Button>
             </e.Container>
         </fv.Form>
