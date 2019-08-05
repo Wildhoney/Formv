@@ -8,7 +8,7 @@ import Field from '../Field';
 import * as e from './styles';
 
 export default function Form({ isSubmitting, ...props }) {
-    const [state, { set: setField }] = useMap({
+    const [state, { set: setField, reset: resetFields }] = useMap({
         name: '',
         email: '',
         message: '',
@@ -67,9 +67,14 @@ export default function Form({ isSubmitting, ...props }) {
                     />
                 </Field>
 
-                <e.Button type="submit">
-                    {isSubmitting ? 'Submitting...' : 'Submit'}
-                </e.Button>
+                <e.Buttons>
+                    <e.Button type="reset" onClick={resetFields}>
+                        Reset
+                    </e.Button>
+                    <e.Button type="submit">
+                        {isSubmitting ? 'Submitting...' : 'Submit'}
+                    </e.Button>
+                </e.Buttons>
             </e.Container>
         </fv.Form>
     );
