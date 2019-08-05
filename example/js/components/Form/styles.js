@@ -6,6 +6,12 @@ export const Container = styled.div`
     grid-gap: 20px;
 `;
 
+export const Buttons = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-gap: 20px;
+`;
+
 export const Button = styled.button`
     padding: 10px;
     cursor: pointer;
@@ -15,5 +21,9 @@ export const Button = styled.button`
 
     &:disabled {
         cursor: not-allowed;
+    }
+
+    &[type='submit'] {
+        font-weight: bold;
     }
 `;

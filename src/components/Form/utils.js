@@ -40,7 +40,7 @@ export function isFormValidatable(form) {
 export function handleFormValidation({ form, dispatch, onSubmit, onInvalid }) {
     return async event => {
         event.preventDefault();
-        dispatch({ type: 'reset' });
+        dispatch({ type: 'reset', payload: true });
 
         // Invoke the developer's `onSubmit` handler if specified as an array of functions.
         const [onSubmitted, onSubmitting = () => {}] = []

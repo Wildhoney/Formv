@@ -4,8 +4,17 @@ import * as duck from '../duck';
 test.afterEach(t => {
     const newState = duck.reducer(duck.initialState, {
         type: 'reset',
+        payload: true,
     });
     t.deepEqual(newState, { ...duck.initialState, isDisabled: true });
+
+    {
+        const newState = duck.reducer(duck.initialState, {
+            type: 'reset',
+            payload: false,
+        });
+        t.deepEqual(newState, { ...duck.initialState, isDisabled: false });
+    }
 });
 
 test('It should be able to change the state to disabled;', t => {

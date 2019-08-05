@@ -37,6 +37,7 @@ test('It should be able to handle the form submission process;', async t => {
     t.true(
         actions.dispatch.calledWith({
             type: 'reset',
+            payload: true,
         }),
     );
     t.true(

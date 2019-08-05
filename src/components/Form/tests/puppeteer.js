@@ -28,14 +28,14 @@ test(
     withPage,
     async (t, page) => {
         await page.goto(url);
-        await page.click('button');
+        await page.click('button[type="submit"]');
         t.is(
             await getValidationMessage(page, 0),
             'Please enter your first name.',
         );
 
         await page.type('input[type="text"]', 'Adam');
-        await page.click('button');
+        await page.click('button[type="submit"]');
         t.is(
             await getValidationMessage(page, 1),
             'Please enter your email address.',
@@ -53,7 +53,7 @@ test(
     async (t, page) => {
         await page.goto(url);
         await page.type('input[type="text"]', 'Hello Maria');
-        await page.click('button');
+        await page.click('button[type="submit"]');
         t.is(await getValidationMessage(page, 0), null);
         t.is(
             await getValidationMessage(page, 1),
@@ -61,11 +61,30 @@ test(
         );
 
         await page.type('input[type="email"]', 'Adam');
-        await page.click('button');
+        await page.click('button[type="submit"]');
         t.is(
             await getValidationMessage(page, 1),
             'Please enter a valid email address.',
         );
+    },
+);
+
+test(
+    'It should be able to reset the validation messages upon reset;',
+    withPage,
+    async (t, page) => {
+        await page.goto(url);
+        await page.type('input[type="text"]', 'Hello Maria');
+        await page.click('button[type="submit"]');
+        t.is(await getValidationMessage(page, 0), null);
+        t.is(
+            await getValidationMessage(page, 1),
+            'Please enter your email address.',
+        );
+
+        await page.click('button[type="reset"]');
+        t.is(await getValidationMessage(page, 0), null);
+        t.is(await getValidationMessage(page, 1), null);
     },
 );
 
@@ -81,7 +100,7 @@ test(
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam tellus nulla, sodales non nisl ut, finibus ornare nisi. Mauris varius, sapien vitae hendrerit rhoncus, neque risus aliquet justo, vitae dapibus est velit ut quam. Nunc sapien neque, tincidunt at congue quis, varius vel mauris.',
         );
 
-        await page.click('button');
+        await page.click('button[type="submit"]');
         await page.waitFor('p.success');
         t.is(
             await page.evaluate(
@@ -106,7 +125,7 @@ test(
 
         page.on('dialog', dialog => dialog.accept());
         await page.click('a.enable');
-        await page.click('button');
+        await page.click('button[type="submit"]');
         await page.waitForSelector('ul li');
         t.is(await getValidationMessage(page, 0), null);
         t.is(

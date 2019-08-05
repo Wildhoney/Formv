@@ -49,6 +49,10 @@ const Form = forwardRef(function Form(
         [form, onInvalid, onSubmit],
     );
 
+    const handleReset = useCallback(() =>
+        dispatch({ type: 'reset', payload: false }),
+    );
+
     useEffect(() => utils.handleScroll(form, state, noScroll), [
         state.highestElement,
         state.messages.validity,
@@ -61,6 +65,7 @@ const Form = forwardRef(function Form(
                 noValidate
                 className={utils.getClassNames(props.className)}
                 onSubmit={handleSubmit}
+                onReset={handleReset}
                 onInvalid={onInvalid}
                 {...props}
             >

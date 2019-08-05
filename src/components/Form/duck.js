@@ -23,7 +23,7 @@ export function reducer(state, action) {
             return { ...state, isDisabled: action.payload };
 
         case 'reset':
-            return { ...initialState, isDisabled: true };
+            return { ...initialState, isDisabled: action.payload };
     }
 
     return state;

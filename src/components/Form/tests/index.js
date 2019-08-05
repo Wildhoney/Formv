@@ -19,7 +19,7 @@ test('It should be able to handle the displaying of generic error messages;', as
 
 test('It should be able to disable the entire form when submitting;', async t => {
     const onSubmit = () => {};
-    const wrapper = mount(<Form onSubmit={onSubmit}></Form>);
+    const wrapper = mount(<Form onSubmit={onSubmit} />);
     t.false(wrapper.find('fieldset').props().disabled);
     wrapper.find(Form).simulate('submit');
     t.true(wrapper.find('fieldset').props().disabled);
