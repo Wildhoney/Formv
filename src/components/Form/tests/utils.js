@@ -23,6 +23,7 @@ test('It should be able to handle the form submission process;', async t => {
         dispatch: sinon.spy(),
         onSubmit: sinon.spy(),
         onInvalid: sinon.spy(),
+        setHash: sinon.spy(),
     };
 
     const handler = utils.handleFormValidation({
@@ -34,6 +35,7 @@ test('It should be able to handle the form submission process;', async t => {
 
     // These functions should always be called.
     t.is(preventDefaultSpy.callCount, 1);
+    t.is(actions.setHash.callCount, 1);
     t.true(
         actions.dispatch.calledWith({
             type: 'reset',
@@ -57,6 +59,7 @@ test('It should be able to handle the form submission process;', async t => {
     handler({ preventDefault: preventDefaultSpy });
     await delay(1);
 
+    t.is(actions.setHash.callCount, 2);
     t.is(actions.onSubmit.callCount, 1);
     t.true(
         actions.dispatch.calledWith({
@@ -73,6 +76,7 @@ test('It should be able to handle the form submission process;', async t => {
     handler({ preventDefault: preventDefaultSpy });
     await delay(1);
     t.is(form.checkValidity.callCount, 2);
+    t.is(actions.setHash.callCount, 3);
     t.is(actions.onSubmit.callCount, 2);
     button.removeAttribute('formnovalidate');
 
@@ -93,6 +97,7 @@ test('It should be able to handle the form submission process;', async t => {
         input.value = 'Hello Maria!';
         handler({ preventDefault: preventDefaultSpy });
         await delay(1);
+        t.is(actions.setHash.callCount, 4);
         t.is(actions.onSubmit.callCount, 2);
         t.is(validationErrorActions.onInvalid.callCount, 1);
         t.true(
@@ -122,6 +127,7 @@ test('It should be able to handle the form submission process;', async t => {
         });
         handler({ preventDefault: preventDefaultSpy });
         await delay(1);
+        t.is(actions.setHash.callCount, 5);
         t.is(actions.onSubmit.callCount, 2);
         t.is(genericErrorActions.onInvalid.callCount, 2);
         t.true(
@@ -165,6 +171,7 @@ test('It should be able to provide an array of `onSubmit` functions for submissi
     const actions = {
         dispatch: sinon.spy(),
         onInvalid: sinon.spy(),
+        setHash: sinon.spy(),
     };
     const handler = utils.handleFormValidation({
         form: { current: form },
@@ -173,8 +180,10 @@ test('It should be able to provide an array of `onSubmit` functions for submissi
     });
 
     handler({ preventDefault: preventDefaultSpy });
+    t.is(actions.setHash.callCount, 0);
     t.is(onSubmittingSpy.callCount, 1);
     await delay(1);
+    t.is(actions.setHash.callCount, 1);
     t.is(onSubmittedSpy.callCount, 1);
 });
 

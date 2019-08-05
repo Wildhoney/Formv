@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import * as utils from './utils';
 
-export default function Messages({ values, className }) {
+function Messages({ values, hash, className }) {
     return values.length === 0 ? null : (
         <ul className={utils.getClassNames({ values, className })}>
             {values.map((message, index) => (
@@ -14,7 +14,13 @@ export default function Messages({ values, className }) {
 
 Messages.propTypes = {
     values: PropTypes.array.isRequired,
+    hash: PropTypes.string.isRequired,
     className: PropTypes.string,
 };
 
 Messages.defaultProps = { values: [], className: '' };
+
+export default memo(
+    Messages,
+    (prevProps, nextProps) => prevProps.hash === nextProps.hash,
+);

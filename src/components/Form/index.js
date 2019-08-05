@@ -3,11 +3,13 @@ import React, {
     useCallback,
     useEffect,
     useRef,
+    useState,
     useReducer,
     createContext,
     forwardRef,
 } from 'react';
 import PropTypes from 'prop-types';
+import id from 'nanoid';
 import Messages from '../Messages';
 import * as utils from './utils';
 import { reducer, initialState } from './duck';
@@ -25,6 +27,7 @@ const Form = forwardRef(function Form(
     ref,
 ) {
     const form = useRef();
+    const [hash, setHash] = useState(id());
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const handleRef = useCallback(
@@ -41,6 +44,7 @@ const Form = forwardRef(function Form(
     const handleSubmit = useCallback(
         utils.handleFormValidation({
             form,
+            setHash,
             onInvalid,
             onSubmit,
             ...state,
@@ -49,8 +53,8 @@ const Form = forwardRef(function Form(
         [form, onInvalid, onSubmit],
     );
 
-    const handleReset = useCallback(() =>
-        dispatch({ type: 'reset', payload: false }),
+    const handleReset = useCallback(
+        () => (dispatch({ type: 'reset', payload: false }), setHash(id())),
     );
 
     useEffect(() => utils.handleScroll(form, state, noScroll), [
@@ -59,7 +63,7 @@ const Form = forwardRef(function Form(
     ]);
 
     return (
-        <Context.Provider value={{ ...state, form, noScroll }}>
+        <Context.Provider value={{ ...state, form, hash, noScroll }}>
             <form
                 ref={handleRef}
                 noValidate
@@ -75,6 +79,7 @@ const Form = forwardRef(function Form(
                 >
                     <Messages
                         className="generic"
+                        hash={hash}
                         values={[].concat(state.messages.generic)}
                     />
 

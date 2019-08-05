@@ -25,11 +25,19 @@ export default function Field({ position, children, ...props }) {
             style={{ display: 'var(--formv-field-display, contents)' }}
         >
             {position === 'before' && (
-                <Messages className="validity" values={messages} />
+                <Messages
+                    className="validity"
+                    hash={context.hash}
+                    values={messages}
+                />
             )}
             {typeof children === 'function' ? children(messages) : children}
             {position === 'after' && (
-                <Messages className="validity" values={messages} />
+                <Messages
+                    className="validity"
+                    hash={context.hash}
+                    values={messages}
+                />
             )}
         </div>
     );

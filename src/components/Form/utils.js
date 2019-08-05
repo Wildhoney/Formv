@@ -1,3 +1,5 @@
+import id from 'nanoid';
+
 class FormError extends Error {
     constructor(messages) {
         super();
@@ -37,7 +39,13 @@ export function isFormValidatable(form) {
     return button ? !button.hasAttribute('formnovalidate') : true;
 }
 
-export function handleFormValidation({ form, dispatch, onSubmit, onInvalid }) {
+export function handleFormValidation({
+    form,
+    dispatch,
+    setHash,
+    onSubmit,
+    onInvalid,
+}) {
     return async event => {
         event.preventDefault();
         dispatch({ type: 'reset', payload: true });
@@ -92,6 +100,7 @@ export function handleFormValidation({ form, dispatch, onSubmit, onInvalid }) {
             // Re-throw the error as it's not one we're able to handle.
             throw error;
         } finally {
+            setHash(id());
             dispatch({ type: 'disabled', payload: false });
         }
     };
