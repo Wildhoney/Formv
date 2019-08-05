@@ -1,4 +1,5 @@
 import React from 'react';
+import { useMap } from 'react-use';
 import PropTypes from 'prop-types';
 import * as fv from 'formv';
 import Input from '../Input';
@@ -7,6 +8,12 @@ import Field from '../Field';
 import * as e from './styles';
 
 export default function Form({ isSubmitting, ...props }) {
+    const [state, { set: setField }] = useMap({
+        name: '',
+        email: '',
+        message: '',
+    });
+
     return (
         <fv.Form {...props}>
             <e.Container>
@@ -15,7 +22,15 @@ export default function Form({ isSubmitting, ...props }) {
                         valueMissing: 'Please enter your first name.',
                     }}
                 >
-                    <Input type="text" name="name" required />
+                    <Input
+                        value={state.name}
+                        type="text"
+                        name="name"
+                        required
+                        onChange={({ target }) =>
+                            setField('name', target.value)
+                        }
+                    />
                 </Field>
 
                 <Field
@@ -24,7 +39,15 @@ export default function Form({ isSubmitting, ...props }) {
                         typeMismatch: 'Please enter a valid email address.',
                     }}
                 >
-                    <Input type="email" name="email" required />
+                    <Input
+                        value={state.email}
+                        type="email"
+                        name="email"
+                        required
+                        onChange={({ target }) =>
+                            setField('email', target.value)
+                        }
+                    />
                 </Field>
 
                 <Field
@@ -33,7 +56,15 @@ export default function Form({ isSubmitting, ...props }) {
                             'Please ensure your message is at least 20 characters.',
                     }}
                 >
-                    <Textarea name="message" minLength={20} required />
+                    <Textarea
+                        value={state.message}
+                        name="message"
+                        minLength={20}
+                        required
+                        onChange={({ target }) =>
+                            setField('message', target.value)
+                        }
+                    />
                 </Field>
 
                 <e.Button type="submit">
