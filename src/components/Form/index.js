@@ -23,7 +23,7 @@ const styles = {
 };
 
 const Form = forwardRef(function Form(
-    { noScroll, noDisable, children, onInvalid, onSubmit, ...props },
+    { noScroll, noDisable, children, onInvalid, onSubmit, onReset, ...props },
     ref,
 ) {
     const form = useRef();
@@ -53,9 +53,11 @@ const Form = forwardRef(function Form(
         [form, onInvalid, onSubmit],
     );
 
-    const handleReset = useCallback(
-        () => (dispatch({ type: 'reset', payload: false }), setHash(id())),
-    );
+    const handleReset = useCallback(event => {
+        dispatch({ type: 'reset', payload: false });
+        setHash(id());
+        onReset(event);
+    });
 
     useEffect(() => utils.handleScroll(form, state, noScroll), [
         state.highestElement,
@@ -102,6 +104,7 @@ Form.propTypes = {
         PropTypes.func,
         PropTypes.arrayOf(PropTypes.func.isRequired),
     ]).isRequired,
+    onReset: PropTypes.func,
 };
 
 Form.defaultProps = {
@@ -110,6 +113,7 @@ Form.defaultProps = {
     noScroll: false,
     children: <Fragment />,
     onInvalid: () => {},
+    onReset: () => {},
 };
 
 export default Form;
