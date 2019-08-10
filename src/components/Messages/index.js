@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import * as utils from './utils';
 
-function Messages({ values, hash, className }) {
+function Messages({ values, className }) {
     return values.length === 0 ? null : (
         <ul className={utils.getClassNames({ values, className })}>
             {values.map((message, index) => (

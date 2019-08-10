@@ -7,10 +7,10 @@ import * as utils from '../utils';
 import Form from '../';
 
 test('It should be able to handle the displaying of generic error messages;', async t => {
-    const onSubmit = () => {
+    const onSubmitted = () => {
         throw new utils.GenericError('Something really bad occurred.');
     };
-    const wrapper = mount(<Form onSubmit={onSubmit}></Form>);
+    const wrapper = mount(<Form onSubmitted={onSubmitted}></Form>);
     wrapper.find(Form).simulate('submit');
     await delay(1);
     t.is(wrapper.find(Messages).length, 1);
@@ -18,8 +18,8 @@ test('It should be able to handle the displaying of generic error messages;', as
 });
 
 test('It should be able to disable the entire form when submitting;', async t => {
-    const onSubmit = () => {};
-    const wrapper = mount(<Form onSubmit={onSubmit} />);
+    const onSubmitted = () => {};
+    const wrapper = mount(<Form onSubmitted={onSubmitted} />);
     t.false(wrapper.find('fieldset').props().disabled);
     wrapper.find(Form).simulate('submit');
     t.true(wrapper.find('fieldset').props().disabled);

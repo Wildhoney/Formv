@@ -43,17 +43,13 @@ export function handleFormValidation({
     form,
     dispatch,
     setHash,
-    onSubmit,
+    onSubmitting,
+    onSubmitted,
     onInvalid,
 }) {
     return async event => {
         event.preventDefault();
         dispatch({ type: 'reset', payload: true });
-
-        // Invoke the developer's `onSubmit` handler if specified as an array of functions.
-        const [onSubmitted, onSubmitting = () => {}] = []
-            .concat(onSubmit)
-            .reverse();
         onSubmitting(event);
 
         try {
@@ -68,7 +64,7 @@ export function handleFormValidation({
                 });
             }
 
-            // Invoke the developer's `onSubmit` handler.
+            // Invoke the developer's `onSubmitted` handler.
             await onSubmitted(event);
         } catch (error) {
             if (error instanceof ValidationError) {

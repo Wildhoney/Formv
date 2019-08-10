@@ -21,7 +21,8 @@ test('It should be able to handle the form submission process;', async t => {
     const preventDefaultSpy = sinon.spy();
     const actions = {
         dispatch: sinon.spy(),
-        onSubmit: sinon.spy(),
+        onSubmitting: sinon.spy(),
+        onSubmitted: sinon.spy(),
         onInvalid: sinon.spy(),
         setHash: sinon.spy(),
     };
@@ -51,7 +52,7 @@ test('It should be able to handle the form submission process;', async t => {
 
     // Form is valid in this instance.
     t.is(form.checkValidity.callCount, 1);
-    t.is(actions.onSubmit.callCount, 1);
+    t.is(actions.onSubmitted.callCount, 1);
 
     // Form invalid because of front-end validation.
     input.name = 'example';
@@ -60,7 +61,7 @@ test('It should be able to handle the form submission process;', async t => {
     await delay(1);
 
     t.is(actions.setHash.callCount, 2);
-    t.is(actions.onSubmit.callCount, 1);
+    t.is(actions.onSubmitted.callCount, 1);
     t.true(
         actions.dispatch.calledWith({
             type: 'messages/validity',
@@ -77,14 +78,15 @@ test('It should be able to handle the form submission process;', async t => {
     await delay(1);
     t.is(form.checkValidity.callCount, 2);
     t.is(actions.setHash.callCount, 3);
-    t.is(actions.onSubmit.callCount, 2);
+    t.is(actions.onSubmitted.callCount, 2);
     button.removeAttribute('formnovalidate');
 
     {
         // Fails back-end validation because we're now throwing the ValidationError.
         const validationErrorActions = {
             ...actions,
-            onSubmit: sinon.spy(() => {
+            onSubmitting: () => {},
+            onSubmitted: sinon.spy(() => {
                 throw new utils.ValidationError({
                     example: 'Please fill in this field.',
                 });
@@ -98,7 +100,7 @@ test('It should be able to handle the form submission process;', async t => {
         handler({ preventDefault: preventDefaultSpy });
         await delay(1);
         t.is(actions.setHash.callCount, 4);
-        t.is(actions.onSubmit.callCount, 2);
+        t.is(actions.onSubmitted.callCount, 2);
         t.is(validationErrorActions.onInvalid.callCount, 1);
         t.true(
             actions.dispatch.calledWith({
@@ -115,7 +117,8 @@ test('It should be able to handle the form submission process;', async t => {
         // Back-end validation is now passing but a GenericError is now being thrown instead.
         const genericErrorActions = {
             ...actions,
-            onSubmit: sinon.spy(() => {
+            onSubmitting: () => {},
+            onSubmitted: sinon.spy(() => {
                 throw new utils.GenericError([
                     'Something terribly bad happened.',
                 ]);
@@ -128,7 +131,7 @@ test('It should be able to handle the form submission process;', async t => {
         handler({ preventDefault: preventDefaultSpy });
         await delay(1);
         t.is(actions.setHash.callCount, 5);
-        t.is(actions.onSubmit.callCount, 2);
+        t.is(actions.onSubmitted.callCount, 2);
         t.is(genericErrorActions.onInvalid.callCount, 2);
         t.true(
             actions.dispatch.calledWith({
@@ -142,10 +145,11 @@ test('It should be able to handle the form submission process;', async t => {
     }
 
     {
-        // Any other errors from the `onSubmit` handler should be re-thrown.
+        // Any other errors from the `onSubmitted` handler should be re-thrown.
         const otherErrorActions = {
             ...actions,
-            onSubmit: sinon.spy(() => {
+            onSubmitting: () => {},
+            onSubmitted: sinon.spy(() => {
                 throw new Error('What just happened?');
             }),
         };
@@ -161,7 +165,7 @@ test('It should be able to handle the form submission process;', async t => {
     }
 });
 
-test('It should be able to provide an array of `onSubmit` functions for submission;', async t => {
+test('It should be able to provide both `onSubmitting` and `onSubmitted` functions for submission;', async t => {
     const { form } = t.context.elements;
     form.checkValidity = sinon.spy(form.checkValidity);
 
@@ -176,7 +180,8 @@ test('It should be able to provide an array of `onSubmit` functions for submissi
     const handler = utils.handleFormValidation({
         form: { current: form },
         ...actions,
-        onSubmit: [onSubmittingSpy, onSubmittedSpy],
+        onSubmitting: onSubmittingSpy,
+        onSubmitted: onSubmittedSpy,
     });
 
     handler({ preventDefault: preventDefaultSpy });

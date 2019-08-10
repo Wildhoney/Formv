@@ -7,7 +7,7 @@ import Messages from '../../Messages';
 
 test('It should be able to handle the displaying of native validation messages;', t => {
     const wrapper = mount(
-        <Form onSubmit={() => {}}>
+        <Form onSubmitted={() => {}}>
             <Field>
                 <input type="text" name="example" required />
             </Field>
@@ -42,7 +42,7 @@ test('It should be able to handle the displaying of native validation messages;'
 
 test('It should be able to handle the displaying of custom validation messages;', t => {
     const wrapper = mount(
-        <Form onSubmit={() => {}}>
+        <Form onSubmitted={() => {}}>
             <Field messages={{ valueMissing: 'Please enter a bit of text.' }}>
                 <input type="text" name="example" required />
             </Field>

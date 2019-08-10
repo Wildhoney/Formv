@@ -80,7 +80,8 @@ export default function Layout() {
 
             <Form
                 isSubmitting={formState === formStateTypes.submitting}
-                onSubmit={[handleSubmitting, handleSubmitted]}
+                onSubmitting={handleSubmitting}
+                onSubmitted={handleSubmitted}
                 onInvalid={handleInvalid}
             />
         </e.Container>

@@ -23,7 +23,16 @@ const styles = {
 };
 
 const Form = forwardRef(function Form(
-    { noScroll, noDisable, children, onInvalid, onSubmit, onReset, ...props },
+    {
+        noScroll,
+        noDisable,
+        children,
+        onInvalid,
+        onSubmitting,
+        onSubmitted,
+        onReset,
+        ...props
+    },
     ref,
 ) {
     const form = useRef();
@@ -46,11 +55,12 @@ const Form = forwardRef(function Form(
             form,
             setHash,
             onInvalid,
-            onSubmit,
-            ...state,
+            onSubmitting,
+            onSubmitted,
             dispatch,
+            ...state,
         }),
-        [form, onInvalid, onSubmit],
+        [form, onInvalid, onSubmitting, onSubmitted],
     );
 
     const handleReset = useCallback(event => {
@@ -70,9 +80,9 @@ const Form = forwardRef(function Form(
                 ref={handleRef}
                 noValidate
                 className={utils.getClassNames(props.className)}
-                onSubmit={handleSubmit}
                 onReset={handleReset}
                 onInvalid={onInvalid}
+                onSubmit={handleSubmit}
                 {...props}
             >
                 <fieldset
@@ -100,11 +110,9 @@ Form.propTypes = {
     noScroll: PropTypes.bool,
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
     onInvalid: PropTypes.func,
-    onSubmit: PropTypes.oneOfType([
-        PropTypes.func,
-        PropTypes.arrayOf(PropTypes.func.isRequired),
-    ]).isRequired,
     onReset: PropTypes.func,
+    onSubmitting: PropTypes.func,
+    onSubmitted: PropTypes.func,
 };
 
 Form.defaultProps = {
@@ -114,6 +122,8 @@ Form.defaultProps = {
     children: <Fragment />,
     onInvalid: () => {},
     onReset: () => {},
+    onSubmitting: () => {},
+    onSubmitted: () => {},
 };
 
 export default Form;

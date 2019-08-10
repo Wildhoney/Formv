@@ -30,7 +30,7 @@ import { Form, Field } from 'formv';
 export default function MyForm() {
 
     return (
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmitted={handleSubmit}>
 
             <Field>
                 <input type="text" name="name" required />
@@ -53,8 +53,6 @@ export default function MyForm() {
 ```
 
 Voila! Using the above code you now have everything you need to validate your form. By clicking the `button` all validation rules will be checked, and if you've not filled in the `firstName` field, or the `emailAddress` field is either missing or an invalid e-mail address, you'll see validation messages appear next to the relevant field.
-
-> Note that you may also pass an array of functions (`[handleSubmitting, handleSubmitted]`) to `onSubmit` &ndash; the first would **always** be invoked upon every submission, and the second would be invoked only upon passing validation.
 
 ## Handling API Validation
 
@@ -104,7 +102,7 @@ import { Form, Field } from 'formv';
 
 export default function MyForm() {
     return (
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmitted={handleSubmit}>
 
             <Field messages={{ valueMissing: 'Please enter your first name.' }}>
                 <input type="text" name="firstName" required />
