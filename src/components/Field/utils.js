@@ -1,29 +1,21 @@
-export function findContainedInput(form, field) {
-    if (!form.current || !field) return null;
-    return (
-        [...form.current.elements].find(element => field.contains(element)) ||
-        null
-    );
+import { useCallback } from 'react';
+
+export function isBefore(x) {
+    return x === 'before';
 }
 
-export function mapCustomMessages(input, customMessages, messages = []) {
-    if (!input || input.validity.valid || messages.length === 0)
-        return messages;
-
-    const key = (() => {
-        for (var key in input.validity) {
-            if (key !== 'valid' && input.validity[key]) {
-                return key;
-            }
-        }
-    })();
-
-    return messages.map(message => customMessages[key] || message);
+export function isAfter(x) {
+    return x === 'after';
 }
 
-export function applyInputClassNames(input, messages) {
-    if (input) {
-        input.classList.remove('invalid');
-        messages.length > 0 && input.classList.add('invalid');
-    }
+export function handleField({ form, setField }) {
+    return useCallback(container => setField(locateField(form, container)), [
+        form,
+        setField,
+    ]);
+}
+
+export function locateField(form, field) {
+    if (!form || !field) return null;
+    return [...form.elements].find(element => field.contains(element)) || null;
 }

@@ -12,7 +12,7 @@ const formStateTypes = {
 
 export default function Layout() {
     const [formState, setFormState] = useState(formStateTypes.idle);
-    const [mockErrors, setMockErrors] = useState(false);
+    const [mockErrors, setMockErrors] = useState(true);
 
     const handleSubmitting = useCallback(() =>
         setFormState(formStateTypes.submitting),

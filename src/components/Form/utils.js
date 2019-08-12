@@ -1,155 +1,58 @@
-import id from 'nanoid';
+import { useCallback } from 'react';
+import * as errors from '../../helpers/errors';
 
-class FormError extends Error {
-    constructor(messages) {
-        super();
-        this.messages = messages;
-    }
-}
+export function handleSubmit({ form, actions, onSubmitting, onSubmitted }) {
+    return useCallback(
+        async event => {
+            event.preventDefault();
+            onSubmitting(event);
 
-export class GenericError extends FormError {}
+            // Clear all of the previous invalid messages.
+            actions.reset();
+            actions.isLoading(true);
 
-export class ValidationError extends FormError {}
+            try {
+                // Collate all of the invalid fields that failed validation.
+                !form.checkValidity() &&
+                    actions.setInvalid(collateInvalidFields(form));
 
-export function findSubmitButton(form) {
-    return (
-        [document.activeElement || null, ...form.current.elements].find(
-            (element, index) => {
-                if (!element) return false;
-                const name = element.nodeName.toLowerCase();
-                const type = element.getAttribute('type');
-                const isInForm =
-                    index > 0 ||
-                    Boolean(
-                        [...form.current.elements].find(
-                            currentElement => currentElement === element,
-                        ),
-                    );
-                const isInput = name === 'input' && type === 'submit';
-                const isButton =
-                    !['reset', 'button'].includes(type) && name === 'button';
-                return isInForm && (isInput || isButton || false);
-            },
-        ) || null
-    );
-}
-
-export function isFormValidatable(form) {
-    const button = findSubmitButton(form);
-    return button ? !button.hasAttribute('formnovalidate') : true;
-}
-
-export function handleFormValidation({
-    form,
-    dispatch,
-    setHash,
-    onSubmitting,
-    onSubmitted,
-    onInvalid,
-}) {
-    return async event => {
-        event.preventDefault();
-        dispatch({ type: 'reset', payload: true });
-        onSubmitting(event);
-
-        try {
-            if (isFormValidatable(form) && !form.current.checkValidity()) {
-                const elements = getInvalidFormElements(form.current);
-                return void dispatch({
-                    type: 'messages/validity',
-                    payload: {
-                        highest: determineHighestElement(elements),
-                        messages: getValidationMessages(elements),
-                    },
-                });
+                // When the form passes front-end validation, invoked the submitted
+                // handler and catch any thrown errors.
+                form.checkValidity() && (await onSubmitted(event));
+            } catch (error) {
+                
+                if (error instanceof errors.ValidationError) {
+                    // Feed the API validation errors back into the component.
+                    actions.setInvalid(
+                        collateInvalidFields(form, error.messages),
+                        );
+                        // actions.setValidityMessages(error.messages)
+                }
+                
+            } finally {
+                actions.isLoading(false);
             }
-
-            // Invoke the developer's `onSubmitted` handler.
-            await onSubmitted(event);
-        } catch (error) {
-            if (error instanceof ValidationError) {
-                onInvalid(event);
-                const elements = mapInvalidFormElements(
-                    form.current,
-                    error.messages,
-                );
-                return void dispatch({
-                    type: 'messages/validity',
-                    payload: {
-                        highest: determineHighestElement(elements),
-                        messages: error.messages,
-                    },
-                });
-            }
-
-            if (error instanceof GenericError) {
-                onInvalid(event);
-                return void dispatch({
-                    type: 'messages/generic',
-                    payload: {
-                        highest: form.current,
-                        messages: error.messages,
-                    },
-                });
-            }
-
-            // Re-throw the error as it's not one we're able to handle.
-            throw error;
-        } finally {
-            setHash(id());
-            dispatch({ type: 'disabled', payload: false });
-        }
-    };
-}
-
-export function getClassNames(className) {
-    return ['formv', className].join(' ').trim();
-}
-
-export function handleScroll({ current: element }, state, noScroll) {
-    !noScroll &&
-        state.highestElement &&
-        setTimeout(() => {
-            const options = { behavior: 'smooth' };
-            if (element.scrollIntoViewIfNeeded)
-                element.scrollIntoViewIfNeeded(options);
-            else if (element.scrollIntoView) element.scrollIntoView(options);
-        });
-}
-
-export function getInvalidFormElements(form) {
-    return [...form.elements].filter(
-        element => !element.validity.valid && element.name,
-    );
-}
-
-export function mapInvalidFormElements(form, messages) {
-    const invalidElements = Object.keys(messages);
-    return [...form.elements].filter(
-        element => element.name && invalidElements.includes(element.name),
-    );
-}
-
-export function getValidationMessages(elements) {
-    return elements.reduce(
-        (accum, element) => ({
-            ...accum,
-            [element.name]: element.validationMessage,
-        }),
-        {},
-    );
-}
-
-export function determineHighestElement(elements) {
-    const [element] = elements.reduce(
-        ([currentElement, currentValue], element) => {
-            const { top: value } = element.getBoundingClientRect();
-            return value < currentValue && element.name
-                ? [element, value]
-                : [currentElement, currentValue];
         },
-        [null, Infinity],
+        [form, onSubmitted, onSubmitting],
     );
+}
 
-    return element;
+export function handleReset({ onReset }) {
+    return useCallback(event => {
+        onReset(event);
+    });
+}
+
+export function handleInvalid({ onInvalid }) {
+    return useCallback(event => {
+        onInvalid(event);
+    });
+}
+
+function collateInvalidFields(form, messages = {}) {
+    const keys = Object.keys(messages);
+
+    return Array.from(form.elements).filter(element => {
+        return !element.validity.valid || keys.includes(element.name);
+    });
 }

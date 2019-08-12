@@ -2,10 +2,14 @@ import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import * as utils from './utils';
 
-function Messages({ values, className }) {
-    return values.length === 0 ? null : (
-        <ul className={utils.getClassNames({ values, className })}>
-            {values.map((message, index) => (
+function Messages({ field, ...props }) {
+    // Gather the validation messages from either the browser's
+    // defaults, or the custom messages if the developer has set them up.
+    const messages = utils.getMessages(field, props.messages);
+
+    return (
+        <ul>
+            {messages.map((message, index) => (
                 <li key={`message_${index}`}>{message}</li>
             ))}
         </ul>
@@ -13,14 +17,14 @@ function Messages({ values, className }) {
 }
 
 Messages.propTypes = {
-    values: PropTypes.array.isRequired,
-    hash: PropTypes.string.isRequired,
-    className: PropTypes.string,
+    id: PropTypes.string.isRequired,
+    field: PropTypes.instanceOf(global.HTMLElement).isRequired,
+    messages: PropTypes.object,
 };
 
-Messages.defaultProps = { values: [], className: '' };
+Messages.defaultProps = { messages: {} };
 
 export default memo(
     Messages,
-    (prevProps, nextProps) => prevProps.hash === nextProps.hash,
+    (prevProps, nextProps) => prevProps.id === nextProps.id,
 );
