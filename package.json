@@ -9,7 +9,8 @@
   "license": "MIT",
   "scripts": {
     "build": "rollup -c && webpack --config example/webpack.config.js",
-    "test": "eslint '**/**.js' && npm run build && concurrently -k -s first 'ava --verbose' 'npm run start'",
+    "lint": "eslint '**/**.js'",
+    "test": "yarn lint && yarn build && concurrently -k -s first 'ava --verbose' 'yarn start'",
     "spec": "yarn build && ava",
     "coverage": "nyc ava && nyc report --reporter=text-lcov | coveralls",
     "format": "NODE_ENV=production prettier --write '**/**.{js,html}'",

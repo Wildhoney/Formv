@@ -9,9 +9,9 @@ import * as e from './styles';
 
 export default function Form({ isSubmitting, ...props }) {
     const [state, { set: setField, reset: resetFields }] = useMap({
-        name: 'adam',
-        email: 'adam.timberlake@gmail.com',
-        message: 'test',
+        name: '',
+        email: '',
+        message: '',
     });
 
     return (

@@ -10,6 +10,7 @@ export default function Field({ position, messages, children, ...props }) {
 
     // Hold a reference to the contained field element.
     const [field, setField] = useState(null);
+    const name = field && field.name;
     const augmentedProps = { ...context, field, setField };
     const handleField = utils.handleField(augmentedProps);
 
@@ -26,7 +27,8 @@ export default function Field({ position, messages, children, ...props }) {
                 <Messages
                     id={context.store.id}
                     field={field}
-                    messages={messages}
+                    customMessages={messages}
+                    validityMessages={context.store.validityMessages[name]}
                 />
             )}
 
@@ -36,7 +38,8 @@ export default function Field({ position, messages, children, ...props }) {
                 <Messages
                     id={context.store.id}
                     field={field}
-                    messages={messages}
+                    customMessages={messages}
+                    validityMessages={context.store.validityMessages[name]}
                 />
             )}
         </div>

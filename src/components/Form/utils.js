@@ -20,15 +20,18 @@ export function handleSubmit({ form, actions, onSubmitting, onSubmitted }) {
                 // handler and catch any thrown errors.
                 form.checkValidity() && (await onSubmitted(event));
             } catch (error) {
-                
                 if (error instanceof errors.ValidationError) {
                     // Feed the API validation errors back into the component.
                     actions.setInvalid(
                         collateInvalidFields(form, error.messages),
-                        );
-                        // actions.setValidityMessages(error.messages)
+                    );
+                    actions.setValidityMessages(error.messages);
                 }
-                
+
+                if (error instanceof errors.GenericError) {
+                    // Feed any generic API error messages back into the component.
+                    actions.setGenericMessages(error.messages);
+                }
             } finally {
                 actions.isLoading(false);
             }

@@ -1,21 +1,10 @@
-import React, {
-    Fragment,
-    useCallback,
-    useEffect,
-    useRef,
-    useState,
-    useReducer,
-    createContext,
-    forwardRef,
-} from 'react';
+import React, { useState, useReducer, createContext } from 'react';
 import PropTypes from 'prop-types';
 import { reducer, initialState, unboundActions } from '../../helpers/store';
 import Messages from '../Messages';
 import * as utils from './utils';
 
 export const Context = createContext();
-
-// export { GenericError, ValidationError } from './utils';
 
 export default function Form({ children, ...props }) {
     // Hold a reference to the form element.
@@ -48,99 +37,19 @@ export default function Form({ children, ...props }) {
                     style={{ display: 'contents' }}
                     disabled={props.noDisable ? false : store.isLoading}
                 >
-                    {/* <Messages
-                        className="generic"
-                        hash={hash}
-                        values={[].concat(state.messages.generic)}
-                    /> */}
+                    {store.genericMessages.length > 0 && (
+                        <Messages
+                            id={store.id}
+                            genericMessages={store.genericMessages}
+                        />
+                    )}
+
                     {children}
                 </fieldset>
             </form>
         </Context.Provider>
     );
 }
-
-// const Form = forwardRef(function Form(
-//     {
-//         noScroll,
-//         noDisable,
-//         children,
-//         onInvalid,
-//         onSubmitting,
-//         onSubmitted,
-//         onReset,
-//         ...props
-//     },
-//     ref,
-// ) {
-//     const form = useRef();
-//     const [hash, setHash] = useState(id());
-//     const [state, dispatch] = useReducer(reducer, initialState);
-
-//     const handleRef = useCallback(
-//         node => {
-//             if (node) {
-//                 form.current = node;
-//                 ref && typeof ref === 'function' && ref(node);
-//                 ref && 'current' in ref && (ref.current = node);
-//             }
-//         },
-//         [form.current],
-//     );
-
-//     const handleSubmit = useCallback(
-//         utils.handleFormValidation({
-//             form,
-//             setHash,
-//             onInvalid,
-//             onSubmitting,
-//             onSubmitted,
-//             dispatch,
-//             ...state,
-//         }),
-//         [form, onInvalid, onSubmitting, onSubmitted],
-//     );
-
-//     const handleReset = useCallback(event => {
-//         dispatch({ type: 'reset', payload: false });
-//         setHash(id());
-//         onReset(event);
-//     });
-
-//     useEffect(() => utils.handleScroll(form, state, noScroll), [
-//         state.highestElement,
-//         state.messages.validity,
-//     ]);
-
-//     return (
-//         <Context.Provider value={{ ...state, form, hash, noScroll }}>
-//             <form
-//                 ref={handleRef}
-//                 noValidate
-//                 className={utils.getClassNames(props.className)}
-//                 onReset={handleReset}
-//                 onInvalid={onInvalid}
-//                 onSubmit={handleSubmit}
-//                 {...props}
-//             >
-//                 <fieldset
-//                     style={styles}
-//                     disabled={noDisable ? false : state.isDisabled}
-//                 >
-//                     <Messages
-//                         className="generic"
-//                         hash={hash}
-//                         values={[].concat(state.messages.generic)}
-//                     />
-
-//                     {typeof children === 'function'
-//                         ? children(state.messages.validity)
-//                         : children}
-//                 </fieldset>
-//             </form>
-//         </Context.Provider>
-//     );
-// });
 
 Form.propTypes = {
     className: PropTypes.string,
@@ -159,11 +68,9 @@ Form.defaultProps = {
     noDisable: false,
     noScroll: false,
     noValidate: true,
-    children: <Fragment />,
+    children: <></>,
     onInvalid: () => {},
     onReset: () => {},
     onSubmitting: () => {},
     onSubmitted: () => {},
 };
-
-// export default Form;
