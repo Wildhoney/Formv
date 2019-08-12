@@ -35,7 +35,7 @@
     "babel-loader": "^8.0.6",
     "browser-env": "^3.2.6",
     "concurrently": "^4.1.1",
-    "core-js": "^3.2.0",
+    "core-js": "^3.2.1",
     "coveralls": "^3.0.6",
     "delay": "^4.3.0",
     "enzyme": "^3.10.0",
