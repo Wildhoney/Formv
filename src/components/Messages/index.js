@@ -16,8 +16,6 @@ function Messages({
         ...genericMessages,
     ];
 
-    console.log(messages);
-
     return (
         <ul>
             {messages.filter(Boolean).map((message, index) => (

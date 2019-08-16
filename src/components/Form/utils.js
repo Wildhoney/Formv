@@ -40,8 +40,9 @@ export function handleSubmit({ form, actions, onSubmitting, onSubmitted }) {
     );
 }
 
-export function handleReset({ onReset }) {
+export function handleReset({ actions, onReset }) {
     return useCallback(event => {
+        actions.reset();
         onReset(event);
     });
 }

@@ -42,6 +42,7 @@ export function reducer(state, action) {
                 id: id(),
                 invalidFields: [],
                 validityMessages: [],
+                genericMessages: []
             };
 
         case actionTypes.isLoading:
@@ -57,6 +58,5 @@ export function reducer(state, action) {
             return { ...state, id: id(), genericMessages: action.payload };
     }
 
-    console.log('::', action);
     return state;
 }
