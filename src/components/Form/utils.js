@@ -1,7 +1,13 @@
 import { useCallback } from 'react';
 import * as errors from '../../helpers/errors';
 
-export function handleSubmit({ form, actions, onSubmitting, onSubmitted }) {
+export function handleSubmit({
+    form,
+    button,
+    actions,
+    onSubmitting,
+    onSubmitted,
+}) {
     return useCallback(
         async event => {
             event.preventDefault();
@@ -11,8 +17,13 @@ export function handleSubmit({ form, actions, onSubmitting, onSubmitted }) {
             actions.reset();
             actions.isLoading(true);
 
+            // Determine if the form requires validation based on the `formnovalidate` field.
+            const requiresValidation =
+                !button.current ||
+                !button.current.hasAttribute('formnovalidate');
+
             try {
-                if (!form.checkValidity()) {
+                if (requiresValidation && !form.checkValidity()) {
                     // Collate all of the invalid fields that failed validation.
                     const invalidFields = collateInvalidFields(form);
                     actions.setScrollField(getHighestElement(invalidFields));
@@ -46,6 +57,13 @@ export function handleSubmit({ form, actions, onSubmitting, onSubmitted }) {
             }
         },
         [form, onSubmitted, onSubmitting],
+    );
+}
+
+export function handleClick({ button }) {
+    return useCallback(
+        event =>
+            isSubmitButton(event.target) && (button.current = event.target),
     );
 }
 
@@ -83,4 +101,12 @@ function getHighestElement(invalidFields) {
     );
 
     return element;
+}
+
+function isSubmitButton(element) {
+    const name = element.nodeName.toLowerCase();
+    const type = element.getAttribute('type');
+
+    if (name === 'input' && type === 'submit') return true;
+    if ((name === 'button' && type === 'submit') || type === null) return true;
 }
