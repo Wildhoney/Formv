@@ -4,6 +4,14 @@ export const Container = styled.div`
     display: grid;
     grid-auto-flow: row;
     grid-gap: 20px;
+
+    ul.formv-messages-generic {
+        padding: 20px;
+        list-style-type: none;
+        background-color: #ffeded;
+        font-size: 1em;
+        color: #4c1616;
+    }
 `;
 
 export const Buttons = styled.div`

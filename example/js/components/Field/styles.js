@@ -5,7 +5,7 @@ export const Container = styled.div`
     grid-auto-flow: row;
     border: 1px solid lightgray;
 
-    ul {
+    ul.formv-messages-validity {
         margin: 0;
         padding: 10px 10px 10px 30px;
         list-style-type: square;

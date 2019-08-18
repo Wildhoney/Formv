@@ -12,7 +12,8 @@ const formStateTypes = {
 
 export default function Layout() {
     const [formState, setFormState] = useState(formStateTypes.idle);
-    const [mockErrors, setMockErrors] = useState(false);
+    const [mockGenericErrors, setMockGenericErrors] = useState(false);
+    const [mockValidationErrors, setMockValidationErrors] = useState(false);
 
     const handleSubmitting = useCallback(() =>
         setFormState(formStateTypes.submitting),
@@ -22,7 +23,14 @@ export default function Layout() {
     const handleSubmitted = useCallback(async () => {
         await delay(2500);
 
-        if (mockErrors) {
+        if (mockGenericErrors) {
+            setFormState(formStateTypes.idle);
+            throw new fv.GenericError(
+                'An unexpected occurred when pretending to send your message.',
+            );
+        }
+
+        if (!mockGenericErrors && mockValidationErrors) {
             setFormState(formStateTypes.idle);
             throw new fv.ValidationError({
                 email:
@@ -44,32 +52,42 @@ export default function Layout() {
             </e.Text>
 
             <e.Information>
-                {!mockErrors && (
-                    <e.Text>
-                        You can even mock API errors by{' '}
-                        <e.Anchor
-                            className="enable"
-                            onClick={() => setMockErrors(true)}
-                        >
-                            enabling
-                        </e.Anchor>{' '}
-                        them which will feed validation errors back into the
-                        form when the form passes browser validation.
-                    </e.Text>
-                )}
-                {mockErrors && (
-                    <e.Text>
-                        You can enable a successful form submission by{' '}
-                        <e.Anchor
-                            className="disable"
-                            onClick={() => setMockErrors(false)}
-                        >
-                            disabling
-                        </e.Anchor>{' '}
-                        mock API errors which will cause the form to submit when
-                        it passes browser validation.
-                    </e.Text>
-                )}
+                <e.Text>
+                    {!mockValidationErrors && (
+                        <>
+                            You can even mock API validation errors by{' '}
+                            <e.Anchor
+                                className="enable"
+                                onClick={() => setMockValidationErrors(true)}
+                            >
+                                enabling
+                            </e.Anchor>{' '}
+                            them which will feed validation errors back into the
+                            form when the form passes browser validation.
+                        </>
+                    )}
+                    {mockValidationErrors && (
+                        <>
+                            You can enable a successful form submission by{' '}
+                            <e.Anchor
+                                className="disable"
+                                onClick={() => setMockValidationErrors(false)}
+                            >
+                                disabling
+                            </e.Anchor>{' '}
+                            mock API errors which will cause the form to submit
+                            when it passes browser validation.
+                        </>
+                    )}{' '}
+                    Formv also supports handling generic messages which you can{' '}
+                    <e.Anchor
+                        className="enable"
+                        onClick={() => setMockGenericErrors(!mockGenericErrors)}
+                    >
+                        {mockGenericErrors ? 'disable' : 'enable'}
+                    </e.Anchor>
+                    .
+                </e.Text>
             </e.Information>
 
             {formState === formStateTypes.submitted && (

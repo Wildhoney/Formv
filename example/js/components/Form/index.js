@@ -15,8 +15,8 @@ export default function Form({ isSubmitting, ...props }) {
     });
 
     return (
-        <fv.Form {...props}>
-            <e.Container>
+        <e.Container>
+            <fv.Form {...props}>
                 <Field
                     messages={{
                         valueMissing: 'Please enter your first name.',
@@ -75,8 +75,8 @@ export default function Form({ isSubmitting, ...props }) {
                         {isSubmitting ? <>Submitting&hellip;</> : 'Submit'}
                     </e.Button>
                 </e.Buttons>
-            </e.Container>
-        </fv.Form>
+            </fv.Form>
+        </e.Container>
     );
 }
 
