@@ -7,7 +7,8 @@ import * as utils from './utils';
 export const Context = createContext();
 
 const styles = {
-    display: 'var(--formv-fieldset-display, contents)',
+    form: { display: 'var(--formv-form-display, contents)' },
+    fieldset: { display: 'var(--formv-fieldset-display, contents)' },
 };
 
 export default function Form({ children, ...props }) {
@@ -30,7 +31,7 @@ export default function Form({ children, ...props }) {
         <Context.Provider value={augmentedProps}>
             <form
                 ref={setForm}
-                style={{ display: 'contents' }}
+                style={styles.form}
                 className={`formv ${props.className}`.trim()}
                 noValidate={props.noValidate}
                 onReset={handleReset}
@@ -39,7 +40,7 @@ export default function Form({ children, ...props }) {
                 onSubmit={handleSubmit}
             >
                 <fieldset
-                    style={styles}
+                    style={styles.fieldset}
                     disabled={props.noDisable ? false : store.isLoading}
                 >
                     {store.genericMessages.length > 0 && (

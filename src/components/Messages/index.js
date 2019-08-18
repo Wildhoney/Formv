@@ -2,18 +2,12 @@ import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import * as utils from './utils';
 
-function Messages({
-    field,
-    customMessages,
-    validityMessages,
-    genericMessages,
-    ...props
-}) {
+function Messages({ field, genericMessages, ...props }) {
     // Gather the validation messages from either the browser's
     // defaults, or the custom messages if the developer has set them up.
     const messages = [
-        ...(field ? utils.getMessages(field, customMessages) : []),
-        ...[].concat(validityMessages),
+        ...(field ? utils.getMessages(field, props.customMessages) : []),
+        ...[].concat(props.validityMessages),
         ...genericMessages,
     ];
 
@@ -36,11 +30,11 @@ Messages.propTypes = {
     field: PropTypes.instanceOf(global.HTMLElement),
     className: PropTypes.string.isRequired,
     customMessages: PropTypes.object,
+    genericMessages: PropTypes.array,
     validityMessages: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.arrayOf(PropTypes.string),
     ]),
-    genericMessages: PropTypes.array,
 };
 
 Messages.defaultProps = {
