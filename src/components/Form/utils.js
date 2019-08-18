@@ -12,26 +12,35 @@ export function handleSubmit({ form, actions, onSubmitting, onSubmitted }) {
             actions.isLoading(true);
 
             try {
-                // Collate all of the invalid fields that failed validation.
-                !form.checkValidity() &&
-                    actions.setInvalid(collateInvalidFields(form));
+                if (!form.checkValidity()) {
+                    // Collate all of the invalid fields that failed validation.
+                    const invalidFields = collateInvalidFields(form);
+                    actions.setScrollField(getHighestElement(invalidFields));
+                    return void actions.setInvalid(invalidFields);
+                }
 
                 // When the form passes front-end validation, invoked the submitted
                 // handler and catch any thrown errors.
-                form.checkValidity() && (await onSubmitted(event));
+                await onSubmitted(event);
             } catch (error) {
                 if (error instanceof errors.ValidationError) {
                     // Feed the API validation errors back into the component.
-                    actions.setInvalid(
-                        collateInvalidFields(form, error.messages),
+                    const invalidFields = collateInvalidFields(
+                        form,
+                        error.messages,
                     );
-                    actions.setValidityMessages(error.messages);
+                    actions.setInvalid(invalidFields);
+                    actions.setScrollField(getHighestElement(invalidFields));
+                    return void actions.setValidityMessages(error.messages);
                 }
 
                 if (error instanceof errors.GenericError) {
                     // Feed any generic API error messages back into the component.
-                    actions.setGenericMessages(error.messages);
+                    return void actions.setGenericMessages(error.messages);
                 }
+
+                // Otherwise we'll re-throw any other exceptions.
+                throw error;
             } finally {
                 actions.isLoading(false);
             }
@@ -59,4 +68,19 @@ function collateInvalidFields(form, messages = {}) {
     return Array.from(form.elements).filter(element => {
         return !element.validity.valid || keys.includes(element.name);
     });
+}
+
+function getHighestElement(invalidFields) {
+    const [element] = invalidFields.reduce(
+        ([highestElement, elementPosition], element) => {
+            const { top: value } = element.getBoundingClientRect();
+
+            return value < elementPosition
+                ? [element, value]
+                : [highestElement, elementPosition];
+        },
+        [null, Infinity],
+    );
+
+    return element;
 }

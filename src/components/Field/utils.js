@@ -8,11 +8,22 @@ export function isAfter(x) {
     return x === 'after';
 }
 
-export function handleField({ form, setField }) {
-    return useCallback(container => setField(locateField(form, container)), [
-        form,
-        setField,
-    ]);
+export function handleField({ form, setContainer, setField }) {
+    return useCallback(
+        container => (
+            setContainer(container), setField(locateField(form, container))
+        ),
+        [form, setField],
+    );
+}
+
+export function handleScroll({ store, container }) {
+    if (!container || !store.scrollField) return;
+    container.contains(store.scrollField) &&
+        container.firstChild.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+        });
 }
 
 export function locateField(form, field) {

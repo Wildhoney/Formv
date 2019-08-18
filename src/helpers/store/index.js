@@ -6,6 +6,7 @@ export const initialState = {
     invalidFields: [],
     validityMessages: {},
     genericMessages: [],
+    scrollField: null,
 };
 
 const actionTypes = {
@@ -14,6 +15,7 @@ const actionTypes = {
     invalidFields: Symbol('formv/invalid-fields'),
     validityMessages: Symbol('formv/validity-messages'),
     genericMessages: Symbol('formv/generic-messages'),
+    scrollField: Symbol('formv/scroll-field'),
 };
 
 export const unboundActions = dispatch => ({
@@ -32,6 +34,8 @@ export const unboundActions = dispatch => ({
             type: actionTypes.genericMessages,
             payload: [].concat(payload),
         }),
+    setScrollField: payload =>
+        dispatch({ type: actionTypes.scrollField, payload }),
 });
 
 export function reducer(state, action) {
@@ -42,7 +46,8 @@ export function reducer(state, action) {
                 id: id(),
                 invalidFields: [],
                 validityMessages: [],
-                genericMessages: []
+                genericMessages: [],
+                scrollField: null,
             };
 
         case actionTypes.isLoading:
@@ -56,6 +61,9 @@ export function reducer(state, action) {
 
         case actionTypes.genericMessages:
             return { ...state, id: id(), genericMessages: action.payload };
+
+        case actionTypes.scrollField:
+            return { ...state, id: id(), scrollField: action.payload };
     }
 
     return state;

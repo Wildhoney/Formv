@@ -9,10 +9,20 @@ export default function Field({ position, messages, children, ...props }) {
     const context = useContext(Context);
 
     // Hold a reference to the contained field element.
+    const [container, setContainer] = useState(null);
     const [field, setField] = useState(null);
     const name = field && field.name;
-    const augmentedProps = { ...context, field, setField };
+    const augmentedProps = {
+        ...context,
+        container,
+        field,
+        setContainer,
+        setField,
+    };
     const handleField = utils.handleField(augmentedProps);
+
+    // Used to scroll to the first invalid element.
+    utils.handleScroll(augmentedProps);
 
     // Determine if the field is contained within the invalid forms determined
     // by the form component.

@@ -17,7 +17,7 @@ function Messages({
     ];
 
     return (
-        <ul>
+        <ul ref={utils.handleScroll(genericMessages)}>
             {messages.filter(Boolean).map((message, index) => (
                 <li key={`message_${index}`}>{message}</li>
             ))}

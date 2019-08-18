@@ -20,9 +20,6 @@ export default function Form({ children, ...props }) {
     const handleReset = utils.handleReset(augmentedProps);
     const handleInvalid = utils.handleInvalid(augmentedProps);
 
-    // Used to scroll to the first invalid element.
-    // utils.handleScroll();
-
     return (
         <Context.Provider value={augmentedProps}>
             <form

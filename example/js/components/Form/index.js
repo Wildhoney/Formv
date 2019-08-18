@@ -72,7 +72,7 @@ export default function Form({ isSubmitting, ...props }) {
                         Reset
                     </e.Button>
                     <e.Button type="submit">
-                        {isSubmitting ? 'Submitting...' : 'Submit'}
+                        {isSubmitting ? <>Submitting&hellip;</> : 'Submit'}
                     </e.Button>
                 </e.Buttons>
             </e.Container>

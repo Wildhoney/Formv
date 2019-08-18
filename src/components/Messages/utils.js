@@ -13,3 +13,14 @@ export function getMessages(field, customMessages) {
 
     return [].concat(messages);
 }
+
+export function handleScroll(genericMessages) {
+    return container => {
+        container &&
+            genericMessages.length > 0 &&
+            container.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+            });
+    };
+}
