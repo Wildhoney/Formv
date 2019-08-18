@@ -7,6 +7,7 @@ function Messages({
     customMessages,
     validityMessages,
     genericMessages,
+    ...props
 }) {
     // Gather the validation messages from either the browser's
     // defaults, or the custom messages if the developer has set them up.
@@ -17,7 +18,12 @@ function Messages({
     ];
 
     return (
-        <ul ref={utils.handleScroll(genericMessages)}>
+        <ul
+            ref={utils.handleScroll(genericMessages)}
+            className={`formv-messages formv-messages-${
+                messages.length > 1 ? 'multiple' : 'single'
+            } ${props.className}`.trim()}
+        >
             {messages.filter(Boolean).map((message, index) => (
                 <li key={`message_${index}`}>{message}</li>
             ))}
@@ -28,6 +34,7 @@ function Messages({
 Messages.propTypes = {
     id: PropTypes.string.isRequired,
     field: PropTypes.instanceOf(global.HTMLElement),
+    className: PropTypes.string.isRequired,
     customMessages: PropTypes.object,
     validityMessages: PropTypes.oneOfType([
         PropTypes.string,

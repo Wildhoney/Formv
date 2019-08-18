@@ -6,6 +6,10 @@ import * as utils from './utils';
 
 export const Context = createContext();
 
+const styles = {
+    display: 'var(--formv-fieldset-display, contents)',
+};
+
 export default function Form({ children, ...props }) {
     // Hold a reference to the form element and the clicked button.
     const button = useRef(null);
@@ -27,6 +31,7 @@ export default function Form({ children, ...props }) {
             <form
                 ref={setForm}
                 style={{ display: 'contents' }}
+                className={`formv ${props.className}`.trim()}
                 noValidate={props.noValidate}
                 onReset={handleReset}
                 onInvalid={handleInvalid}
@@ -34,12 +39,13 @@ export default function Form({ children, ...props }) {
                 onSubmit={handleSubmit}
             >
                 <fieldset
-                    style={{ display: 'contents' }}
+                    style={styles}
                     disabled={props.noDisable ? false : store.isLoading}
                 >
                     {store.genericMessages.length > 0 && (
                         <Messages
                             id={store.id}
+                            className="formv-messages-generic"
                             genericMessages={store.genericMessages}
                         />
                     )}

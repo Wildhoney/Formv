@@ -4,6 +4,8 @@ import Messages from '../Messages';
 import { Context } from '../Form';
 import * as utils from './utils';
 
+const styles = { display: 'var(--formv-field-display, contents)' };
+
 export default function Field({ position, messages, children, ...props }) {
     // Gather the context from the parent Form component.
     const context = useContext(Context);
@@ -32,10 +34,16 @@ export default function Field({ position, messages, children, ...props }) {
     field && field.classList[isInvalid ? 'add' : 'remove']('invalid');
 
     return (
-        <div ref={handleField} style={{ display: 'contents' }} {...props}>
+        <div
+            ref={handleField}
+            style={styles}
+            className={`formv-field ${props.className}`.trim()}
+            {...props}
+        >
             {isInvalid && utils.isBefore(position) && (
                 <Messages
                     id={context.store.id}
+                    className="formv-messages-validity"
                     field={field}
                     customMessages={messages}
                     validityMessages={context.store.validityMessages[name]}
@@ -47,6 +55,7 @@ export default function Field({ position, messages, children, ...props }) {
             {isInvalid && utils.isAfter(position) && (
                 <Messages
                     id={context.store.id}
+                    className="formv-messages-validity"
                     field={field}
                     customMessages={messages}
                     validityMessages={context.store.validityMessages[name]}
@@ -59,6 +68,7 @@ export default function Field({ position, messages, children, ...props }) {
 Field.propTypes = {
     messages: PropTypes.object,
     position: PropTypes.oneOf(['before', 'after']),
+    className: PropTypes.string,
     children: PropTypes.node.isRequired,
 };
 
