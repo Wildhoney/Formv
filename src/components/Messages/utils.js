@@ -14,9 +14,10 @@ export function getMessages(field, customMessages) {
     return [].concat(messages);
 }
 
-export function handleScroll(genericMessages) {
+export function handleScroll({ genericMessages, noScroll }) {
     return container => {
-        container &&
+        !noScroll &&
+            container &&
             genericMessages.length > 0 &&
             container.scrollIntoView({
                 behavior: 'smooth',

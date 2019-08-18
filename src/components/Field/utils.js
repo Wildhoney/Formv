@@ -17,9 +17,10 @@ export function handleField({ form, setContainer, setField }) {
     );
 }
 
-export function handleScroll({ store, container }) {
+export function handleScroll({ store, container, noScroll }) {
     if (!container || !store.scrollField) return;
     container.contains(store.scrollField) &&
+        !noScroll &&
         container.firstChild.scrollIntoView({
             behavior: 'smooth',
             block: 'start',

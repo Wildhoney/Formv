@@ -46,6 +46,7 @@ export default function Form({ children, ...props }) {
                     {store.genericMessages.length > 0 && (
                         <Messages
                             id={store.id}
+                            noScroll={props.noScroll}
                             className="formv-messages-generic"
                             genericMessages={store.genericMessages}
                         />
