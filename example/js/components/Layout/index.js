@@ -57,7 +57,7 @@ export default function Layout() {
                         <>
                             You can even mock API validation errors by{' '}
                             <e.Anchor
-                                className="enable"
+                                className="enable api"
                                 onClick={() => setMockValidationErrors(true)}
                             >
                                 enabling
@@ -70,7 +70,7 @@ export default function Layout() {
                         <>
                             You can enable a successful form submission by{' '}
                             <e.Anchor
-                                className="disable"
+                                className="disable api"
                                 onClick={() => setMockValidationErrors(false)}
                             >
                                 disabling
@@ -81,7 +81,7 @@ export default function Layout() {
                     )}{' '}
                     Formv also supports handling generic messages which you can{' '}
                     <e.Anchor
-                        className="enable"
+                        className="enable generic"
                         onClick={() => setMockGenericErrors(!mockGenericErrors)}
                     >
                         {mockGenericErrors ? 'disable' : 'enable'}

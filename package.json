@@ -10,7 +10,7 @@
   "scripts": {
     "build": "rollup -c && webpack --config example/webpack.config.js",
     "lint": "eslint '**/**.js'",
-    "test": "yarn lint && yarn build && concurrently -k -s first 'ava --verbose' 'yarn start'",
+    "test": "yarn lint && yarn build && ava --verbose",
     "spec": "yarn build && ava",
     "coverage": "nyc ava && nyc report --reporter=text-lcov | coveralls",
     "format": "NODE_ENV=production prettier --write '**/**.{js,html}'",
@@ -48,7 +48,9 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-standard": "^4.0.0",
+    "execa": "^2.0.4",
     "express": "^4.17.1",
+    "get-port": "^5.0.0",
     "nyc": "^14.1.1",
     "prettier": "^1.18.2",
     "prop-types": "^15.7.2",

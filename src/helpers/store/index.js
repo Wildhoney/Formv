@@ -42,12 +42,8 @@ export function reducer(state, action) {
     switch (action.type) {
         case actionTypes.reset:
             return {
-                ...state,
+                ...initialState,
                 id: id(),
-                invalidFields: [],
-                validityMessages: [],
-                genericMessages: [],
-                scrollField: null,
             };
 
         case actionTypes.isLoading:
