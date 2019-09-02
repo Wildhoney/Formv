@@ -32,3 +32,13 @@ export function withPage(debug = false) {
         }
     };
 }
+
+export function getHelpers(page) {
+    async function getValidationMessages() {
+        return page.$$eval('.formv-messages li', items => {
+            return Array.from(items).map(item => item.innerHTML);
+        });
+    }
+
+    return { getValidationMessages };
+}

@@ -1,5 +1,5 @@
 import test from 'ava';
-import { withPage } from '../helpers/puppeteer';
+import { withPage, getHelpers } from '../helpers/puppeteer';
 
 test(
     'It should be able to show the validation messages;',
@@ -86,13 +86,3 @@ test(
         t.snapshot(await helpers.getValidationMessages());
     },
 );
-
-function getHelpers(page) {
-    async function getValidationMessages() {
-        return page.$$eval('.formv-messages li', items => {
-            return Array.from(items).map(item => item.innerHTML);
-        });
-    }
-
-    return { getValidationMessages };
-}
