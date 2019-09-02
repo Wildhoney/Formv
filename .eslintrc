@@ -9,6 +9,7 @@
     "plugins": ["react"],
     "rules": {
         "no-sequences": "off",
+        "no-void": "off",
         "react/react-in-jsx-scope": "off",
         "react/display-name": "off"
     },
