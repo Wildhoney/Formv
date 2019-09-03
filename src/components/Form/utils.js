@@ -64,20 +64,22 @@ export function handleClick({ button }) {
     return useCallback(
         event =>
             isSubmitButton(event.target) && (button.current = event.target),
+        [button],
     );
 }
 
 export function handleReset({ actions, onReset }) {
-    return useCallback(event => {
-        actions.reset();
-        onReset(event);
-    });
+    return useCallback(
+        event => {
+            actions.reset();
+            onReset(event);
+        },
+        [onReset],
+    );
 }
 
 export function handleInvalid({ onInvalid }) {
-    return useCallback(event => {
-        onInvalid(event);
-    });
+    return onInvalid;
 }
 
 function collateInvalidFields(form, messages = {}) {
@@ -91,10 +93,10 @@ function collateInvalidFields(form, messages = {}) {
 function getHighestElement(invalidFields) {
     const [element] = invalidFields.reduce(
         ([highestElement, elementPosition], element) => {
-            const { top: value } = element.getBoundingClientRect();
+            const position = element.getBoundingClientRect();
 
-            return value < elementPosition
-                ? [element, value]
+            return position.top < elementPosition
+                ? [element, position.top]
                 : [highestElement, elementPosition];
         },
         [null, Infinity],
