@@ -20,22 +20,19 @@ const actionTypes = {
 
 export const unboundActions = dispatch => ({
     reset: () => dispatch({ type: actionTypes.reset }),
-    isLoading: loading =>
-        dispatch({ type: actionTypes.isLoading, payload: loading }),
+    isLoading: loading => dispatch({ type: actionTypes.isLoading, payload: loading }),
     setInvalid: payload =>
         dispatch({
             type: actionTypes.invalidFields,
             payload,
         }),
-    setValidityMessages: payload =>
-        dispatch({ type: actionTypes.validityMessages, payload }),
+    setValidityMessages: payload => dispatch({ type: actionTypes.validityMessages, payload }),
     setGenericMessages: payload =>
         dispatch({
             type: actionTypes.genericMessages,
             payload: [].concat(payload),
         }),
-    setScrollField: payload =>
-        dispatch({ type: actionTypes.scrollField, payload }),
+    setScrollField: payload => dispatch({ type: actionTypes.scrollField, payload }),
 });
 
 export function reducer(state, action) {

@@ -10,9 +10,7 @@ export function isAfter(x) {
 
 export function handleField({ form, setContainer, setField }) {
     return useCallback(
-        container => (
-            setContainer(container), setField(locateField(form, container))
-        ),
+        container => (setContainer(container), setField(locateField(form, container))),
         [form, setField],
     );
 }

@@ -15,9 +15,7 @@ export default function Layout() {
     const [mockGenericErrors, setMockGenericErrors] = useState(false);
     const [mockValidationErrors, setMockValidationErrors] = useState(false);
 
-    const handleSubmitting = useCallback(() =>
-        setFormState(formStateTypes.submitting),
-    );
+    const handleSubmitting = useCallback(() => setFormState(formStateTypes.submitting));
     const handleInvalid = useCallback(() => setFormState(formStateTypes.idle));
 
     const handleSubmitted = useCallback(async () => {
@@ -46,9 +44,8 @@ export default function Layout() {
             <e.Image src="/images/logo.png" alt="Formv" />
 
             <e.Text>
-                Try and submit the form below to see how the validation is
-                handled by Formv using the browser&apos;s native validation
-                capabilities.
+                Try and submit the form below to see how the validation is handled by Formv using
+                the browser&apos;s native validation capabilities.
             </e.Text>
 
             <e.Information>
@@ -62,8 +59,8 @@ export default function Layout() {
                             >
                                 enabling
                             </e.Anchor>{' '}
-                            them which will feed validation errors back into the
-                            form when the form passes browser validation.
+                            them which will feed validation errors back into the form when the form
+                            passes browser validation.
                         </>
                     )}
                     {mockValidationErrors && (
@@ -75,8 +72,8 @@ export default function Layout() {
                             >
                                 disabling
                             </e.Anchor>{' '}
-                            mock API errors which will cause the form to submit
-                            when it passes browser validation.
+                            mock API errors which will cause the form to submit when it passes
+                            browser validation.
                         </>
                     )}{' '}
                     Formv also supports handling generic messages which you can{' '}

@@ -32,10 +32,7 @@ Messages.propTypes = {
     className: PropTypes.string.isRequired,
     customMessages: PropTypes.object,
     genericMessages: PropTypes.array,
-    validityMessages: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.arrayOf(PropTypes.string),
-    ]),
+    validityMessages: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
 };
 
 Messages.defaultProps = {
@@ -45,7 +42,4 @@ Messages.defaultProps = {
     genericMessages: [],
 };
 
-export default memo(
-    Messages,
-    (prevProps, nextProps) => prevProps.id === nextProps.id,
-);
+export default memo(Messages, (prevProps, nextProps) => prevProps.id === nextProps.id);

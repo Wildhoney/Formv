@@ -1,13 +1,7 @@
 import { useCallback } from 'react';
 import * as errors from '../../helpers/errors';
 
-export function handleSubmit({
-    form,
-    button,
-    actions,
-    onSubmitting,
-    onSubmitted,
-}) {
+export function handleSubmit({ form, button, actions, onSubmitting, onSubmitted }) {
     return useCallback(
         async event => {
             event.preventDefault();
@@ -19,8 +13,7 @@ export function handleSubmit({
 
             // Determine if the form requires validation based on the `formnovalidate` field.
             const requiresValidation =
-                !button.current ||
-                !button.current.hasAttribute('formnovalidate');
+                !button.current || !button.current.hasAttribute('formnovalidate');
 
             try {
                 if (requiresValidation && !form.checkValidity()) {
@@ -36,10 +29,7 @@ export function handleSubmit({
             } catch (error) {
                 if (error instanceof errors.ValidationError) {
                     // Feed the API validation errors back into the component.
-                    const invalidFields = collateInvalidFields(
-                        form,
-                        error.messages,
-                    );
+                    const invalidFields = collateInvalidFields(form, error.messages);
                     actions.setInvalid(invalidFields);
                     actions.setScrollField(getHighestElement(invalidFields));
                     return void actions.setValidityMessages(error.messages);
@@ -61,11 +51,9 @@ export function handleSubmit({
 }
 
 export function handleClick({ button }) {
-    return useCallback(
-        event =>
-            isSubmitButton(event.target) && (button.current = event.target),
-        [button],
-    );
+    return useCallback(event => isSubmitButton(event.target) && (button.current = event.target), [
+        button,
+    ]);
 }
 
 export function handleReset({ actions, onReset }) {

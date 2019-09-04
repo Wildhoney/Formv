@@ -40,5 +40,15 @@ export function getHelpers(page) {
         });
     }
 
-    return { getValidationMessages };
+    async function includesClassName(selector, className) {
+        return page.evaluate(
+            ({ selector, className }) => {
+                const element = document.querySelector(selector);
+                return element.classList.contains(className);
+            },
+            { selector, className },
+        );
+    }
+
+    return { getValidationMessages, includesClassName };
 }

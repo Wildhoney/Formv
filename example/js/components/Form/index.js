@@ -27,9 +27,7 @@ export default function Form({ isSubmitting, ...props }) {
                         type="text"
                         name="name"
                         required
-                        onChange={({ target }) =>
-                            setField('name', target.value)
-                        }
+                        onChange={({ target }) => setField('name', target.value)}
                     />
                 </Field>
 
@@ -44,16 +42,13 @@ export default function Form({ isSubmitting, ...props }) {
                         type="email"
                         name="email"
                         required
-                        onChange={({ target }) =>
-                            setField('email', target.value)
-                        }
+                        onChange={({ target }) => setField('email', target.value)}
                     />
                 </Field>
 
                 <Field
                     messages={{
-                        valueMissing:
-                            'Please ensure your message is at least 20 characters.',
+                        valueMissing: 'Please ensure your message is at least 20 characters.',
                     }}
                 >
                     <Textarea
@@ -61,9 +56,7 @@ export default function Form({ isSubmitting, ...props }) {
                         name="message"
                         minLength={20}
                         required
-                        onChange={({ target }) =>
-                            setField('message', target.value)
-                        }
+                        onChange={({ target }) => setField('message', target.value)}
                     />
                 </Field>
 
