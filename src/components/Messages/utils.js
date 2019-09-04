@@ -2,13 +2,7 @@ export function getMessages(field, customMessages) {
     const messages = (() => {
         for (var key in field.validity) {
             const isInvalid = key !== 'valid' && field.validity[key];
-            // field.setCustomValidity('');
-
-            if (isInvalid) {
-                const message = customMessages[key] || field.validationMessage;
-                // field.setCustomValidity(message);
-                return message;
-            }
+            if (isInvalid) return customMessages[key] || field.validationMessage;
         }
     })();
 
@@ -20,9 +14,6 @@ export function handleScroll({ genericMessages, noScroll }) {
         !noScroll &&
             container &&
             genericMessages.length > 0 &&
-            container.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start',
-            });
+            setTimeout(() => container.scrollIntoView({ block: 'start' }));
     };
 }

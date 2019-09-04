@@ -18,6 +18,7 @@ export default function Field({ position, messages, children, ...props }) {
         ...context,
         container,
         field,
+        messages,
         setContainer,
         setField,
     };
@@ -25,6 +26,9 @@ export default function Field({ position, messages, children, ...props }) {
 
     // Used to scroll to the first invalid element.
     utils.handleScroll(augmentedProps);
+
+    // Reset custom validity upon render.
+    field && field.setCustomValidity('');
 
     // Determine if the field is contained within the invalid forms determined
     // by the form component.
