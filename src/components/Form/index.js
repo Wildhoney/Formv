@@ -67,6 +67,7 @@ Form.propTypes = {
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
     onInvalid: PropTypes.func,
     onReset: PropTypes.func,
+    onValidate: PropTypes.func,
     onSubmitting: PropTypes.func,
     onSubmitted: PropTypes.func,
 };
@@ -79,6 +80,7 @@ Form.defaultProps = {
     children: <></>,
     onInvalid: () => {},
     onReset: () => {},
+    onValidate: () => {},
     onSubmitting: () => {},
     onSubmitted: () => {},
 };

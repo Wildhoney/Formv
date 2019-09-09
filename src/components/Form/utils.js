@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import * as errors from '../../helpers/errors';
 
-export function handleSubmit({ form, button, actions, onSubmitting, onSubmitted }) {
+export function handleSubmit({ form, button, actions, onValidate, onSubmitting, onSubmitted }) {
     return useCallback(
         async event => {
             event.preventDefault();
@@ -17,6 +17,10 @@ export function handleSubmit({ form, button, actions, onSubmitting, onSubmitted 
 
             try {
                 if (requiresValidation && !form.checkValidity()) {
+                    // Invoke the `onValidate` function which can throw exceptions for validation
+                    // techniques that are too complex for the `pattern` attribute.
+                    onValidate();
+
                     // Collate all of the invalid fields that failed validation.
                     const invalidFields = collateInvalidFields(form);
                     actions.setScrollField(getHighestElement(invalidFields));
