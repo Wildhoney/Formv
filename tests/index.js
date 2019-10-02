@@ -96,6 +96,24 @@ test(
 );
 
 test(
+    'It should be able to show validation messages from the custom validator;',
+    withPage(),
+    async (t, page) => {
+        const helpers = getHelpers(page);
+
+        await page.type('input[name="name"]', 'Bot');
+        const submitButton = await page.waitFor('button[type="submit"]');
+        await submitButton.click();
+        t.snapshot(await helpers.getValidationMessages());
+        
+        await page.type('input[name="email"]', 'adam@example.org');
+        await page.type('textarea[name="message"]', 'blah '.repeat(20).trim());
+        await submitButton.click();
+        t.snapshot(await helpers.getValidationMessages());
+    },
+);
+
+test(
     'It should be adding the "invalid" class name to the invalid fields;',
     withPage(),
     async (t, page) => {
