@@ -37,7 +37,7 @@ export function handleSubmit({
                 // Both the custom validation and native validation have passed successfully.
                 await onSubmitted(event);
             } catch (error) {
-                // We always invoke the `onInvalid` callback even if the errors are not necessary
+                // We always invoke the `onInvalid` callback even if the errors are not necessarily
                 // applicable to Formv validation.
                 onInvalid(event);
 
@@ -116,4 +116,8 @@ function isSubmitButton(element) {
 
     if (name === 'input' && type === 'submit') return true;
     if ((name === 'button' && type === 'submit') || type === null) return true;
+}
+
+export function getStyles(isLegacy) {
+    return isLegacy ? {} : { display: 'contents' };
 }

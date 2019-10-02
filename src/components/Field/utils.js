@@ -1,6 +1,8 @@
 import { useCallback } from 'react';
 import { getMessages } from '../Messages/utils';
 
+export { getStyles } from '../Form/utils';
+
 export function isBefore(x) {
     return x === 'before';
 }

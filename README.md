@@ -128,13 +128,7 @@ export default function MyForm() {
 
 ## Applying Custom Styles
 
-Although Formv uses the [`display: contents`](https://caniuse.com/#feat=css-display-contents) on the `form`, `fieldset` and `Field` container to make styling easier, support is still lacking in pre-Chromium versions of Edge. Therefore to support those browsers you'll need to *normalise* the `form`, `fieldset` and `Field` container elements by using the following three CSS variables.
-
-```css
---formv-form-display: block;
---formv-field-display: block;
---formv-fieldset-display: block;
-```
+Although Formv uses the [`display: contents`](https://caniuse.com/#feat=css-display-contents) on the `form`, `fieldset` and `Field` container to make styling easier, support is still lacking in pre-Chromium versions of Edge. Therefore to support those browsers you'll need to *normalise* the `form`, `fieldset` and `Field` container elements by passing the `legacy` prop to the `Form` component.
 
 You can then style consistently across all browsers regardless of `contents` support.
 

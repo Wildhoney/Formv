@@ -4,8 +4,6 @@ import Messages from '../Messages';
 import { Context } from '../Form';
 import * as utils from './utils';
 
-const styles = { display: 'var(--formv-field-display, contents)' };
-
 export default function Field({ position, messages, children, ...props }) {
     // Gather the context from the parent Form component.
     const context = useContext(Context);
@@ -40,7 +38,7 @@ export default function Field({ position, messages, children, ...props }) {
     return (
         <div
             ref={handleField}
-            style={styles}
+            style={utils.getStyles(context.legacy)}
             className={`formv-field ${props.className}`.trim()}
             {...props}
         >

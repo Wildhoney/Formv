@@ -6,11 +6,6 @@ import * as utils from './utils';
 
 export const Context = createContext();
 
-const styles = {
-    form: { display: 'var(--formv-form-display, contents)' },
-    fieldset: { display: 'var(--formv-fieldset-display, contents)' },
-};
-
 export default function Form({ children, ...props }) {
     // Hold a reference to the form element and the clicked button.
     const button = useRef(null);
@@ -31,7 +26,7 @@ export default function Form({ children, ...props }) {
         <Context.Provider value={augmentedProps}>
             <form
                 ref={setForm}
-                style={styles.form}
+                style={utils.getStyles(props.legacy)}
                 className={`formv ${props.className}`.trim()}
                 noValidate={props.noValidate}
                 onReset={handleReset}
@@ -40,7 +35,7 @@ export default function Form({ children, ...props }) {
                 onSubmit={handleSubmit}
             >
                 <fieldset
-                    style={styles.fieldset}
+                    style={utils.getStyles(props.legacy)}
                     disabled={props.noDisable ? false : store.isLoading}
                 >
                     {store.genericMessages.length > 0 && (
@@ -61,6 +56,7 @@ export default function Form({ children, ...props }) {
 
 Form.propTypes = {
     className: PropTypes.string,
+    legacy: PropTypes.bool,
     noDisable: PropTypes.bool,
     noScroll: PropTypes.bool,
     noValidate: PropTypes.bool,
@@ -74,6 +70,7 @@ Form.propTypes = {
 
 Form.defaultProps = {
     className: '',
+    legacy: false,
     noDisable: false,
     noScroll: false,
     noValidate: true,
