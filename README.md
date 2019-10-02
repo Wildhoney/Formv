@@ -174,5 +174,5 @@ const handleValidation = useCallback(() => {
 
 }, []);
 
-<Form onValidation={handleValidation} />
+<Form onValidate={handleValidation} />
 ```
