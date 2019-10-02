@@ -28,35 +28,37 @@ export function handleSubmit({
                 // techniques that are too complex for the `pattern` attribute.
                 requiresValidation && onValidate();
 
-                if (requiresValidation && !form.checkValidity()) {
-                    // Collate all of the invalid fields that failed validation.
-                    const invalidFields = collateInvalidFields(form);
-                    actions.setScrollField(getHighestElement(invalidFields));
-                    return void actions.setInvalid(invalidFields);
-                }
+                // Check to see whether the validation passes the native validation, and if not
+                // throw an empty validation error to collect the error messages directly from
+                // each of the fields.
+                if (requiresValidation && !form.checkValidity())
+                    throw new errors.ValidationError({});
 
-                // When the form passes front-end validation, invoked the submitted
-                // handler and catch any thrown errors.
+                // Both the custom validation and native validation have passed successfully.
                 await onSubmitted(event);
             } catch (error) {
+                // We always invoke the `onInvalid` callback even if the errors are not necessary
+                // applicable to Formv validation.
+                onInvalid(event);
+
                 if (error instanceof errors.ValidationError) {
                     // Feed the API validation errors back into the component.
                     const invalidFields = collateInvalidFields(form, error.messages);
                     actions.setInvalid(invalidFields);
                     actions.setScrollField(getHighestElement(invalidFields));
-                    onInvalid(event);
                     return void actions.setValidityMessages(error.messages);
                 }
 
                 if (error instanceof errors.GenericError) {
                     // Feed any generic API error messages back into the component.
-                    onInvalid(event);
                     return void actions.setGenericMessages(error.messages);
                 }
 
                 // Otherwise we'll re-throw any other exceptions.
                 throw error;
             } finally {
+                // Modify the state to show that everything has completed, and we're in either a
+                // success or error state.
                 actions.isLoading(false);
             }
         },

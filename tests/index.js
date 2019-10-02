@@ -105,7 +105,7 @@ test(
         const submitButton = await page.waitFor('button[type="submit"]');
         await submitButton.click();
         t.snapshot(await helpers.getValidationMessages());
-        
+
         await page.type('input[name="email"]', 'adam@example.org');
         await page.type('textarea[name="message"]', 'blah '.repeat(20).trim());
         await submitButton.click();
