@@ -58,22 +58,26 @@ test.serial('It should be able to handle API validation messages;', withPage(), 
     t.snapshot(await helpers.getValidationMessages());
 });
 
-test.serial('It should be able to handle generic validation messages;', withPage(), async (t, page) => {
-    const helpers = getHelpers(page);
+test.serial(
+    'It should be able to handle generic validation messages;',
+    withPage(),
+    async (t, page) => {
+        const helpers = getHelpers(page);
 
-    const enableAnchor = await page.waitFor('a.enable.generic');
-    await enableAnchor.click();
+        const enableAnchor = await page.waitFor('a.enable.generic');
+        await enableAnchor.click();
 
-    await page.type('input[name="name"]', 'Adam');
-    await page.type('input[name="email"]', 'adam@example.org');
-    await page.type('textarea[name="message"]', 'blah '.repeat(20).trim());
+        await page.type('input[name="name"]', 'Adam');
+        await page.type('input[name="email"]', 'adam@example.org');
+        await page.type('textarea[name="message"]', 'blah '.repeat(20).trim());
 
-    const submitButton = await page.waitFor('button[type="submit"]');
-    await submitButton.click();
-    await page.waitFor(() => document.querySelectorAll('.formv-messages li').length > 0);
+        const submitButton = await page.waitFor('button[type="submit"]');
+        await submitButton.click();
+        await page.waitFor(() => document.querySelectorAll('.formv-messages li').length > 0);
 
-    t.snapshot(await helpers.getValidationMessages());
-});
+        t.snapshot(await helpers.getValidationMessages());
+    },
+);
 
 test.serial(
     'It should be able to bypass validation with `formNoValidate` attribute;',
