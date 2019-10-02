@@ -64,6 +64,7 @@ export function handleReset({ actions, onReset }) {
     return useCallback(
         event => {
             actions.reset();
+            event.preventDefault();
             onReset(event);
         },
         [onReset],
