@@ -1,7 +1,15 @@
 import { useCallback } from 'react';
 import * as errors from '../../helpers/errors';
 
-export function handleSubmit({ form, button, actions, onValidate, onSubmitting, onSubmitted }) {
+export function handleSubmit({
+    form,
+    button,
+    actions,
+    onValidate,
+    onInvalid,
+    onSubmitting,
+    onSubmitted,
+}) {
     return useCallback(
         async event => {
             event.preventDefault();
@@ -16,11 +24,11 @@ export function handleSubmit({ form, button, actions, onValidate, onSubmitting, 
                 !button.current || !button.current.hasAttribute('formnovalidate');
 
             try {
-                if (requiresValidation && !form.checkValidity()) {
-                    // Invoke the `onValidate` function which can throw exceptions for validation
-                    // techniques that are too complex for the `pattern` attribute.
-                    onValidate();
+                // Invoke the `onValidate` function which can throw exceptions for validation
+                // techniques that are too complex for the `pattern` attribute.
+                onValidate();
 
+                if (requiresValidation && !form.checkValidity()) {
                     // Collate all of the invalid fields that failed validation.
                     const invalidFields = collateInvalidFields(form);
                     actions.setScrollField(getHighestElement(invalidFields));
@@ -36,11 +44,13 @@ export function handleSubmit({ form, button, actions, onValidate, onSubmitting, 
                     const invalidFields = collateInvalidFields(form, error.messages);
                     actions.setInvalid(invalidFields);
                     actions.setScrollField(getHighestElement(invalidFields));
+                    onInvalid(event);
                     return void actions.setValidityMessages(error.messages);
                 }
 
                 if (error instanceof errors.GenericError) {
                     // Feed any generic API error messages back into the component.
+                    onInvalid(event);
                     return void actions.setGenericMessages(error.messages);
                 }
 
@@ -50,7 +60,7 @@ export function handleSubmit({ form, button, actions, onValidate, onSubmitting, 
                 actions.isLoading(false);
             }
         },
-        [form, onSubmitted, onSubmitting],
+        [form, button, actions, onValidate, onInvalid, onSubmitting, onSubmitted],
     );
 }
 

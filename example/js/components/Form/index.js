@@ -8,15 +8,22 @@ import Field from '../Field';
 import * as e from './styles';
 
 export default function Form({ isSubmitting, ...props }) {
-    const [state, { set: setField, reset: resetFields }] = useMap({
+    const [state, { set, reset }] = useMap({
         name: '',
         email: '',
         message: '',
     });
 
+    const customValidation = () => {
+        if (state.name.toLowerCase() === 'bot')
+            throw new fv.ValidationError({
+                name: 'Bots are not allowed to send messages.',
+            });
+    };
+
     return (
         <e.Container>
-            <fv.Form {...props}>
+            <fv.Form {...props} onValidate={customValidation}>
                 <Field
                     messages={{
                         valueMissing: 'Please enter your first name.',
@@ -27,7 +34,7 @@ export default function Form({ isSubmitting, ...props }) {
                         type="text"
                         name="name"
                         required
-                        onChange={({ target }) => setField('name', target.value)}
+                        onChange={({ target }) => set('name', target.value)}
                     />
                 </Field>
 
@@ -42,7 +49,7 @@ export default function Form({ isSubmitting, ...props }) {
                         type="email"
                         name="email"
                         required
-                        onChange={({ target }) => setField('email', target.value)}
+                        onChange={({ target }) => set('email', target.value)}
                     />
                 </Field>
 
@@ -56,12 +63,12 @@ export default function Form({ isSubmitting, ...props }) {
                         name="message"
                         minLength={20}
                         required
-                        onChange={({ target }) => setField('message', target.value)}
+                        onChange={({ target }) => set('message', target.value)}
                     />
                 </Field>
 
                 <e.Buttons>
-                    <e.Button type="reset" onClick={resetFields}>
+                    <e.Button type="reset" onClick={reset}>
                         Reset
                     </e.Button>
                     <e.Button type="submit">
