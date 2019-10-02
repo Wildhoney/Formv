@@ -1,7 +1,7 @@
 import test from 'ava';
 import { withPage, getHelpers } from '../helpers/puppeteer';
 
-test('It should be able to show the validation messages;', withPage(), async (t, page) => {
+test.serial('It should be able to show the validation messages;', withPage(), async (t, page) => {
     const helpers = getHelpers(page);
 
     const submitButton = await page.waitFor('button[type="submit"]');
@@ -25,7 +25,7 @@ test('It should be able to show the validation messages;', withPage(), async (t,
     t.snapshot(await helpers.getValidationMessages());
 });
 
-test(
+test.serial(
     'It should be able to handle the reset which clears validation messages;',
     withPage(),
     async (t, page) => {
@@ -41,7 +41,7 @@ test(
     },
 );
 
-test('It should be able to handle API validation messages;', withPage(), async (t, page) => {
+test.serial('It should be able to handle API validation messages;', withPage(), async (t, page) => {
     const helpers = getHelpers(page);
 
     const enableAnchor = await page.waitFor('a.enable.api');
@@ -58,7 +58,7 @@ test('It should be able to handle API validation messages;', withPage(), async (
     t.snapshot(await helpers.getValidationMessages());
 });
 
-test('It should be able to handle generic validation messages;', withPage(), async (t, page) => {
+test.serial('It should be able to handle generic validation messages;', withPage(), async (t, page) => {
     const helpers = getHelpers(page);
 
     const enableAnchor = await page.waitFor('a.enable.generic');
@@ -75,7 +75,7 @@ test('It should be able to handle generic validation messages;', withPage(), asy
     t.snapshot(await helpers.getValidationMessages());
 });
 
-test(
+test.serial(
     'It should be able to bypass validation with `formNoValidate` attribute;',
     withPage(),
     async (t, page) => {
@@ -95,7 +95,7 @@ test(
     },
 );
 
-test(
+test.serial(
     'It should be able to show validation messages from the custom validator;',
     withPage(),
     async (t, page) => {
@@ -113,7 +113,7 @@ test(
     },
 );
 
-test(
+test.serial(
     'It should be adding the "invalid" class name to the invalid fields;',
     withPage(),
     async (t, page) => {
