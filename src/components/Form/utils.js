@@ -26,7 +26,7 @@ export function handleSubmit({
             try {
                 // Invoke the `onValidate` function which can throw exceptions for validation
                 // techniques that are too complex for the `pattern` attribute.
-                onValidate();
+                requiresValidation && onValidate();
 
                 if (requiresValidation && !form.checkValidity()) {
                     // Collate all of the invalid fields that failed validation.
