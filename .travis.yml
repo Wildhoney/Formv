@@ -6,13 +6,12 @@ script:
     - yarn build
 
 addons:
-  chrome: stable
+    chrome: stable
 
 deploy:
     provider: heroku
-    skip_cleanup: true
     api_key:
-        secure: ZoMyPfMxhR3HoKHmwj/naiAuOvg8L4d9nGn0q+enVPTNzsFiZa3A1E7pf6ngJC71V+lonz69PlxgU46W7a/xZOb6namKTezlZF8UtrJZ9VnaMFnllwgsQ/eImrQphO2y2/2A0ocE6RWpdYhvUUerAVPqZtdaXYiHVNjLJbzSXIHcUFIL8M1bezBxUtekOO31THJaGobDNC81k/oRxvVEwnEBUgTXlvoLpECqCawtzDATAmtAFbX7it4W4IfoVQokXZtcZxLraKVcEKuX3hj0FCHljArAtkLIYUZsAnLes/IXP9MIb+/8yJXEqFumXknEwu9EXBpOlvJdmrU/+cZRJ+jdoSmKCFwNnLAtB7Fn2qMUprjnR8QWs9HwcRUv0S7FSepOA5J4HWmdkAI7toziLD10Od0EKIZA0qeh5G/gt43DMjCvM9iLSm1e6twthTD8sFO7rO8jvh+TljgEXG1xoIrJlPIY2XF5ZO8AuXUaxP10QPXjm567ZEcc8J5rjgUjg19TcXVNDmtDqLVQSMVL5/na8Up2j7U6zWisi/EtnC+HXm3yIb3OGpFEH4pEGjWkDaiVx5nT0KSUAVd7Vsl54k4RDx/3A5XSM28nVZXb1RNzUTXbWq2Hz/9PehnL3efg/MwMuSyNkwhcEVjZ0bKmakufo/Ar9WpWwZ4TfGaDFCY=
+        secure: bR1xG4lJENcfPAcIwI97FfvExHoF+xVKtF78PSfI9ZzOuqHIMjq/VEBVidPRj3BapCWPPThHLGWy9hUL8ahUavdoHxcqN2Z/qATVvIZmduvo4+TrAPFh8yP/tC09kn9M+VFb5hDKqI0reCOpxXVP+ax1HxGAAV+E8tB3DIEvC6zZyKWpgVdQcUbn8fkSov3MALdUPLnRWRLW18X19F5s+wI+q1DvPGIKnGN2zKy2IlZ9m2Yr79mIMbehvZlJytFMaduY41fXkZThNCd1Ze1LW07+l5bfseUyvV6XLhEbqJsOi6FR708qA0Rl8Jc2zlFw0TFZFQDMd7afmsMAUAgQDwyNwOywqcJ5zSK+fTeRsDZ4/lxeLpIfW9naLRnNr6ZOV/FhELbQ55VBsnm13hoK/9cVKdQeSP4jLwys53H33zpH9u1IutRueUZzdjLnCUYcKcmRE9GYIrStT7JtTW6SRK0CvXcXQ7pGyt9tmEE1RrMZgBoB8Pxq1EVhZdBD80eKQakff/f62C7CqoF92IXXdK6ucaaaDWTdQJ4CHfVZCEceGDpJQqp1pzJ7FnXRh2vQbGLbAtw9/Ihc/RVHYAKi5VoSqIsVX5XyoJ7vc/UKFjf359lZEpTMF/wYy2lpm8DZw+odzMmp2Mgfd1GCnZA1PbsibST+p6RdzUFSKyg9KFI=
     app: formv
     on:
         repo: Wildhoney/Formv
