@@ -5,8 +5,6 @@ script:
     - yarn test
     - yarn build
 
-after_success: yarn coverage
-
 addons:
   chrome: stable
 

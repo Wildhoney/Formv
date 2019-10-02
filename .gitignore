@@ -5,6 +5,3 @@ yarn-error.log
 # build
 dist/
 example/js/build.js
-
-# coverage
-.nyc_output/
