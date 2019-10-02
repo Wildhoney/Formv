@@ -21,7 +21,7 @@ module.exports = {
         },
     ],
     plugins: [
-        resolve(),
+        resolve({ preferBuiltins: true }),
         babel({
             exclude: 'node_modules/**',
             runtimeHelpers: true,
