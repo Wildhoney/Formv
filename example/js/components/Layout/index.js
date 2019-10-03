@@ -15,8 +15,15 @@ export default function Layout() {
     const [mockGenericErrors, setMockGenericErrors] = useState(false);
     const [mockValidationErrors, setMockValidationErrors] = useState(false);
 
-    const handleSubmitting = useCallback(() => setFormState(formStateTypes.submitting));
     const handleInvalid = useCallback(() => setFormState(formStateTypes.idle));
+    const handleSubmitting = useCallback(state => () => {
+        setFormState(formStateTypes.submitting);
+
+        if (state.name.toLowerCase().trim() === 'bot')
+            throw new fv.Error.Validation({
+                name: 'Bots are not allowed to send messages.',
+            });
+    });
 
     const handleSubmitted = useCallback(async () => {
         await delay(2500);

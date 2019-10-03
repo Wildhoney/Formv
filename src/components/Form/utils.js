@@ -2,19 +2,10 @@ import { useCallback } from 'react';
 import Error from '../../helpers/errors';
 import Success from '../../helpers/success';
 
-export function handleSubmit({
-    form,
-    button,
-    actions,
-    onValidate,
-    onInvalid,
-    onSubmitting,
-    onSubmitted,
-}) {
+export function handleSubmit({ form, button, actions, onInvalid, onSubmitting, onSubmitted }) {
     return useCallback(
         async event => {
             event.preventDefault();
-            onSubmitting(event);
 
             // Clear all of the previous invalid messages.
             actions.reset();
@@ -25,9 +16,20 @@ export function handleSubmit({
                 !button.current || !button.current.hasAttribute('formnovalidate');
 
             try {
-                // Invoke the `onValidate` function which can throw exceptions for validation
-                // techniques that are too complex for the `pattern` attribute.
-                requiresValidation && onValidate();
+                try {
+                    // Invoke the `onSubmitting` callback so the user can handle the form state
+                    // change, and have an opportunity to raise early generic and/or validation
+                    // errors.
+                    onSubmitting(event);
+                } catch (error) {
+                    // We'll only re-throw errors if they are non-Formv errors, or if they are Formv
+                    // errors then only in instances where the form has opted into validation.
+                    if (
+                        (requiresValidation && isRelatedException(error)) ||
+                        !isRelatedException(error)
+                    )
+                        throw error;
+                }
 
                 // Check to see whether the validation passes the native validation, and if not
                 // throw an empty validation error to collect the error messages directly from
@@ -64,7 +66,7 @@ export function handleSubmit({
                 actions.isLoading(false);
             }
         },
-        [form, button, actions, onValidate, onInvalid, onSubmitting, onSubmitted],
+        [form, button, actions, onInvalid, onSubmitting, onSubmitted],
     );
 }
 
@@ -122,4 +124,8 @@ function isSubmitButton(element) {
 
 export function getStyles(isLegacy) {
     return isLegacy ? {} : { display: 'contents' };
+}
+
+function isRelatedException(error) {
+    return error instanceof Error.Generic || error instanceof Error.Validation;
 }

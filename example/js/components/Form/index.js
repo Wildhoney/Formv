@@ -13,16 +13,9 @@ export default function Form({ isSubmitting, ...props }) {
         message: '',
     });
 
-    const customValidation = () => {
-        if (state.name.toLowerCase().trim() === 'bot')
-            throw new fv.Error.Validation({
-                name: 'Bots are not allowed to send messages.',
-            });
-    };
-
     return (
         <e.Container>
-            <fv.Form {...props} onValidate={customValidation}>
+            <fv.Form {...props} onSubmitting={props.onSubmitting(state)}>
                 <Field
                     messages={{
                         valueMissing: 'Please enter your first name.',
@@ -79,4 +72,7 @@ export default function Form({ isSubmitting, ...props }) {
     );
 }
 
-Form.propTypes = { isSubmitting: PropTypes.bool.isRequired };
+Form.propTypes = {
+    isSubmitting: PropTypes.bool.isRequired,
+    onSubmitting: PropTypes.func.isRequired,
+};

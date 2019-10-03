@@ -150,7 +150,7 @@ You can also skip the front-end validation entirely on a button-by-button basis 
 
 ## Complex Validation
 
-In instances where the `pattern` attribute is insufficient for quirky validation, Formv provides the `onValidate` prop which is a function that can throw `Error.Validation` and `Error.Generic` exceptions.
+In instances where the `pattern` attribute is insufficient for quirky validation, you can use the `onSubmitting` callback to throw `Error.Validation` and `Error.Generic` exceptions.
 
 ```jsx
 import { useCallback } from 'react';
@@ -158,7 +158,7 @@ import { Form, Error } from 'formv';
 
 // ...
 
-const handleValidation = useCallback(() => {
+const handleSubmitting = useCallback(() => {
 
     if (!utils.passesQuirkyValidation(state)) {
         throw new Error.Validation({
@@ -168,5 +168,5 @@ const handleValidation = useCallback(() => {
 
 });
 
-<Form onValidate={handleValidation} />
+<Form onSubmitting={handleSubmitting} />
 ```
