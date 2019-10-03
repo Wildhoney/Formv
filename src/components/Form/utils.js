@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
-import * as errors from '../../helpers/errors';
+import Error from '../../helpers/errors';
+import Success from '../../helpers/success';
 
 export function handleSubmit({
     form,
@@ -31,17 +32,18 @@ export function handleSubmit({
                 // Check to see whether the validation passes the native validation, and if not
                 // throw an empty validation error to collect the error messages directly from
                 // each of the fields.
-                if (requiresValidation && !form.checkValidity())
-                    throw new errors.ValidationError({});
+                if (requiresValidation && !form.checkValidity()) throw new Error.Validation({});
 
-                // Both the custom validation and native validation have passed successfully.
-                await onSubmitted(event);
+                // Both the custom validation and native validation have passed successfully. We
+                // do a check on whether the developer provided a success message which we can render.
+                const result = await onSubmitted(event);
+                result instanceof Success && actions.setSuccessMessage(result.message);
             } catch (error) {
                 // We always invoke the `onInvalid` callback even if the errors are not necessarily
                 // applicable to Formv validation.
                 onInvalid(event);
 
-                if (error instanceof errors.ValidationError) {
+                if (error instanceof Error.Validation) {
                     // Feed the API validation errors back into the component.
                     const invalidFields = collateInvalidFields(form, error.messages);
                     actions.setInvalid(invalidFields);
@@ -49,7 +51,7 @@ export function handleSubmit({
                     return void actions.setValidityMessages(error.messages);
                 }
 
-                if (error instanceof errors.GenericError) {
+                if (error instanceof Error.Generic) {
                     // Feed any generic API error messages back into the component.
                     return void actions.setGenericMessages(error.messages);
                 }

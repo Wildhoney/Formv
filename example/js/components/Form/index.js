@@ -15,7 +15,7 @@ export default function Form({ isSubmitting, ...props }) {
 
     const customValidation = () => {
         if (state.name.toLowerCase().trim() === 'bot')
-            throw new fv.ValidationError({
+            throw new fv.Error.Validation({
                 name: 'Bots are not allowed to send messages.',
             });
     };

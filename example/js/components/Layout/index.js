@@ -23,20 +23,28 @@ export default function Layout() {
 
         if (mockGenericErrors) {
             setFormState(formStateTypes.idle);
-            throw new fv.GenericError(
+            throw new fv.Error.Generic(
                 'An unexpected occurred when pretending to send your message.',
             );
         }
 
         if (!mockGenericErrors && mockValidationErrors) {
             setFormState(formStateTypes.idle);
-            throw new fv.ValidationError({
+            throw new fv.Error.Validation({
                 email:
                     'We were unable to validate the supplied e-mail address. Please try again later.',
             });
         }
 
         setFormState(formStateTypes.submitted);
+
+        return new fv.Success(
+            (
+                <e.Success className="success">
+                    We have successfully pretended to send your message!
+                </e.Success>
+            ),
+        );
     });
 
     return (
@@ -86,12 +94,6 @@ export default function Layout() {
                     .
                 </e.Text>
             </e.Information>
-
-            {formState === formStateTypes.submitted && (
-                <e.Success className="success">
-                    We have successfully pretended to send your message!
-                </e.Success>
-            )}
 
             <Form
                 isSubmitting={formState === formStateTypes.submitting}

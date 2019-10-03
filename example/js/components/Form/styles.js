@@ -5,7 +5,7 @@ export const Container = styled.div`
     grid-auto-flow: row;
     grid-gap: 20px;
 
-    ul.formv-messages-generic {
+    ul.formv-messages-error-generic {
         padding: 20px;
         list-style-type: none;
         background-color: #ffeded;

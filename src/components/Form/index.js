@@ -38,11 +38,20 @@ export default function Form({ children, ...props }) {
                     style={utils.getStyles(props.legacy)}
                     disabled={props.noDisable ? false : store.isLoading}
                 >
+                    {store.successMessage && (
+                        <Messages
+                            id={store.id}
+                            noScroll={props.noScroll}
+                            className="formv-messages-success"
+                            successMessage={store.successMessage}
+                        />
+                    )}
+
                     {store.genericMessages.length > 0 && (
                         <Messages
                             id={store.id}
                             noScroll={props.noScroll}
-                            className="formv-messages-generic"
+                            className="formv-messages-error-generic"
                             genericMessages={store.genericMessages}
                         />
                     )}

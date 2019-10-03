@@ -9,11 +9,14 @@ export function getMessages(field, customMessages) {
     return [].concat(messages);
 }
 
-export function handleScroll({ genericMessages, noScroll }) {
-    return container => {
+export function handleScroll({ successMessage, genericMessages, noScroll }) {
+    return node => {
+        if (!node) return;
+        const container = successMessage ? node.firstChild : node;
+
         !noScroll &&
             container &&
-            genericMessages.length > 0 &&
+            (successMessage || genericMessages.length > 0) &&
             setTimeout(() => container.scrollIntoView({ block: 'start' }));
     };
 }

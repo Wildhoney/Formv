@@ -4,6 +4,7 @@ export const initialState = {
     id: id(),
     isLoading: false,
     invalidFields: [],
+    successMessage: null,
     validityMessages: {},
     genericMessages: [],
     scrollField: null,
@@ -13,6 +14,7 @@ const actionTypes = {
     reset: Symbol('formv/reset'),
     isLoading: Symbol('formv/is-loading'),
     invalidFields: Symbol('formv/invalid-fields'),
+    successMessage: Symbol('formv/success-message'),
     validityMessages: Symbol('formv/validity-messages'),
     genericMessages: Symbol('formv/generic-messages'),
     scrollField: Symbol('formv/scroll-field'),
@@ -26,6 +28,7 @@ export const unboundActions = dispatch => ({
             type: actionTypes.invalidFields,
             payload,
         }),
+    setSuccessMessage: payload => dispatch({ type: actionTypes.successMessage, payload }),
     setValidityMessages: payload => dispatch({ type: actionTypes.validityMessages, payload }),
     setGenericMessages: payload =>
         dispatch({
@@ -48,6 +51,9 @@ export function reducer(state, action) {
 
         case actionTypes.invalidFields:
             return { ...state, id: id(), invalidFields: action.payload };
+
+        case actionTypes.successMessage:
+            return { ...state, id: id(), successMessage: action.payload };
 
         case actionTypes.validityMessages:
             return { ...state, id: id(), validityMessages: action.payload };

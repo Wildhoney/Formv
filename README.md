@@ -56,14 +56,14 @@ Voila! Using the above code you now have everything you need to validate your fo
 
 ## Handling API Validation
 
-It's all good and well having the front-end validation for your forms, however there are always cases where the front-end validation passes just fine, whereas the back-end throws a validation error &ndash; maybe the username is already taken, for instance. In those cases we need to feed the API validation messages back into the `Form` component by using the `ValidationError` exception that Formv exports.
+It's all good and well having the front-end validation for your forms, however there are always cases where the front-end validation passes just fine, whereas the back-end throws a validation error &ndash; maybe the username is already taken, for instance. In those cases we need to feed the API validation messages back into the `Form` component by using the `Error.Validation` exception that Formv exports.
 
 The validation messages need to be flattened and should map to your field names &ndash; for cases where you have an array of fields, we recommend you name these `names.0.firstName`, `names.1.firstName`, etc...
 
 Continuing from the above example, we'll implement the `handleSubmitted` function which handles the submitting of the data to the API.
 
 ```javascript
-import { ValidationError, GenericError } from 'formv';
+import { Error } from 'formv';
 
 async function handleSubmitted() {
 
@@ -79,19 +79,19 @@ async function handleSubmitted() {
         if (failedValidation) {
 
             // Feed the validation errors back into Formv.
-            throw new ValidationError(error.response.data);
+            throw new Error.Validation(error.response.data);
 
         }
 
         // Handle other error messages gracefully.
-        throw new GenericError(error.response.data);
+        throw new Error.Generic(error.response.data);
 
     }
 
 }
 ```
 
-Interestingly Formv also comes bundled with a `GenericError` class that allows you to display any non-validation messages gracefully at the top of your form &ndash; simply throw `GenericError` with a string or an array of strings, Formv will take care of the rendering, and you take care of the styling.
+Interestingly Formv also comes bundled with a `Error.Generic` class that allows you to display any non-validation messages gracefully at the top of your form &ndash; simply throw `Error.Generic` with a string or an array of strings, Formv will take care of the rendering, and you take care of the styling.
 
 ## Custom Validation Messages
 
@@ -150,18 +150,18 @@ You can also skip the front-end validation entirely on a button-by-button basis 
 
 ## Complex Validation
 
-In instances where the `pattern` attribute is insufficient for quirky validation, Formv provides the `onValidate` prop which is a function that can throw `ValidationError` and `GenericError` exceptions.
+In instances where the `pattern` attribute is insufficient for quirky validation, Formv provides the `onValidate` prop which is a function that can throw `Error.Validation` and `Error.Generic` exceptions.
 
 ```jsx
 import { useCallback } from 'react';
-import { Form, ValidationError } from 'formv';
+import { Form, Error } from 'formv';
 
 // ...
 
 const handleValidation = useCallback(() => {
 
     if (!utils.passesQuirkyValidation(state)) {
-        throw new ValidationError({
+        throw new Error.Validation({
             name: 'Does not pass our quirky validation rules.'
         });
     }

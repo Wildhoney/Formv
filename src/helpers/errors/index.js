@@ -5,6 +5,7 @@ class FormError extends Error {
     }
 }
 
-export class GenericError extends FormError {}
+class Generic extends FormError {}
+class Validation extends FormError {}
 
-export class ValidationError extends FormError {}
+export default { Generic, Validation };
