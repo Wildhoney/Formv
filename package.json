@@ -67,6 +67,7 @@
     "webpack-cli": "^3.3.9"
   },
   "dependencies": {
+    "lodash": "^4.17.15",
     "nanoid": "^2.1.1"
   }
 }
