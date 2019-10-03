@@ -45,10 +45,12 @@ export default function Field({ position, messages, children, ...props }) {
             {isInvalid && utils.isBefore(position) && (
                 <Messages
                     id={context.store.id}
+                    type="error-validation"
                     className="formv-messages-error-validation"
                     field={field}
                     customMessages={messages}
                     validityMessages={context.store.validityMessages[name]}
+                    renderer={context.renderer}
                 />
             )}
 
@@ -57,10 +59,12 @@ export default function Field({ position, messages, children, ...props }) {
             {isInvalid && utils.isAfter(position) && (
                 <Messages
                     id={context.store.id}
+                    type="error-validation"
                     className="formv-messages-error-validation"
                     field={field}
                     customMessages={messages}
                     validityMessages={context.store.validityMessages[name]}
+                    renderer={context.renderer}
                 />
             )}
         </div>

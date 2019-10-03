@@ -21,12 +21,6 @@ export const Anchor = styled.a`
     cursor: pointer;
 `;
 
-export const Success = styled.p`
-    background-color: #e5f9e5;
-    padding: 20px;
-    color: #002800;
-`;
-
 export const Information = styled.div`
     background: url('/images/information.svg') no-repeat 10px center;
     background-size: 20px;

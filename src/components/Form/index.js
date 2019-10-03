@@ -1,5 +1,6 @@
 import React, { useState, useReducer, useRef, createContext } from 'react';
 import PropTypes from 'prop-types';
+import Renderer from '../Renderer';
 import { reducer, initialState, unboundActions } from '../../helpers/store';
 import Messages from '../Messages';
 import * as utils from './utils';
@@ -41,18 +42,22 @@ export default function Form({ children, ...props }) {
                     {store.successMessage && (
                         <Messages
                             id={store.id}
-                            noScroll={props.noScroll}
+                            type="success"
                             className="formv-messages-success"
+                            noScroll={props.noScroll}
                             successMessage={store.successMessage}
+                            renderer={props.renderer}
                         />
                     )}
 
                     {store.genericMessages.length > 0 && (
                         <Messages
                             id={store.id}
-                            noScroll={props.noScroll}
+                            type="error-generic"
                             className="formv-messages-error-generic"
+                            noScroll={props.noScroll}
                             genericMessages={store.genericMessages}
+                            renderer={props.renderer}
                         />
                     )}
 
@@ -65,6 +70,7 @@ export default function Form({ children, ...props }) {
 
 Form.propTypes = {
     className: PropTypes.string,
+    renderer: PropTypes.func,
     legacy: PropTypes.bool,
     noDisable: PropTypes.bool,
     noScroll: PropTypes.bool,
@@ -78,6 +84,7 @@ Form.propTypes = {
 
 Form.defaultProps = {
     className: '',
+    renderer: Renderer,
     legacy: false,
     noDisable: false,
     noScroll: false,
