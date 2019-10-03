@@ -160,13 +160,13 @@ import { Form, ValidationError } from 'formv';
 
 const handleValidation = useCallback(() => {
 
-    if (!utils.passQuirkyValidation(state)) {
+    if (!utils.passesQuirkyValidation(state)) {
         throw new ValidationError({
             name: 'Does not pass our quirky validation rules.'
         });
     }
 
-}, []);
+});
 
 <Form onValidate={handleValidation} />
 ```
