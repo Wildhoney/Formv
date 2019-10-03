@@ -1,6 +1,11 @@
-import React from 'react';
+import React, { memo } from 'react';
+import PropTypes from 'prop-types';
 import * as e from './styles';
 
-export default function Input(props) {
-    return <e.Input {...props} />;
+function Input(props) {
+    return <e.Input {...props} onChange={({ target }) => props.onChange(target.value)} />;
 }
+
+Input.propTypes = { onChange: PropTypes.func.isRequired };
+
+export default memo(Input);

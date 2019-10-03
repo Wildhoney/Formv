@@ -1,5 +1,4 @@
 import React from 'react';
-import { useMap } from 'react-use';
 import PropTypes from 'prop-types';
 import * as fv from 'formv';
 import Input from '../Input';
@@ -8,14 +7,14 @@ import Field from '../Field';
 import * as e from './styles';
 
 export default function Form({ isSubmitting, ...props }) {
-    const [state, { set, reset }] = useMap({
+    const [state, { set, reset }] = fv.useForm({
         name: '',
         email: '',
         message: '',
     });
 
     const customValidation = () => {
-        if (state.name.toLowerCase() === 'bot')
+        if (state.name.toLowerCase().trim() === 'bot')
             throw new fv.ValidationError({
                 name: 'Bots are not allowed to send messages.',
             });
@@ -34,7 +33,7 @@ export default function Form({ isSubmitting, ...props }) {
                         type="text"
                         name="name"
                         required
-                        onChange={({ target }) => set('name', target.value)}
+                        onChange={set('name')}
                     />
                 </Field>
 
@@ -49,7 +48,7 @@ export default function Form({ isSubmitting, ...props }) {
                         type="email"
                         name="email"
                         required
-                        onChange={({ target }) => set('email', target.value)}
+                        onChange={set('email')}
                     />
                 </Field>
 
@@ -63,7 +62,7 @@ export default function Form({ isSubmitting, ...props }) {
                         name="message"
                         minLength={20}
                         required
-                        onChange={({ target }) => set('message', target.value)}
+                        onChange={set('message')}
                     />
                 </Field>
 
