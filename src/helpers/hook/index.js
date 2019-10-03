@@ -13,7 +13,7 @@ export default function useForm(initialState) {
 
     const remove = useCallback(name => setState(state => ({ ..._.unset(state, name) })), [state]);
 
-    const reset = useCallback(() =>  setState(initialState), [state]);
+    const reset = useCallback(() => setState(initialState), [state]);
 
     return [state, { get, remove, reset, set }];
 }
