@@ -48,6 +48,7 @@ export default function Field({ position, messages, children, ...props }) {
                     type="error-validation"
                     className="formv-messages-error-validation"
                     field={field}
+                    legacy={context.legacy}
                     customMessages={messages}
                     validityMessages={context.store.validityMessages[name]}
                     renderer={context.renderer}
@@ -62,6 +63,7 @@ export default function Field({ position, messages, children, ...props }) {
                     type="error-validation"
                     className="formv-messages-error-validation"
                     field={field}
+                    legacy={context.legacy}
                     customMessages={messages}
                     validityMessages={context.store.validityMessages[name]}
                     renderer={context.renderer}

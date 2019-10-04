@@ -44,6 +44,7 @@ export default function Form({ children, ...props }) {
                             id={store.id}
                             type="success"
                             className="formv-messages-success"
+                            legacy={props.legacy}
                             noScroll={props.noScroll}
                             successMessage={store.successMessage}
                             renderer={props.renderer}
@@ -55,6 +56,7 @@ export default function Form({ children, ...props }) {
                             id={store.id}
                             type="error-generic"
                             className="formv-messages-error-generic"
+                            legacy={props.legacy}
                             noScroll={props.noScroll}
                             genericMessages={store.genericMessages}
                             renderer={props.renderer}

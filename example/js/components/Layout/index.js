@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import delay from 'delay';
 import * as fv from 'formv';
 import Form from '../Form';
-// import Messages from '../Messages';
+import Messages from '../Messages';
 import * as e from './styles';
 
 const formStateTypes = {
@@ -101,7 +101,7 @@ export default function Layout() {
                 onSubmitting={handleSubmitting}
                 onSubmitted={handleSubmitted}
                 onInvalid={handleInvalid}
-                // renderer={props => <Messages {...props} />}
+                renderer={props => <Messages {...props} />}
             />
         </e.Container>
     );

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const GenericError = styled.div`
+export const GenericError = styled.ul.attrs({ className: 'formv-messages' })`
     padding: 20px;
     list-style-type: none;
     background-color: #ffeded;
@@ -8,7 +8,7 @@ export const GenericError = styled.div`
     color: #4c1616;
 `;
 
-export const ValidationError = styled.ul`
+export const ValidationError = styled.ul.attrs({ className: 'formv-messages' })`
     margin: 0;
     padding: 10px 10px 10px 30px;
     list-style-type: square;
