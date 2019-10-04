@@ -25,7 +25,9 @@ export function withPage(debug = false) {
                 waitUntil: 'load',
             });
             await run(t, page);
-        } catch {
+        } catch (error) {
+            console.error(`Puppeteer: ${error}.`);
+            t.fail();
         } finally {
             await page.close();
             await browser.close();
@@ -34,21 +36,31 @@ export function withPage(debug = false) {
 }
 
 export function getHelpers(page) {
-    async function getValidationMessages() {
-        return page.$$eval('.formv-messages li', items => {
-            return Array.from(items).map(item => item.innerHTML);
+    async function getSuccessMessage() {
+        await page.waitFor('.formv-message');
+        return page.$eval('.formv-message', node => node.innerHTML);
+    }
+
+    function getValidationMessages() {
+        return page.$$eval('.formv-messages li', nodes => {
+            return Array.from(nodes).map(node => node.innerHTML);
         });
+    }
+
+    async function getGenericMessages() {
+        await page.waitFor('.formv-messages');
+        return getValidationMessages();
     }
 
     async function includesClassName(selector, className) {
         return page.evaluate(
             ({ selector, className }) => {
-                const element = document.querySelector(selector);
-                return element.classList.contains(className);
+                const node = document.querySelector(selector);
+                return node.classList.contains(className);
             },
             { selector, className },
         );
     }
 
-    return { getValidationMessages, includesClassName };
+    return { getGenericMessages, getSuccessMessage, getValidationMessages, includesClassName };
 }

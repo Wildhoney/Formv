@@ -23,6 +23,7 @@ test.serial('It should be able to show the validation messages;', withPage(), as
     await page.type('textarea[name="message"]', 'blah '.repeat(20).trim());
     await submitButton.click();
     t.snapshot(await helpers.getValidationMessages());
+    t.snapshot(await helpers.getSuccessMessage());
 });
 
 test.serial(
@@ -53,8 +54,6 @@ test.serial('It should be able to handle API validation messages;', withPage(), 
 
     const submitButton = await page.waitFor('button[type="submit"]');
     await submitButton.click();
-    await page.waitFor(() => document.querySelectorAll('.formv-messages li').length > 0);
-
     t.snapshot(await helpers.getValidationMessages());
 });
 
@@ -73,9 +72,7 @@ test.serial(
 
         const submitButton = await page.waitFor('button[type="submit"]');
         await submitButton.click();
-        await page.waitFor(() => document.querySelectorAll('.formv-messages li').length > 0);
-
-        t.snapshot(await helpers.getValidationMessages());
+        t.snapshot(await helpers.getGenericMessages());
     },
 );
 
@@ -96,6 +93,7 @@ test.serial(
 
         await submitButton.click();
         t.snapshot(await helpers.getValidationMessages());
+        t.snapshot(await helpers.getSuccessMessage());
     },
 );
 
@@ -128,35 +126,36 @@ test.serial(
 
         t.true(await helpers.includesClassName('input[name="name"]', 'invalid'));
         t.true(await helpers.includesClassName('input[name="email"]', 'invalid'));
-        t.true(await helpers.includesClassName('input[name="message"]', 'invalid'));
+        t.true(await helpers.includesClassName('textarea[name="message"]', 'invalid'));
         t.snapshot(await helpers.getValidationMessages());
 
         await page.type('input[name="name"]', 'Adam');
         await submitButton.click();
         t.false(await helpers.includesClassName('input[name="name"]', 'invalid'));
         t.true(await helpers.includesClassName('input[name="email"]', 'invalid'));
-        t.true(await helpers.includesClassName('input[name="message"]', 'invalid'));
+        t.true(await helpers.includesClassName('textarea[name="message"]', 'invalid'));
         t.snapshot(await helpers.getValidationMessages());
 
         await page.type('input[name="email"]', 'adam');
         await submitButton.click();
         t.false(await helpers.includesClassName('input[name="name"]', 'invalid'));
         t.true(await helpers.includesClassName('input[name="email"]', 'invalid'));
-        t.true(await helpers.includesClassName('input[name="message"]', 'invalid'));
+        t.true(await helpers.includesClassName('textarea[name="message"]', 'invalid'));
         t.snapshot(await helpers.getValidationMessages());
 
         await page.type('input[name="email"]', 'adam@example.org');
         await submitButton.click();
         t.false(await helpers.includesClassName('input[name="name"]', 'invalid'));
         t.false(await helpers.includesClassName('input[name="email"]', 'invalid'));
-        t.true(await helpers.includesClassName('input[name="message"]', 'invalid'));
+        t.true(await helpers.includesClassName('textarea[name="message"]', 'invalid'));
         t.snapshot(await helpers.getValidationMessages());
 
         await page.type('textarea[name="message"]', 'blah '.repeat(20).trim());
         await submitButton.click();
         t.false(await helpers.includesClassName('input[name="name"]', 'invalid'));
         t.false(await helpers.includesClassName('input[name="email"]', 'invalid'));
-        t.false(await helpers.includesClassName('input[name="message"]', 'invalid'));
+        t.false(await helpers.includesClassName('textarea[name="message"]', 'invalid'));
         t.snapshot(await helpers.getValidationMessages());
+        t.snapshot(await helpers.getSuccessMessage());
     },
 );

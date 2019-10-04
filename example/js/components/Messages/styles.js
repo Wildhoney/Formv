@@ -18,7 +18,7 @@ export const ValidationError = styled.ul.attrs({ className: 'formv-messages' })`
     color: #ff4c4c;
 `;
 
-export const Success = styled.p`
+export const Success = styled.p.attrs({ className: 'formv-message' })`
     background-color: #e5f9e5;
     padding: 20px;
     color: #002800;
