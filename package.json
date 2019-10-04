@@ -12,7 +12,7 @@
     "lint": "eslint '**/**.js'",
     "test": "yarn lint && yarn build && ava --verbose",
     "spec": "yarn build && ava",
-    "format": "NODE_ENV=production prettier --write '**/**.{js,html}'",
+    "format": "NODE_ENV=production prettier --write '**/**.{js,html,md}'",
     "start": "node --experimental-modules example/server.mjs",
     "dev": "concurrently 'webpack --config example/webpack.config.js --watch' 'node --experimental-modules example/server.mjs'"
   },

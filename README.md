@@ -28,10 +28,8 @@ In the examples below we'll take a simple form that requires a name, email and a
 import { Form, Field } from 'formv';
 
 export default function MyForm() {
-
     return (
         <Form onSubmitted={handleSubmitted}>
-
             <Field>
                 <input type="text" name="name" required />
             </Field>
@@ -45,10 +43,8 @@ export default function MyForm() {
             </Field>
 
             <button type="submit">Submit</button>
-
         </Form>
     );
-
 }
 ```
 
@@ -64,15 +60,14 @@ import { Form, Field } from 'formv';
 export default function MyForm() {
     return (
         <Form onSubmitted={handleSubmitted}>
-
             <Field messages={{ valueMissing: 'Please enter your first and last name.' }}>
                 <input type="text" name="name" required />
             </Field>
-            
+
             <Field
                 messages={{
                     valueMissing: 'Please enter your email address.',
-                    typeMismatch: 'Please enter a valid email address.'
+                    typeMismatch: 'Please enter a valid email address.',
                 }}
             >
                 <input type="email" name="emailAddress" required />
@@ -81,13 +76,13 @@ export default function MyForm() {
             <Field
                 messages={{
                     valueMissing: 'Please enter your age.',
-                    rangeUnderflow: 'You must be 18 or over to use this form.'
-                }}>
+                    rangeUnderflow: 'You must be 18 or over to use this form.',
+                }}
+            >
                 <input name="age" required min={18} />
             </Field>
 
             <button type="submit">Submit</button>
-
         </Form>
     );
 }
@@ -97,7 +92,7 @@ Now when you submit the form in Chrome, Firefox, Edge, Safari, Opera, etc... you
 
 ## Skipping Validation
 
-There are *some* instances where skipping validation might be beneficial. Although you can't skip the back-end validation from `Formv` directly &mdash; you should configure your back-end to accept an optional param that skips validation &mdash; it's quite easy to skip the front-end validation by introducing another `button` element with the native [`formnovalidate` attribute](https://www.w3schools.com/jsref/prop_form_novalidate.asp).
+There are _some_ instances where skipping validation might be beneficial. Although you can't skip the back-end validation from `Formv` directly &mdash; you should configure your back-end to accept an optional param that skips validation &mdash; it's quite easy to skip the front-end validation by introducing another `button` element with the native [`formnovalidate` attribute](https://www.w3schools.com/jsref/prop_form_novalidate.asp).
 
 In the above form if you were to add another button alongside our existing `button`, you can have one `button` that runs the front-end validation in its entirety, and another `button` that skips it altogether.
 
@@ -110,9 +105,7 @@ Interestingly when you tap `enter` in a form, the first `button` in the DOM hier
 
 ## JS Validation
 
-For the most part the native HTML validation is sufficient for our forms, especially when you consider the power that the [`pattern` attribute](https://www.w3schools.com/tags/att_input_pattern.asp) provides with regular expression based validation. Nevertheless there will **always** be edge-cases where HTML validation doesn't quite cut the mustard. In those cases `Formv` provides a set of exceptions that you can raise during the `onSubmitting` phase.
-
-In instances where the `pattern` attribute is insufficient for quirky validation, you can use the `onSubmitting` callback to throw `Error.Validation` and `Error.Generic` exceptions.
+For the most part the native HTML validation is sufficient for our forms, especially when you consider the power that the [`pattern` attribute](https://www.w3schools.com/tags/att_input_pattern.asp) provides with regular expression based validation. Nevertheless there will **always** be edge-cases where HTML validation doesn't quite cut the mustard. In those cases `Formv` provides the `Error.Validation` and `Error.Generic` exceptions that you can raise during the `onSubmitting` phase.
 
 ```jsx
 import { Form, Error } from 'formv';
@@ -145,18 +138,16 @@ Continuing from the above example, we'll implement the `handleSubmitted` functio
 import { Form, Error } from 'formv';
 
 async function handleSubmitted() {
-
     try {
         await api.post('/send', data);
     } catch (error) {
         const isBadRequest = error.response.status === 400;
-        if (isBadRequest)   throw new Error.Validation(error.response.data);
+        if (isBadRequest) throw new Error.Validation(error.response.data);
         throw error;
     }
-
 }
 
-<Form onSubmitted={handleSubmitted} />
+<Form onSubmitted={handleSubmitted} />;
 ```
 
 In the example above we're capturing all API errors &ndash; we then check if the status code is a `400` which indicates a validation error in our application, and then feeds the validation errors back into `Formv`. The param passed to the `Error.Validation` should be a map of errors that correspond to the `name` attributes in your fields &ndash; we will then show the messages next to the relevant fields &ndash; for instance the `error.response.data` may be the following from the back-end if we were to hard-code it on the front-end.
@@ -164,8 +155,8 @@ In the example above we're capturing all API errors &ndash; we then check if the
 ```javascript
 throw new Error.Validation({
     name: 'Please enter your first and last name.',
-    age: 'You must be 18 or over to use this form.'
-})
+    age: 'You must be 18 or over to use this form.',
+});
 ```
 
 However there may be another error code that indicates a more generic error, such as that we weren't able to validate the user at this present moment &ndash; perhaps there's an error in our back-end code somewhere. In those cases you can instead raise a `Error.Generic` to provide helpful feedback to the user.
@@ -174,21 +165,19 @@ However there may be another error code that indicates a more generic error, suc
 import { Form, Error } from 'formv';
 
 async function handleSubmitted() {
-
     try {
         await api.post('/send', data);
     } catch (error) {
         const isAxiosError = error.isAxiosError;
         const isBadRequest = error.response.status === 400;
 
-        if (isBadRequest)   throw new Error.Validation(error.response.data);
-        if(isAxiosError) throw new Error.Generic(error.response.data);
+        if (isBadRequest) throw new Error.Validation(error.response.data);
+        if (isAxiosError) throw new Error.Generic(error.response.data);
         throw error;
     }
-
 }
 
-<Form onSubmitted={handleSubmitted} />
+<Form onSubmitted={handleSubmitted} />;
 ```
 
 Using the above example we throw `Error.Validation` errors when the request yields a `400` error message, we raise a `Error.Generic` error when the error is Axios specific. Any other errors are re-thrown for capturing elsewhere, as they're likely to indicate non-request specific errors such as syntax errors and non-defined variables.
@@ -203,7 +192,6 @@ In your `onSubmitted` callback all you need to do is yield a `Success` class wit
 import { Form, Success, Error } from 'formv';
 
 async function handleSubmitted() {
-
     try {
         await api.post('/send', data);
         return new Success('Everything went swimmingly!');
@@ -211,19 +199,18 @@ async function handleSubmitted() {
         const isAxiosError = error.isAxiosError;
         const isBadRequest = error.response.status === 400;
 
-        if (isBadRequest)   throw new Error.Validation(error.response.data);
-        if(isAxiosError) throw new Error.Generic(error.response.data);
+        if (isBadRequest) throw new Error.Validation(error.response.data);
+        if (isAxiosError) throw new Error.Generic(error.response.data);
         throw error;
     }
-
 }
 
-<Form onSubmitted={handleSubmitted} />
+<Form onSubmitted={handleSubmitted} />;
 ```
 
 ## Applying Styles
 
-Although Formv uses the [`display: contents`](https://caniuse.com/#feat=css-display-contents) on the `form`, `fieldset` and `Field` container to make styling easier, support is still lacking in pre-Chromium versions of Edge. Therefore to support those browsers you'll need to *normalise* the `form`, `fieldset` and `Field` container elements by passing the `legacy` prop to the `Form` component.
+Although Formv uses the [`display: contents`](https://caniuse.com/#feat=css-display-contents) on the `form`, `fieldset` and `Field` container to make styling easier, support is still lacking in pre-Chromium versions of Edge. Therefore to support those browsers you'll need to _normalise_ the `form`, `fieldset` and `Field` container elements by passing the `legacy` prop to the `Form` component.
 
 You can then style consistently across all browsers regardless of `contents` support.
 
@@ -244,13 +231,10 @@ By default `Formv` uses its own renderer for displaying error messages, and prov
 Taking advantage of your own custom `renderer` requires setting up a component that accepts three props: `message`, `messages` and `type` where `type` can be one of the three values: `success`, `error-generic` and `error-validation`. The `messages` prop is populated for error messages, and the `message` prop is populated for success messages.
 
 ```jsx
-<Form
-    renderer={props => <Messages {...props} />}
-    onSubmitted={handleSubmitted}
-    />
+<Form renderer={props => <Messages {...props} />} onSubmitted={handleSubmitted} />
 ```
 
-We provide an [example of the custom `Messages` renderer](/Wildhoney/Formv/blob/master/example/js/components/Messages/index.js) in the `example/` directory. 
+We provide an [example of the custom `Messages` renderer](/Wildhoney/Formv/blob/master/example/js/components/Messages/index.js) in the `example/` directory.
 
 ## Default Behaviours
 
@@ -259,4 +243,3 @@ By default Formv disables the form when it's being submitted, which includes the
 You can also skip the front-end validation entirely on a button-by-button basis with the native `formNoValidate` attribute on your chosen button.
 
 > Note that if you need anything from state, Formv exports the `Context` which you can use in the `useContext` hook or via the more traditional `Context.Consumer` approach.
-
