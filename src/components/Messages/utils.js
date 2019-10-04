@@ -13,8 +13,6 @@ export function getMessages(field, customMessages) {
 
 export function handleScroll({ successMessage, genericMessages, noScroll }) {
     return container => {
-        if (!container) return;
-
         !noScroll &&
             container &&
             (successMessage || genericMessages.length > 0) &&

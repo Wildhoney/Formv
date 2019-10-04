@@ -208,6 +208,38 @@ async function handleSubmitted() {
 <Form onSubmitted={handleSubmitted} />;
 ```
 
+## Managing State
+
+Managing the state for your forms is not typically an arduous task, nevertheless there are techniques that can make everything just a little bit easier, which is why `Formv` exports a `useForm` hook that has the same interface as [`react-use`'s `useMap` hook](https://github.com/streamich/react-use/blob/master/docs/useMap.md) with a handful of differences &ndash; currying, memoization and nested properties.
+
+```javascript
+import { useForm } from 'formv';
+
+const [state, { set }] = useForm({
+    username: null,
+    profile: {
+        age: null,
+        created: null
+    }
+});
+```
+
+Using the `set` function provided by `useForm` you can use a curried function to pass to your `Input` component. Interestingly if you use the approach below rather than creating a new function every time, the `set('username')` will never change, and as such makes everything a whole lot easier when it comes to wrapping your `Input` field in [`memo`](https://reactjs.org/docs/react-api.html#reactmemo).
+
+```jsx
+<Input value={state.username} onChange={set('username')} />
+<Input value={state.profile.age} onChange={set('profile.age')} />
+<Input value={state.profile.created} onChange={set('profile.created')} />
+```
+
+In contrast, if you were to use the non-curried version &ndash; which works perfectly fine and is illustrated below &ndash; each time the component is rendered you'd be creating a new function which would cause the component to re-render even when it didn't need to. In an ideal scenario the component would only re-render when its value was modified.
+
+```jsx
+<Input value={state.username} onChange={({ target }) => set('username', target.value)} />
+```
+
+You'll also notice that nested objects are handled with the dot notation thanks to [`Lodash`](https://lodash.com/).
+
 ## Applying Styles
 
 Although Formv uses the [`display: contents`](https://caniuse.com/#feat=css-display-contents) on the `form`, `fieldset` and `Field` container to make styling easier, support is still lacking in pre-Chromium versions of Edge. Therefore to support those browsers you'll need to _normalise_ the `form`, `fieldset` and `Field` container elements by passing the `legacy` prop to the `Form` component.
