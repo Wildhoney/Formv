@@ -101,9 +101,9 @@ There are *some* instances where skipping validation might be beneficial. Althou
 
 In the above form if you were to add another button alongside our existing `button`, you can have one `button` that runs the front-end validation in its entirety, and another `button` that skips it altogether.
 
-```html
+```jsx
 <button type="submit">Submit</button>
-<button type="submit">Submit Without Validation</button>
+<button type="submit" formNoValidate>Submit Without Validation</button>
 ```
 
 Interestingly when you tap `enter` in a form, the first `button` in the DOM hierarchy will be the button that's used to submit the form; in the above case `enter` would run the validation. However if you were to reverse the order of the buttons in the DOM, the `enter` key will submit the form **without** the front-end validation.
