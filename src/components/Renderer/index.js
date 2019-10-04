@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 export default function Renderer({ type, message, messages, className }) {
     switch (type) {
         case 'success':
-            return <div className={`formv-messages ${className}`.trim()}>{messages}</div>;
+            return <div className={`formv-messages ${className}`.trim()}>{message}</div>;
 
         default:
             return (
