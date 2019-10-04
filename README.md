@@ -231,10 +231,10 @@ By default `Formv` uses its own renderer for displaying error messages, and prov
 Taking advantage of your own custom `renderer` requires setting up a component that accepts three props: `message`, `messages` and `type` where `type` can be one of the three values: `success`, `error-generic` and `error-validation`. The `messages` prop is populated for error messages, and the `message` prop is populated for success messages.
 
 ```jsx
-<Form renderer={props => <Messages {...props} />} onSubmitted={handleSubmitted} />
+<Form renderer={props => <Messages {...props} />} />
 ```
 
-We provide an [example of the custom `Messages` renderer](/Wildhoney/Formv/blob/master/example/js/components/Messages/index.js) in the `example/` directory.
+We provide an [example of the custom `Messages` renderer](/example/js/components/Messages/index.js) in the `example/` directory.
 
 ## Default Behaviours
 
