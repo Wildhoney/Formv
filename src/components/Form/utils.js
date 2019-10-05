@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
-import Error from '../../helpers/errors';
-import Success from '../../helpers/success';
+import { Error, Success } from '../../';
 
 export function handleSubmit({ form, button, actions, onInvalid, onSubmitting, onSubmitted }) {
     return useCallback(
@@ -91,7 +90,7 @@ export function handleInvalid({ onInvalid }) {
     return onInvalid;
 }
 
-function collateInvalidFields(form, messages = {}) {
+export function collateInvalidFields(form, messages = {}) {
     const keys = Object.keys(messages);
 
     return Array.from(form.elements).filter(element => {
@@ -99,7 +98,7 @@ function collateInvalidFields(form, messages = {}) {
     });
 }
 
-function getHighestElement(invalidFields) {
+export function getHighestElement(invalidFields) {
     const [element] = invalidFields.reduce(
         ([highestElement, elementPosition], element) => {
             const position = element.getBoundingClientRect();
@@ -114,18 +113,19 @@ function getHighestElement(invalidFields) {
     return element;
 }
 
-function isSubmitButton(element) {
+export function isSubmitButton(element) {
     const name = element.nodeName.toLowerCase();
     const type = element.getAttribute('type');
 
     if (name === 'input' && type === 'submit') return true;
-    if ((name === 'button' && type === 'submit') || type === null) return true;
+    if (name === 'button' && (type === 'submit' || type === null)) return true;
+    return false;
 }
 
 export function getStyles(isLegacy) {
     return isLegacy ? {} : { display: 'contents' };
 }
 
-function isRelatedException(error) {
+export function isRelatedException(error) {
     return error instanceof Error.Generic || error instanceof Error.Validation;
 }

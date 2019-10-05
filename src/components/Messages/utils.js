@@ -1,5 +1,14 @@
 export { getStyles } from '../Form/utils';
 
+export function handleScroll({ successMessage, genericMessages, noScroll }) {
+    return container => {
+        !noScroll &&
+            container &&
+            (successMessage || genericMessages.length > 0) &&
+            setTimeout(() => container.firstChild.scrollIntoView({ block: 'start' }));
+    };
+}
+
 export function getMessages(field, customMessages) {
     const messages = (() => {
         for (var key in field.validity) {
@@ -9,13 +18,4 @@ export function getMessages(field, customMessages) {
     })();
 
     return [].concat(messages);
-}
-
-export function handleScroll({ successMessage, genericMessages, noScroll }) {
-    return container => {
-        !noScroll &&
-            container &&
-            (successMessage || genericMessages.length > 0) &&
-            setTimeout(() => container.firstChild.scrollIntoView({ block: 'start' }));
-    };
 }
