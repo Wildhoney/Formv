@@ -14,6 +14,19 @@
 
 ---
 
+## Contents
+
+1. [Getting Started](#getting-started)
+2. [Customising Messages](#customising-messages)
+3. [Skipping Validation](#skipping-validation)
+4. [JS Validation](#js-validation)
+5. [API Validation](#api-validation)
+6. [Success Messages](#success-messages)
+7. [Managing State](#managing-state)
+8. [Applying Styles](#applying-styles)
+9. [Custom Renderer](#custom-renderer)
+10. [Default Behaviours](#default-behaviours)
+
 ## Getting Started
 
 Formv utilises the native [form validation](https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Form_validation) which is built-in to all recent browsers &ndash; as such, all validation rules are set on the relevant form fields using `required`, `pattern`, `minLength`, etc...
@@ -263,6 +276,7 @@ import styled from 'styled-components';
 const Container = styled.div`
     display: grid;
     grid-auto-flow: row;
+    grid-gap: 10px;
 `;
 
 export default function MyForm() {
@@ -288,7 +302,7 @@ export default function MyForm() {
 }
 ```
 
-## Renderer
+## Custom Renderer
 
 By default `Formv` uses its own renderer for displaying error messages, and provides appropriate class names for you to style. Nevertheless it may be easier to style if you provide your own `renderer` prop to the `Form` component, which allows you take full control over the messages. It's especially useful if you use styling techniques such as `styled-components`.
 
