@@ -219,8 +219,8 @@ const [state, { set }] = useForm({
     username: null,
     profile: {
         age: null,
-        created: null
-    }
+        created: null,
+    },
 });
 ```
 
@@ -255,6 +255,38 @@ By default Formv applies the `Messages` component after your `children` in the `
 ```
 
 One of the great things about the `display: contents` is that by default **all** of the `Formv` elements are styled that way, and as such you can take full advantage of CSS grids to style your forms. With the elements in the `Field` component being the first set of elements that will be styled according to your grid layout.
+
+```jsx
+import { Form, Field } from 'formv';
+import styled from 'styled-components';
+
+const Container = styled.div`
+    display: grid;
+    grid-auto-flow: row;
+`;
+
+export default function MyForm() {
+    return (
+        <Container>
+            <Form onSubmitted={handleSubmitted}>
+                <Field>
+                    <input type="text" name="name" required />
+                </Field>
+
+                <Field>
+                    <input type="email" name="email" required />
+                </Field>
+
+                <Field>
+                    <input name="age" required min={18} />
+                </Field>
+
+                <button type="submit">Submit</button>
+            </Form>
+        </Container>
+    );
+}
+```
 
 ## Renderer
 
