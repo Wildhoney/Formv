@@ -9,13 +9,22 @@ export function handleScroll({ successMessage, genericMessages, noScroll }) {
     };
 }
 
-export function getMessages(field, customMessages) {
-    const messages = (() => {
-        for (var key in field.validity) {
-            const isInvalid = key !== 'valid' && field.validity[key];
-            if (isInvalid) return customMessages[key] || field.validationMessage;
-        }
-    })();
+export function getMessages(fields, customMessages) {
+    const validationMessages = [];
 
-    return [].concat(messages);
+    fields.forEach(field => {
+        const messages = (() => {
+            for (var key in field.validity) {
+                const isInvalid = key !== 'valid' && field.validity[key];
+                if (isInvalid) return customMessages[key] || field.validationMessage;
+            }
+        })();
+        validationMessages.push(messages);
+    });
+
+    return validationMessages.flat().filter(uniqueList);
+}
+
+function uniqueList(value, index, list) {
+    return list.indexOf(value) === index;
 }

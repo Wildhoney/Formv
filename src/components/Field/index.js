@@ -10,15 +10,15 @@ export default function Field({ position, messages, children, ...props }) {
 
     // Hold a reference to the contained field element.
     const [container, setContainer] = useState(null);
-    const [field, setField] = useState(null);
-    const name = field && field.name;
+    const [fields, setFields] = useState([]);
+    const names = fields.map(({ name }) => name);
     const augmentedProps = {
         ...context,
         container,
-        field,
+        fields,
         messages,
         setContainer,
-        setField,
+        setFields,
     };
     const handleField = utils.handleField(augmentedProps);
 
@@ -26,14 +26,16 @@ export default function Field({ position, messages, children, ...props }) {
     utils.handleScroll(augmentedProps);
 
     // Reset custom validity upon render.
-    field && field.setCustomValidity('');
+    fields.forEach(field => field.setCustomValidity(''));
 
     // Determine if the field is contained within the invalid forms determined
     // by the form component.
-    const isInvalid = context.store.invalidFields.includes(field);
+    const isInvalid = context.store.invalidFields.some(field => fields.includes(field));
 
     // Add or remove the "invalid" class name of the field.
-    field && field.classList[isInvalid ? 'add' : 'remove']('invalid');
+    fields.forEach(field => field.classList[isInvalid ? 'add' : 'remove']('invalid'));
+
+    console.log(context.store.validityMessages);
 
     return (
         <div
@@ -43,31 +45,13 @@ export default function Field({ position, messages, children, ...props }) {
             {...props}
         >
             {isInvalid && utils.isBefore(position) && (
-                <Messages
-                    id={context.store.id}
-                    type="error-validation"
-                    className="formv-messages-error-validation"
-                    field={field}
-                    legacy={context.legacy}
-                    customMessages={messages}
-                    validityMessages={context.store.validityMessages[name]}
-                    renderer={context.renderer}
-                />
+                <Messages {...utils.getMessageProps({ context, fields, messages, names })} />
             )}
 
             {children}
 
             {isInvalid && utils.isAfter(position) && (
-                <Messages
-                    id={context.store.id}
-                    type="error-validation"
-                    className="formv-messages-error-validation"
-                    field={field}
-                    legacy={context.legacy}
-                    customMessages={messages}
-                    validityMessages={context.store.validityMessages[name]}
-                    renderer={context.renderer}
-                />
+                <Messages {...utils.getMessageProps({ context, fields, messages, names })} />
             )}
         </div>
     );

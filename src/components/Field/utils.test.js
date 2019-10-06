@@ -26,6 +26,10 @@ test('It should be able to locate the input within the given field;', t => {
     form.append(first.field);
     form.append(second.field);
 
-    t.is(utils.locateField(form, first.field), first.input);
-    t.is(utils.locateField(form, second.field), second.input);
+    t.deepEqual(utils.locateFields(form, first.field), [first.input]);
+    t.deepEqual(utils.locateFields(form, second.field), [second.input]);
+
+    first.field.append(second.input);
+    t.deepEqual(utils.locateFields(form, first.field), [first.input, second.input]);
+    t.deepEqual(utils.locateFields(form, second.field), []);
 });

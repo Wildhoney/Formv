@@ -11,18 +11,19 @@ export function isAfter(x) {
     return x === 'after';
 }
 
-export function handleField({ form, field, messages, setContainer, setField }) {
+export function handleField({ form, fields, messages, setContainer, setFields }) {
     return useCallback(
         container => {
             setContainer(container);
-            setField(locateField(form, container));
+            setFields(locateFields(form, container));
 
-            field &&
+            fields.forEach(field =>
                 field.addEventListener('invalid', ({ target }) => {
                     target.setCustomValidity(getMessages(field, messages)[0]);
-                });
+                }),
+            );
         },
-        [form, field, setField],
+        [form, setFields],
     );
 }
 
@@ -33,7 +34,26 @@ export function handleScroll({ store, container, noScroll }) {
         setTimeout(() => container.firstChild.scrollIntoView({ block: 'start' }));
 }
 
-export function locateField(form, field) {
-    if (!form || !field) return null;
-    return [...form.elements].find(element => field.contains(element)) || null;
+export function locateFields(form, field) {
+    if (!form || !field) return [];
+    return [...form.elements].filter(element => field.contains(element));
+}
+
+export function getMessageProps({ context, fields, messages, names }) {
+    const validityMessages = Object.entries(context.store.validityMessages)
+        .reduce((accum, [name, message]) => {
+            return names.includes(name) ? [...accum, message] : accum;
+        }, [])
+        .flat();
+
+    return {
+        id: context.store.id,
+        type: 'error-validation',
+        className: 'formv-messages-error-validation',
+        fields,
+        legacy: context.legacy,
+        customMessages: messages,
+        validityMessages,
+        renderer: context.renderer,
+    };
 }

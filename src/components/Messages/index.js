@@ -4,7 +4,7 @@ import * as utils from './utils';
 
 function Messages({
     type,
-    field,
+    fields,
     successMessage,
     genericMessages,
     className,
@@ -28,7 +28,7 @@ function Messages({
     // Gather the validation messages from either the browser's
     // defaults, or the custom messages if the developer has set them up.
     const messages = [
-        ...(field ? utils.getMessages(field, props.customMessages) : []),
+        ...utils.getMessages(fields, props.customMessages),
         ...[].concat(props.validityMessages),
         ...genericMessages,
     ].filter(Boolean);
@@ -49,7 +49,7 @@ Messages.propTypes = {
     type: PropTypes.oneOf(['success', 'error-generic', 'error-validation']).isRequired,
     legacy: PropTypes.bool.isRequired,
     className: PropTypes.string.isRequired,
-    field: PropTypes.instanceOf(global.HTMLElement),
+    fields: PropTypes.arrayOf(PropTypes.instanceOf(global.HTMLElement)),
     noScroll: PropTypes.bool,
     successMessage: PropTypes.node,
     customMessages: PropTypes.object,
@@ -61,6 +61,7 @@ Messages.defaultProps = {
     noScroll: false,
     successMessage: null,
     customMessages: {},
+    fields: [],
     validityMessages: [],
     genericMessages: [],
 };
