@@ -24,7 +24,7 @@
 8. [Applying Styles](#applying-styles)
 9. [Custom Renderer](#custom-renderer)
 10. [Default Behaviours](#default-behaviours)
-11. [Form Architecture](#Form Architecture)
+11. [Form Architecture](#form-architecture)
 
 ## Getting Started
 
