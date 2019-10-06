@@ -24,6 +24,7 @@
 8. [Applying Styles](#applying-styles)
 9. [Custom Renderer](#custom-renderer)
 10. [Default Behaviours](#default-behaviours)
+11. [Form Architecture](#Form Architecture)
 
 ## Getting Started
 
@@ -319,3 +320,53 @@ By default Formv disables the form when it's being submitted, which includes the
 You can also skip the front-end validation entirely on a button-by-button basis with the native `formNoValidate` attribute on your chosen button.
 
 > Note that if you need anything from state, Formv exports the `Context` which you can use in the `useContext` hook or via the more traditional `Context.Consumer` approach.
+
+## Form Architecture
+
+When deciding on an architecture for your forms, it's recommended to think about them as three separate layers. The first and most simple layer is the `Field` which handles logic pertaining to an individual input field; it can maintain its own state such as a country selector maintains its state for a list of countries, but it does **not** maintain state for its value. Secondly there is the `Fieldset` layer which composes many `Field` components and is again stateless. Last of all there is the parent `Form` component which maintains state foe the entire form.
+
+With the above architecture it allows your `Field` and `Fieldset` components to be used freely in any `Form` components without any quirky state management.
+
+Using `Formv` it's easy to have the aforementioned setup as illustrated below.
+
+```jsx
+import * as fv from 'formv';
+
+function Form() {
+    const [state, { set }] = fv.useForm({
+        name: null,
+        age: null,
+    });
+
+    return (
+        <fv.Form onSubmitted={handleSubmitted}>
+            <Fieldset onChange={set} />
+        </fv.Form>
+    );
+}
+
+function Fieldset({ onChange }) {
+    return (
+        <>
+            <FieldName onChange={onChange('name')} />
+            <FieldAge onChange={onChange('age')} />
+        </>
+    );
+}
+
+function FieldName({ onChange }) {
+    return (
+        <fv.Field>
+            <input type="text" onChange={({ target }) => onChange(target.value)} />
+        </fv.Field>
+    );
+}
+
+function FieldAge({ onChange }) {
+    return (
+        <fv.Field>
+            <input type="number" onChange={({ target }) => onChange(target.value)} />
+        </fv.Field>
+    );
+}
+```
