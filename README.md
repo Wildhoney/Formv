@@ -1,6 +1,6 @@
 <img src="example/images/logo.png" alt="Formv" width="150px" />
 
-> React form validation using the validation native to all recent browsers. Also includes support for handling API validation messages.
+> React form validation using the validation native to all recent browsers. Also includes support for handling API validation messages, success messages, memoized and nested form state, and super easy styling.
 
 ![Travis](http://img.shields.io/travis/Wildhoney/Formv.svg?style=for-the-badge)
 &nbsp;
