@@ -33,7 +33,7 @@
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
     "browser-env": "^3.2.6",
-    "concurrently": "^4.1.2",
+    "concurrently": "^5.0.0",
     "core-js": "^3.2.1",
     "delay": "^4.3.0",
     "enzyme": "^3.10.0",
