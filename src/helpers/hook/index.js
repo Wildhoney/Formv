@@ -7,7 +7,12 @@ export default function useForm(initialState) {
     const get = useCallback(name => _.get(state, name), [state]);
 
     const set = useCallback((name, value) => {
-        const setter = value => setState(state => ({ ..._.set(state, name, value) }));
+        const setter = value =>
+            setState(state =>
+                Array.isArray(state)
+                    ? [..._.set(state, name, value)]
+                    : { ..._.set(state, name, value) },
+            );
         return value ? setter(value) : useCallback(setter, []);
     }, []);
 

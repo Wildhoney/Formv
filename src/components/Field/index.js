@@ -35,8 +35,6 @@ export default function Field({ position, messages, children, ...props }) {
     // Add or remove the "invalid" class name of the field.
     fields.forEach(field => field.classList[isInvalid ? 'add' : 'remove']('invalid'));
 
-    console.log(context.store.validityMessages);
-
     return (
         <div
             ref={handleField}
