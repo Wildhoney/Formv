@@ -7,12 +7,7 @@ export default function useForm(initialState) {
 
     const get = useCallback(name => _.get(state, name), [state]);
     const set = useCallback((name, value) => {
-        const setter = value =>
-            setState(state =>
-                Array.isArray(state)
-                    ? [..._.set(state, name, value)]
-                    : { ..._.set(state, name, value) },
-            );
+        const setter = value => setState(state => _.cloneDeep(_.set(state, name, value)));
 
         if (value) return setter(value);
         !fns.get(name) && fns.set(name, setter);
