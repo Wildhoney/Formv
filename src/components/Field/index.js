@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Messages from '../Messages';
 import { Context } from '../Form';
@@ -23,7 +23,7 @@ export default function Field({ position, messages, children, ...props }) {
     const handleField = utils.handleField(augmentedProps);
 
     // Used to scroll to the first invalid element.
-    utils.handleScroll(augmentedProps);
+    useEffect(() => utils.handleScroll(augmentedProps), [context.store.id]);
 
     // Reset custom validity upon render.
     fields.forEach(field => field.setCustomValidity(''));
