@@ -5,7 +5,7 @@ import { reducer, initialState, unboundActions } from '../../helpers/store';
 import Messages from '../Messages';
 import * as utils from './utils';
 
-export const Context = createContext();
+export const Context = createContext(null);
 
 export default function Form({ children, ...props }) {
     // Hold a reference to the form element and the clicked button.

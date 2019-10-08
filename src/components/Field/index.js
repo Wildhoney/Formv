@@ -8,6 +8,10 @@ export default function Field({ position, messages, children, ...props }) {
     // Gather the context from the parent Form component.
     const context = useContext(Context);
 
+    if (!context)
+        // Friendly error for when the developer forgets to wrap a <Form /> component.
+        throw new Error('Formv: Field components must be nested within a Form component.');
+
     // Hold a reference to the contained field element.
     const [container, setContainer] = useState(null);
     const [fields, setFields] = useState([]);
