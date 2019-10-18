@@ -1,7 +1,15 @@
 import { useCallback } from 'react';
 import { Error, Success } from '../../';
 
-export function handleSubmit({ form, button, actions, onInvalid, onSubmitting, onSubmitted }) {
+export function handleSubmit({
+    form,
+    button,
+    isMounted,
+    actions,
+    onInvalid,
+    onSubmitting,
+    onSubmitted,
+}) {
     return useCallback(
         async event => {
             event.preventDefault();
@@ -38,7 +46,9 @@ export function handleSubmit({ form, button, actions, onInvalid, onSubmitting, o
                 // Both the custom validation and native validation have passed successfully. We
                 // do a check on whether the developer provided a success message which we can render.
                 const result = await onSubmitted(event);
-                result instanceof Success && actions.setSuccessMessage(result.message);
+                isMounted() &&
+                    result instanceof Success &&
+                    actions.setSuccessMessage(result.message);
             } catch (error) {
                 // We always invoke the `onInvalid` callback even if the errors are not necessarily
                 // applicable to Formv validation.
@@ -62,7 +72,7 @@ export function handleSubmit({ form, button, actions, onInvalid, onSubmitting, o
             } finally {
                 // Modify the state to show that everything has completed, and we're in either a
                 // success or error state.
-                actions.isLoading(false);
+                isMounted() && actions.isLoading(false);
             }
         },
         [form, button, actions, onInvalid, onSubmitting, onSubmitted],

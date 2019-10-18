@@ -1,5 +1,6 @@
 import React, { useState, useReducer, useRef, createContext } from 'react';
 import PropTypes from 'prop-types';
+import { useMountedState } from 'react-use';
 import Renderer from '../Renderer';
 import { reducer, initialState, unboundActions } from '../../helpers/store';
 import Messages from '../Messages';
@@ -11,11 +12,12 @@ export default function Form({ children, ...props }) {
     // Hold a reference to the form element and the clicked button.
     const button = useRef(null);
     const [form, setForm] = useState(null);
+    const isMounted = useMountedState();
 
     // Bind to the reducer to manage the form's state.
     const [store, dispatch] = useReducer(reducer, initialState);
     const actions = unboundActions(dispatch);
-    const augmentedProps = { ...props, store, form, button, actions };
+    const augmentedProps = { ...props, store, form, button, isMounted, actions };
 
     // Setup the event handlers for the form element.
     const handleSubmit = utils.handleSubmit(augmentedProps);
