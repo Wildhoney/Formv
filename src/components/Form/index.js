@@ -1,36 +1,30 @@
-import React, { useState, useReducer, useRef, createContext } from 'react';
-import PropTypes from 'prop-types';
+import React, { useRef } from 'react';
 import { useMountedState } from 'react-use';
-import Renderer from '../Renderer';
-import { reducer, initialState, unboundActions } from '../../helpers/store';
-import Messages from '../Messages';
+import PropTypes from 'prop-types';
 import * as utils from './utils';
+import * as duck from './duck';
+import { Context } from '../Context';
 
-export const Context = createContext(null);
-
-export default function Form({ children, ...props }) {
-    // Hold a reference to the form element and the clicked button.
+export default function Form(props) {
+    const form = useRef(null);
     const button = useRef(null);
-    const [form, setForm] = useState(null);
     const isMounted = useMountedState();
+    const [state, actions] = utils.useDuck(duck);
 
-    // Bind to the reducer to manage the form's state.
-    const [store, dispatch] = useReducer(reducer, initialState);
-    const actions = unboundActions(dispatch);
-    const augmentedProps = { ...props, store, form, button, isMounted, actions };
+    // Either use children as-is, or call it as a function passing in the form's state.
+    const children = utils.isFunction(props.children) ? props.children(state) : props.children;
 
-    // Setup the event handlers for the form element.
-    const handleSubmit = utils.handleSubmit(augmentedProps);
-    const handleReset = utils.handleReset(augmentedProps);
-    const handleInvalid = utils.handleInvalid(augmentedProps);
-    const handleClick = utils.handleClick(augmentedProps);
+    // Setup all of the event listeners passing in the necessary props.
+    const handleInvalid = utils.handleInvalid({ onInvalid: props.onInvalid });
+    const handleSubmit = utils.handleSubmit({ ...props, form, button, state, actions, isMounted });
+    const handleClick = utils.handleClick({ button });
+    const handleReset = utils.handleReset({ actions, onReset: props.onReset });
 
     return (
-        <Context.Provider value={augmentedProps}>
+        <Context.Provider>
             <form
-                ref={setForm}
-                style={utils.getStyles(props.legacy)}
-                className={`formv ${props.className}`.trim()}
+                ref={form}
+                style={utils.getStyles()}
                 noValidate={props.noValidate}
                 onReset={handleReset}
                 onInvalid={handleInvalid}
@@ -38,33 +32,9 @@ export default function Form({ children, ...props }) {
                 onSubmit={handleSubmit}
             >
                 <fieldset
-                    style={utils.getStyles(props.legacy)}
-                    disabled={props.noDisable ? false : store.isLoading}
+                    disabled={props.noDisable ? false : state.isLoading}
+                    style={utils.getStyles()}
                 >
-                    {store.successMessage && (
-                        <Messages
-                            id={store.id}
-                            type="success"
-                            className="formv-messages-success"
-                            legacy={props.legacy}
-                            noScroll={props.noScroll}
-                            successMessage={store.successMessage}
-                            renderer={props.renderer}
-                        />
-                    )}
-
-                    {store.genericMessages.length > 0 && (
-                        <Messages
-                            id={store.id}
-                            type="error-generic"
-                            className="formv-messages-error-generic"
-                            legacy={props.legacy}
-                            noScroll={props.noScroll}
-                            genericMessages={store.genericMessages}
-                            renderer={props.renderer}
-                        />
-                    )}
-
                     {children}
                 </fieldset>
             </form>
@@ -73,11 +43,7 @@ export default function Form({ children, ...props }) {
 }
 
 Form.propTypes = {
-    className: PropTypes.string,
-    renderer: PropTypes.func,
-    legacy: PropTypes.bool,
     noDisable: PropTypes.bool,
-    noScroll: PropTypes.bool,
     noValidate: PropTypes.bool,
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
     onInvalid: PropTypes.func,
@@ -88,10 +54,7 @@ Form.propTypes = {
 
 Form.defaultProps = {
     className: '',
-    renderer: Renderer,
-    legacy: false,
     noDisable: false,
-    noScroll: false,
     noValidate: true,
     children: <></>,
     onInvalid: () => {},

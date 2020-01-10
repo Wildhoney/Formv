@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const GenericError = styled.ul.attrs({ className: 'formv-messages' })`
     padding: 20px;
+    margin: 0;
     list-style-type: none;
     background-color: #ffeded;
     font-size: 1em;

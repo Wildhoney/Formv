@@ -2,24 +2,13 @@ import React, { useState, useCallback } from 'react';
 import delay from 'delay';
 import * as fv from 'formv';
 import Form from '../Form';
-import Messages from '../Messages';
 import * as e from './styles';
 
-const formStateTypes = {
-    idle: Symbol('idle'),
-    submitting: Symbol('submitting'),
-    submitted: Symbol('submitted'),
-};
-
 export default function Layout() {
-    const [formState, setFormState] = useState(formStateTypes.idle);
     const [mockGenericErrors, setMockGenericErrors] = useState(false);
     const [mockValidationErrors, setMockValidationErrors] = useState(false);
 
-    const handleInvalid = useCallback(() => setFormState(formStateTypes.idle));
     const handleSubmitting = useCallback(state => () => {
-        setFormState(formStateTypes.submitting);
-
         if (state.name.toLowerCase().trim() === 'bot')
             throw new fv.Error.Validation({
                 name: 'Bots are not allowed to send messages.',
@@ -30,21 +19,18 @@ export default function Layout() {
         await delay(2500);
 
         if (mockGenericErrors) {
-            setFormState(formStateTypes.idle);
             throw new fv.Error.Generic(
                 'An unexpected occurred when pretending to send your message.',
             );
         }
 
         if (!mockGenericErrors && mockValidationErrors) {
-            setFormState(formStateTypes.idle);
             throw new fv.Error.Validation({
                 email:
                     'We were unable to validate the supplied e-mail address. Please try again later.',
             });
         }
 
-        setFormState(formStateTypes.submitted);
         return new fv.Success('We have successfully pretended to send your message!');
     });
 
@@ -96,13 +82,7 @@ export default function Layout() {
                 </e.Text>
             </e.Information>
 
-            <Form
-                isSubmitting={formState === formStateTypes.submitting}
-                onSubmitting={handleSubmitting}
-                onSubmitted={handleSubmitted}
-                onInvalid={handleInvalid}
-                renderer={props => <Messages {...props} />}
-            />
+            <Form onSubmitting={handleSubmitting} onSubmitted={handleSubmitted} />
         </e.Container>
     );
 }

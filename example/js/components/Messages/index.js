@@ -2,24 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as e from './styles';
 
-export default function Messages({ type, message, messages }) {
+export default function Messages({ type, value }) {
+    if (!value) return null;
+
     switch (type) {
         case 'success':
-            return <e.Success>{message}</e.Success>;
+            return <e.Success>{value}</e.Success>;
 
-        case 'error-generic':
-            return (
-                <e.GenericError>
-                    {messages.map(message => (
-                        <li key={`message_${message}`}>{message}</li>
-                    ))}
-                </e.GenericError>
-            );
+        case 'generic':
+            return <e.GenericError>{value}</e.GenericError>;
 
-        case 'error-validation':
+        case 'validation':
             return (
                 <e.ValidationError>
-                    {messages.map(message => (
+                    {value.map(message => (
                         <li key={`message_${message}`}>{message}</li>
                     ))}
                 </e.ValidationError>
@@ -29,6 +25,9 @@ export default function Messages({ type, message, messages }) {
 
 Messages.propTypes = {
     type: PropTypes.string.isRequired,
-    message: PropTypes.string,
-    messages: PropTypes.arrayOf(PropTypes.string),
+    value: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.string]),
+};
+
+Messages.defaultProps = {
+    value: null,
 };

@@ -12,11 +12,6 @@ test('It should be able to determine if the exception is related;', t => {
     t.true(utils.isRelatedException(validationError));
 });
 
-test('It should be able to get the styles based on the legacy prop;', t => {
-    t.deepEqual(utils.getStyles(true), {});
-    t.deepEqual(utils.getStyles(false), { display: 'contents' });
-});
-
 test('It should be able to determine if a button is a form submit button;', t => {
     t.false(utils.isSubmitButton(document.createElement('div')));
 
@@ -34,18 +29,6 @@ test('It should be able to determine if a button is a form submit button;', t =>
     t.true(utils.isSubmitButton(button));
 });
 
-test('It should be able to determine the element that is highest in the DOM;', t => {
-    const first = document.createElement('input');
-    const second = document.createElement('input');
-    const third = document.createElement('input');
-
-    first.getBoundingClientRect = () => ({ top: 10 });
-    second.getBoundingClientRect = () => ({ top: 5 });
-    third.getBoundingClientRect = () => ({ top: 25 });
-
-    t.is(utils.getHighestElement([first, second, third]), second);
-});
-
 test('It should be able to yield a collection of the invalid form fields;', t => {
     const form = document.createElement('form');
     const first = document.createElement('input');
@@ -61,10 +44,13 @@ test('It should be able to yield a collection of the invalid form fields;', t =>
     form.append(third);
 
     t.deepEqual(
-        utils.collateInvalidFields(form, {
-            first: 'invalid',
-            third: 'invalid',
-        }),
+        utils.collateInvalidFields(
+            { current: form },
+            {
+                first: 'invalid',
+                third: 'invalid',
+            },
+        ),
         [first, third],
     );
 });
