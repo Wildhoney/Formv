@@ -5,6 +5,7 @@ const actionTypes = {
     id: Symbol('id'),
     reset: Symbol('reset'),
     loading: Symbol('loading'),
+    validity: Symbol('validity'),
     invalidFields: Symbol('invalid-fields'),
     messages: {
         success: Symbol('success'),
@@ -20,6 +21,7 @@ export function bindActions(dispatch) {
         id: () => dispatch({ type: actionTypes.id }),
         reset: () => dispatch({ type: actionTypes.reset }),
         isLoading: isLoading => dispatch({ type: actionTypes.loading, payload: { isLoading } }),
+        setFormValidity: isValid => dispatch({ type: actionTypes.validity, payload: { isValid } }),
         setInvalidFields: fields =>
             dispatch({ type: actionTypes.invalidFields, payload: { fields } }),
         setSuccessMessages: message =>
@@ -41,6 +43,9 @@ export function reducer(state, event) {
         }
         case actionTypes.loading: {
             return { ...state, isLoading: event.payload.isLoading };
+        }
+        case actionTypes.validity: {
+            return { ...state, isValid: event.payload.isValid };
         }
         case actionTypes.invalidFields: {
             return {

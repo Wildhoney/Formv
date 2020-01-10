@@ -4,6 +4,7 @@ import id from 'nanoid';
 export const defaultState = {
     isLoading: false,
     isValid: null,
+    isDirty: false,
     feedback: {
         error: null,
         success: null,

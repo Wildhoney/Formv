@@ -1,4 +1,4 @@
-import React, { useRef, useState, useLayoutEffect, useMemo } from 'react';
+import React, { useRef, useState, useLayoutEffect, useMemo, useEffect } from 'react';
 import { useMountedState, useList } from 'react-use';
 import PropTypes from 'prop-types';
 import * as utils from './utils';
@@ -34,11 +34,19 @@ export default function Form(props) {
     const handleClick = utils.handleClick({ button });
     const handleReset = utils.handleReset({ actions, onReset: props.onReset });
 
-    // Determine which field is the highest in the DOM.
+    useEffect(
+        // Set the state of the initial form validity.
+        () => actions.setFormValidity(form.current.checkValidity()),
+        [form],
+    );
+
     useLayoutEffect(() => {
+        // Ensure that we want the computation for the highest field to occur.
         if (props.noScroll) return;
         const isInvalidField = state.utils.invalidFields.length > 0;
         if (isInvalidField && !props.noValidate) return;
+
+        // Determine which field is the highest in the DOM.
         setHighestField(
             getHighestField(isInvalidField ? state.utils.invalidFields : fields, !isInvalidField),
         );
