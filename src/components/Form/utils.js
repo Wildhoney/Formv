@@ -1,5 +1,7 @@
-import { useCallback, useReducer, useMemo } from 'react';
+import { useCallback, useReducer, useMemo, useState } from 'react';
+import { equals } from 'ramda';
 import * as feedback from '../../helpers/feedback';
+import { useEffectOnce } from 'react-use';
 
 export function getStyles() {
     return { border: 0, padding: 0, margin: 0 };
@@ -9,8 +11,8 @@ export function isFunction(a) {
     return typeof a === 'function';
 }
 
-export function useDuck(duck) {
-    const [state, dispatch] = useReducer(duck.reducer, duck.initialState);
+export function useDuck(duck, initialState) {
+    const [state, dispatch] = useReducer(duck.reducer, initialState);
     const actions = useMemo(() => duck.bindActions(dispatch), [dispatch]);
     return [state, actions];
 }
@@ -156,8 +158,35 @@ export function handleInvalid({ messages: refinedMessages, onInvalid }) {
     );
 }
 
-export function handleChange() {
-    return useCallback(event => event.target.setCustomValidity(''), []);
+export function getFormData(form) {
+    const data = new FormData(form);
+    return [...[...data.keys()].sort(), ...data.values()];
+}
+
+export function handleChange({ form, dirtyCheck, setDirty }) {
+    const [state, setState] = useState(null);
+
+    // Set the initial form state.
+    useEffectOnce(() => {
+        if (dirtyCheck) {
+            setDirty(false);
+            setState(getFormData(form.current));
+        }
+    }, [form, dirtyCheck]);
+
+    return useCallback(
+        event => {
+            if (dirtyCheck) {
+                // Handle the dirty checking of the form.
+                const newState = getFormData(event.target.form);
+                setDirty(!equals(newState, state));
+            }
+
+            // Reset the form validity.
+            event.target.setCustomValidity('');
+        },
+        [state, dirtyCheck],
+    );
 }
 
 export function getValidationMessages(field, refinedMessages) {

@@ -11,7 +11,7 @@ export default function Form(props) {
     const form = useRef(null);
     const button = useRef(null);
     const isMounted = useMountedState();
-    const [state, actions] = utils.useDuck(duck);
+    const [state, actions] = utils.useDuck(duck, duck.getInitialState(props));
     const [highestField, setHighestField] = useState(null);
     const [fields, { push: addField }] = useList([]);
     const context = useMemo(() => ({ highestField, addField }), [highestField, addField]);
@@ -29,14 +29,18 @@ export default function Form(props) {
         actions,
         isMounted,
     });
-    const handleChange = utils.handleChange();
+    const handleChange = utils.handleChange({
+        form,
+        dirtyCheck: props.dirtyCheck,
+        setDirty: actions.setDirty,
+    });
     const handleInvalid = utils.handleInvalid(props);
     const handleClick = utils.handleClick({ button });
     const handleReset = utils.handleReset({ actions, onReset: props.onReset });
 
     useEffect(
         // Set the state of the initial form validity.
-        () => actions.setFormValidity(form.current.checkValidity()),
+        () => actions.setValidity(form.current.checkValidity()),
         [form],
     );
 
@@ -82,6 +86,7 @@ Form.propTypes = {
     noDisable: PropTypes.bool,
     noValidate: PropTypes.bool,
     messages: PropTypes.object,
+    dirtyCheck: PropTypes.bool,
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
     onInvalid: PropTypes.func,
     onReset: PropTypes.func,
@@ -95,6 +100,7 @@ Form.defaultProps = {
     noDisable: false,
     noValidate: true,
     messages: {},
+    dirtyCheck: true,
     children: <></>,
     onInvalid: () => {},
     onReset: () => {},

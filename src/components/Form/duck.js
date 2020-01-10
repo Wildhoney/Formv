@@ -6,6 +6,7 @@ const actionTypes = {
     reset: Symbol('reset'),
     loading: Symbol('loading'),
     validity: Symbol('validity'),
+    dirty: Symbol('dirty'),
     invalidFields: Symbol('invalid-fields'),
     messages: {
         success: Symbol('success'),
@@ -14,14 +15,17 @@ const actionTypes = {
     },
 };
 
-export const initialState = defaultState;
+export const getInitialState = ({ dirtyCheck }) => {
+    return { ...defaultState, isDirty: dirtyCheck ? false : null };
+};
 
 export function bindActions(dispatch) {
     return {
         id: () => dispatch({ type: actionTypes.id }),
         reset: () => dispatch({ type: actionTypes.reset }),
         isLoading: isLoading => dispatch({ type: actionTypes.loading, payload: { isLoading } }),
-        setFormValidity: isValid => dispatch({ type: actionTypes.validity, payload: { isValid } }),
+        setValidity: isValid => dispatch({ type: actionTypes.validity, payload: { isValid } }),
+        setDirty: isDirty => dispatch({ type: actionTypes.dirty, payload: { isDirty } }),
         setInvalidFields: fields =>
             dispatch({ type: actionTypes.invalidFields, payload: { fields } }),
         setSuccessMessages: message =>
@@ -36,7 +40,11 @@ export function bindActions(dispatch) {
 export function reducer(state, event) {
     switch (event.type) {
         case actionTypes.reset: {
-            return { ...defaultState, utils: { ...defaultState.utils, id: state.utils.id } };
+            return {
+                ...defaultState,
+                isDirty: state.isDirty,
+                utils: { ...defaultState.utils, id: state.utils.id },
+            };
         }
         case actionTypes.id: {
             return { ...state, utils: { ...state.utils, id: id() } };
@@ -46,6 +54,9 @@ export function reducer(state, event) {
         }
         case actionTypes.validity: {
             return { ...state, isValid: event.payload.isValid };
+        }
+        case actionTypes.dirty: {
+            return { ...state, isDirty: event.payload.isDirty };
         }
         case actionTypes.invalidFields: {
             return {

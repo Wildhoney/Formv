@@ -1,11 +1,6 @@
 {
     "parser": "babel-eslint",
-    "extends": [
-        "standard",
-        "prettier",
-        "plugin:react/recommended",
-        "prettier/standard"
-    ],
+    "extends": ["standard", "prettier", "plugin:react/recommended", "prettier/standard"],
     "plugins": ["react"],
     "rules": {
         "no-sequences": "off",
@@ -17,5 +12,6 @@
         "react": {
             "version": "detect"
         }
-    }
+    },
+    "globals": { "FormData": true }
 }
