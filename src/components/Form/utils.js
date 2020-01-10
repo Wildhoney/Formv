@@ -1,5 +1,5 @@
 import { useCallback, useReducer, useMemo } from 'react';
-import { Error, Success } from '../../';
+import * as feedback from '../../helpers/feedback';
 
 export function getStyles() {
     return { border: 0, padding: 0, margin: 0 };
@@ -75,16 +75,16 @@ export function handleSubmit({
                 // throw an empty validation error to collect the error messages directly from
                 // each of the fields.
                 if (requiresValidation && !form.current.checkValidity())
-                    throw new Error.Validation({});
+                    throw new feedback.FormvValidationError({});
 
                 // Both the custom validation and native validation have passed successfully. We
                 // do a check on whether the developer provided a success message which we can render.
                 const result = await onSubmitted(event);
                 isMounted() &&
-                    result instanceof Success &&
+                    result instanceof feedback.FormvSuccess &&
                     actions.setSuccessMessages(result.message);
             } catch (error) {
-                if (error instanceof Error.Validation) {
+                if (error instanceof feedback.FormvValidationError) {
                     // Feed the API validation errors back into the component.
                     const invalidFields = collateInvalidFields(form, error.messages);
 
@@ -103,7 +103,7 @@ export function handleSubmit({
                     );
                 }
 
-                if (error instanceof Error.Generic) {
+                if (error instanceof feedback.FormvGenericError) {
                     // Feed any generic API error messages back into the component.
                     return void actions.setGenericMessages(error.messages);
                 }
@@ -151,7 +151,10 @@ export function collateInvalidFields(form, messages = {}) {
 }
 
 export function isRelatedException(error) {
-    return error instanceof Error.Generic || error instanceof Error.Validation;
+    return (
+        error instanceof feedback.FormvGenericError ||
+        error instanceof feedback.FormvValidationError
+    );
 }
 
 export function getMessages(fields, refinedMessages, customErrorMessages) {
