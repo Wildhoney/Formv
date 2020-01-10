@@ -48,6 +48,9 @@ export function handleSubmit({
             actions.reset();
             actions.isLoading(true);
 
+            // Remove the invalid class name from all form fields.
+            Array.from(form.current.elements).forEach(field => field.classList.remove('invalid'));
+
             // Remove the invalid class name from the form.
             form.current.classList.remove('invalid');
 
@@ -87,11 +90,6 @@ export function handleSubmit({
                 if (error instanceof feedback.FormvValidationError) {
                     // Feed the API validation errors back into the component.
                     const invalidFields = collateInvalidFields(form, error.messages);
-
-                    // Remove the invalid class name from all form fields.
-                    Array.from(form.current.elements).forEach(field =>
-                        field.classList.remove('invalid'),
-                    );
 
                     invalidFields.forEach(field => {
                         // Apply the invalid class name to each invalid field.

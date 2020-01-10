@@ -48,8 +48,8 @@ export function getHelpers(page) {
     }
 
     async function getGenericMessages() {
-        await page.waitFor('.formv-messages');
-        return getValidationMessages();
+        await page.waitFor('.formv-message');
+        return page.$eval('.formv-message', node => node.innerHTML);
     }
 
     async function includesClassName(selector, className) {

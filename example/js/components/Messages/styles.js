@@ -1,12 +1,17 @@
 import styled from 'styled-components';
 
-export const GenericError = styled.ul.attrs({ className: 'formv-messages' })`
+export const Success = styled.p.attrs({ className: 'formv-message' })`
+    background-color: #e5f9e5;
     padding: 20px;
+    color: #002800;
     margin: 0;
-    list-style-type: none;
+`;
+
+export const GenericError = styled.p.attrs({ className: 'formv-message' })`
     background-color: #ffeded;
-    font-size: 1em;
+    padding: 20px;
     color: #4c1616;
+    margin: 0;
 `;
 
 export const ValidationError = styled.ul.attrs({ className: 'formv-messages' })`
@@ -17,11 +22,4 @@ export const ValidationError = styled.ul.attrs({ className: 'formv-messages' })`
     background-color: white;
     font-size: 0.75em;
     color: #ff4c4c;
-`;
-
-export const Success = styled.p.attrs({ className: 'formv-message' })`
-    background-color: #e5f9e5;
-    padding: 20px;
-    color: #002800;
-    margin: 0;
 `;
