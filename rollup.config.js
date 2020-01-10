@@ -5,7 +5,7 @@ import { terser } from 'rollup-plugin-terser';
 
 module.exports = {
     input: 'src/index.js',
-    external: ['react', 'react-dom', 'prop-types'],
+    external: ['react', 'react-dom', 'prop-types', 'nanoid'],
     output: [
         {
             file: 'dist/formv.cjs.js',
