@@ -21,6 +21,7 @@ export default function Form({ ...props }) {
                 <>
                     <e.Container>
                         <Messages value={formState.feedback.success} type="success" />
+
                         <Messages value={formState.feedback.error} type="generic" />
 
                         <Field>

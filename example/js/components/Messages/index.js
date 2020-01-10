@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import * as fv from 'formv';
 import * as e from './styles';
 
 export default function Messages({ type, value }) {
@@ -7,10 +8,18 @@ export default function Messages({ type, value }) {
 
     switch (type) {
         case 'success':
-            return <e.Success>{value}</e.Success>;
+            return (
+                <fv.Field>
+                    <e.Success>{value}</e.Success>
+                </fv.Field>
+            );
 
         case 'generic':
-            return <e.GenericError>{value}</e.GenericError>;
+            return (
+                <fv.Field>
+                    <e.GenericError>{value}</e.GenericError>
+                </fv.Field>
+            );
 
         case 'validation':
             return (

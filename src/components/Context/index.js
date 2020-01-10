@@ -1,4 +1,5 @@
 import { createContext } from 'react';
+import id from 'nanoid';
 
 export const defaultState = {
     isLoading: false,
@@ -7,6 +8,10 @@ export const defaultState = {
         error: null,
         success: null,
         field: {},
+    },
+    utils: {
+        id: id(),
+        invalidFields: [],
     },
 };
 

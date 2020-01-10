@@ -34,6 +34,7 @@ export function handleSubmit({
     form,
     button,
     messages,
+    setHighestField,
     isMounted,
     actions,
     onInvalid,
@@ -47,6 +48,9 @@ export function handleSubmit({
             // Clear all of the previous invalid messages and initiate the loading.
             actions.reset();
             actions.isLoading(true);
+
+            // Reset the highest field computation.
+            setHighestField(null);
 
             // Remove the invalid class name from all form fields.
             Array.from(form.current.elements).forEach(field => field.classList.remove('invalid'));
@@ -96,6 +100,8 @@ export function handleSubmit({
                         field.classList.add('invalid');
                     });
 
+                    // Hand over the invalid fields to the state, and set the validation messages.
+                    actions.setInvalidFields(invalidFields);
                     return void actions.setValidityMessages(
                         getMessages(invalidFields, messages, error.messages),
                     );
@@ -119,9 +125,12 @@ export function handleSubmit({
                 // Modify the state to show that everything has completed, and we're in either a
                 // success or error state.
                 isMounted() && actions.isLoading(false);
+
+                // Finally modify the ID to signify a change in state.
+                actions.id();
             }
         },
-        [form, button, actions, onInvalid, onSubmitting, onSubmitted],
+        [form, button, actions, setHighestField, onInvalid, onSubmitting, onSubmitted],
     );
 }
 
