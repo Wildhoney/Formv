@@ -20,7 +20,6 @@ export default function Form(props) {
     const children = utils.isFunction(props.children) ? props.children(state) : props.children;
 
     // Setup all of the event listeners passing in the necessary props.
-    const handleInvalid = utils.handleInvalid({ onInvalid: props.onInvalid });
     const handleSubmit = utils.handleSubmit({
         ...props,
         form,
@@ -30,6 +29,8 @@ export default function Form(props) {
         actions,
         isMounted,
     });
+    const handleChange = utils.handleChange();
+    const handleInvalid = utils.handleInvalid(props);
     const handleClick = utils.handleClick({ button });
     const handleReset = utils.handleReset({ actions, onReset: props.onReset });
 
@@ -37,6 +38,7 @@ export default function Form(props) {
     useLayoutEffect(() => {
         if (props.noScroll) return;
         const isInvalidField = state.utils.invalidFields.length > 0;
+        if (isInvalidField && !props.noValidate) return;
         setHighestField(
             getHighestField(isInvalidField ? state.utils.invalidFields : fields, !isInvalidField),
         );
@@ -52,6 +54,7 @@ export default function Form(props) {
                     onReset={handleReset}
                     onInvalid={handleInvalid}
                     onClick={handleClick}
+                    onChange={handleChange}
                     onSubmit={handleSubmit}
                 >
                     <fieldset

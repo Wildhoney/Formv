@@ -145,8 +145,26 @@ export function handleReset({ actions, onReset }) {
     );
 }
 
-export function handleInvalid({ onInvalid }) {
-    return onInvalid;
+export function handleInvalid({ messages: refinedMessages, onInvalid }) {
+    return useCallback(
+        event => {
+            const field = event.target;
+            const message = getValidationMessages(field, refinedMessages);
+            field.setCustomValidity(message);
+        },
+        [refinedMessages, onInvalid],
+    );
+}
+
+export function handleChange() {
+    return useCallback(event => event.target.setCustomValidity(''), []);
+}
+
+export function getValidationMessages(field, refinedMessages) {
+    const key = getValidationKey(field);
+    return (
+        (refinedMessages[field.name] && refinedMessages[field.name][key]) || field.validationMessage
+    );
 }
 
 export function collateInvalidFields(form, messages = {}) {
@@ -164,20 +182,18 @@ export function isRelatedException(error) {
     );
 }
 
+export function getValidationKey(field) {
+    for (var key in field.validity) {
+        const isInvalid = key !== 'valid' && field.validity[key];
+        if (isInvalid) return key;
+    }
+}
+
 export function getMessages(fields, refinedMessages, customErrorMessages) {
     const validationMessages = {};
 
     fields.forEach(field => {
-        const messages = (() => {
-            for (var key in field.validity) {
-                const isInvalid = key !== 'valid' && field.validity[key];
-                if (isInvalid)
-                    return (
-                        (refinedMessages[field.name] && refinedMessages[field.name][key]) ||
-                        field.validationMessage
-                    );
-            }
-        })();
+        const messages = (() => getValidationMessages(field, refinedMessages))();
 
         [messages, customErrorMessages[field.name]]
             .flat()
