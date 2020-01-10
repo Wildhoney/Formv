@@ -162,7 +162,11 @@ export function getMessages(fields, refinedMessages, customErrorMessages) {
         const messages = (() => {
             for (var key in field.validity) {
                 const isInvalid = key !== 'valid' && field.validity[key];
-                if (isInvalid) return refinedMessages[field.name][key] || field.validationMessage;
+                if (isInvalid)
+                    return (
+                        (refinedMessages[field.name] && refinedMessages[field.name][key]) ||
+                        field.validationMessage
+                    );
             }
         })();
 

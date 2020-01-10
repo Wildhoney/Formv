@@ -21,7 +21,7 @@ export default function Form(props) {
     const handleReset = utils.handleReset({ actions, onReset: props.onReset });
 
     return (
-        <Context.Provider>
+        <Context.Provider value={state}>
             <form
                 ref={form}
                 style={utils.getStyles()}
@@ -45,6 +45,7 @@ export default function Form(props) {
 Form.propTypes = {
     noDisable: PropTypes.bool,
     noValidate: PropTypes.bool,
+    messages: PropTypes.object,
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
     onInvalid: PropTypes.func,
     onReset: PropTypes.func,
@@ -56,6 +57,7 @@ Form.defaultProps = {
     className: '',
     noDisable: false,
     noValidate: true,
+    messages: {},
     children: <></>,
     onInvalid: () => {},
     onReset: () => {},
