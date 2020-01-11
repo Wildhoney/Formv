@@ -9,7 +9,7 @@ import * as e from './styles';
 import * as utils from './utils';
 
 export default function Form({ ...props }) {
-    const [state, { set, reset }] = fv.useForm({
+    const [state, { set, reset }] = fv.useFormState({
         name: '',
         email: '',
         message: '',

@@ -28,7 +28,7 @@
 
 Formv utilises the native [form validation](https://developer.mozilla.org/en-US/docs/Learn/HTML/Forms/Form_validation) which is built-in to all recent browsers &ndash; as such, all validation rules are set on the relevant form fields using `required`, `pattern`, `minLength`, etc...
 
-Formv has a philosophy that it should be easy to opt-out of form validation if and when you want to use another technique in the future. That means not coupling your validation to a particular method, which makes it easily reversible &ndash; that is why Formv comes with only two simple React components &ndash; `Form` and `Field`.
+Formv has a philosophy that it should be easy to opt-out of form validation if and when you want to use another technique in the future. That means not coupling your validation to a particular method, which makes it easily reversible &ndash; that is why Formv comes with only one fundamental React component &ndash; `Form`.
 
 To get started you need to append the form to the DOM. Formv's `Form` component is a plain `form` element that intercepts the `onSubmit` function. We then nest all of our input fields in the `Form` component as you would normally. `Form` takes an optional function child as a function to pass the form's state &ndash; you can also use the context API for more complex forms.
 
@@ -42,6 +42,9 @@ export default function MyForm() {
         <Form onSubmitted={handleSubmitted}>
             {formState => (
                 <>
+                    <Messages value={formState.feedback.success} />
+                    <Messages value={formState.feedback.error} />
+
                     <input type="text" name="name" required />
                     <Messages values={formState.feedback.field.name} />
 
@@ -85,6 +88,9 @@ export default function MyForm() {
         <Form messages={messages} onSubmitted={handleSubmitted}>
             {formState => (
                 <>
+                    <Messages value={formState.feedback.success} />
+                    <Messages value={formState.feedback.error} />
+
                     <input type="text" name="name" required />
                     <Messages values={formState.feedback.field.name} />
 
@@ -198,9 +204,7 @@ Using the above example we throw `Error.Validation` errors when the request yiel
 
 ## Success Messages
 
-With all the talk of validation errors and generic errors, it may have slipped your mind that sometimes forms submit successfully! In those rare cases we provide success messages which sit in the exact same location as generic error messages, which makes them super simple to setup in a CSS grid.
-
-In your `onSubmitted` callback all you need to do is yield a `Success` class with the content set to some kind of success message.
+With all the talk of validation errors and generic errors, it may have slipped your mind that sometimes forms submit successfully! In your `onSubmitted` callback all you need to do is yield a `Success` class with the content set to some kind of success message.
 
 ```jsx
 import { Form, Success, Error } from 'formv';
@@ -224,12 +228,12 @@ async function handleSubmitted() {
 
 ## Managing State
 
-Managing the state for your forms is not typically an arduous task, nevertheless there are techniques that can make everything just a little bit easier, which is why `Formv` exports a `useForm` hook that has the same interface as [`react-use`'s `useMap` hook](https://github.com/streamich/react-use/blob/master/docs/useMap.md) with a handful of differences &ndash; currying, memoization and nested properties.
+Managing the state for your forms is not typically an arduous task, nevertheless there are techniques that can make everything just a little bit easier, which is why `Formv` exports a `useFormState` hook that has the same interface as [`react-use`'s `useMap` hook](https://github.com/streamich/react-use/blob/master/docs/useMap.md) with a handful of differences &ndash; currying, memoization and nested properties.
 
 ```javascript
-import { useForm } from 'formv';
+import { useFormState } from 'formv';
 
-const [state, { set }] = useForm({
+const [state, { set }] = useFormState({
     username: null,
     profile: {
         age: null,
@@ -238,7 +242,7 @@ const [state, { set }] = useForm({
 });
 ```
 
-Using the `set` function provided by `useForm` you can use a curried function to pass to your `Input` component. Interestingly if you use the approach below rather than creating a new function every time, the `set('username')` will never change, and as such makes everything a whole lot easier when it comes to wrapping your `Input` field in [`memo`](https://reactjs.org/docs/react-api.html#reactmemo).
+Using the `set` function provided by `useFormState` you can use a curried function to pass to your `Input` component. Interestingly if you use the approach below rather than creating a new function every time, the `set('username')` will never change, and as such makes everything a whole lot easier when it comes to wrapping your `Input` field in [`memo`](https://reactjs.org/docs/react-api.html#reactmemo).
 
 ```jsx
 <Input value={state.username} onChange={set('username')} />
@@ -260,7 +264,7 @@ By default Formv disables the form when it's being submitted, which includes the
 
 You can also skip the front-end validation entirely on a button-by-button basis with the native `formNoValidate` attribute on your chosen button.
 
-> Note that if you need anything from state, Formv exports the `Context` which you can use in the `useContext` hook or via the more traditional `Context.Consumer` approach.
+> Note that if you need anything from state, Formv exports the `Context` which you can use in the `useContext` hook, a utility hook called `useFormContext`, or via the more traditional `Context.Consumer` approach.
 
 ## Form Architecture
 
@@ -274,7 +278,7 @@ Using `Formv` it's easy to have the aforementioned setup as illustrated below.
 import * as fv from 'formv';
 
 function Form() {
-    const [state, { set }] = fv.useForm({
+    const [state, { set }] = fv.useFormState({
         name: null,
         age: null,
     });
@@ -307,10 +311,9 @@ function Fieldset({ onChange }) {
 
 ```jsx
 import * as fv from 'formv';
-import { useContext } from 'react';
 
 function FieldName({ onChange }) {
-    const formState = useContext(fv.Context);
+    const formState = fv.useFormContext();
 
     return (
         <>
@@ -323,10 +326,9 @@ function FieldName({ onChange }) {
 
 ```jsx
 import * as fv from 'formv';
-import { useContext } from 'react';
 
 function FieldAge({ onChange }) {
-    const formState = useContext(fv.Context);
+    const formState = fv.useFormContext();
 
     return (
         <>

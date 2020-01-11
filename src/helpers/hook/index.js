@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo, useContext } from 'react';
 import _ from 'lodash';
 import { Context } from '../../components/Context';
 
-export function useForm(initialState) {
+export function useFormState(initialState) {
     const fns = useMemo(() => new Map(), []);
     const [state, setState] = useState(initialState);
 
@@ -22,6 +22,6 @@ export function useForm(initialState) {
     return [state, { get, remove, reset, set }];
 }
 
-export const useFormState = () => {
+export const useFormContext = () => {
     return useContext(Context);
 };
