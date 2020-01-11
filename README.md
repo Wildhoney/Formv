@@ -265,9 +265,9 @@ You can also skip the front-end validation entirely on a button-by-button basis 
 
 ## Form Architecture
 
-When deciding on an architecture for your forms, it's recommended to think about them as three separate layers. The first and most simple layer is the `Field` which handles logic pertaining to an individual input field; it can maintain its own state such as a country selector maintains its state for a list of countries, but it does **not** maintain state for its value. Secondly there is the `Fieldset` layer which composes many `Field` components and is again stateless. Last of all there is the parent `Form` component which maintains state for the entire form.
+When deciding on an architecture for your forms, it's recommended to think about them as three separate layers. The first and most simple layer is the field which handles logic pertaining to an individual input field; it can maintain its own state such as a country selector maintains its state for a list of countries, but it does **not** maintain state for its value. Secondly there is the fieldset layer which composes many field components and is again stateless. Last of all there is the parent form component which maintains state for the entire form.
 
-With the above architecture it allows your `Field` and `Fieldset` components to be used freely in any `Form` components without any quirky state management. The `Form` field has the ultimate responsibility of maintaining and submitting the data.
+With the above architecture it allows your field and fieldset components to be used freely in any form components without any quirky state management. The form field has the ultimate responsibility of maintaining and submitting the data.
 
 Using `Formv` it's easy to have the aforementioned setup as illustrated below.
 
