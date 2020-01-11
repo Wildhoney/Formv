@@ -144,7 +144,7 @@ It's worth noting that any errors that are thrown from the `onSubmitting` handle
 
 It's all good and well having the front-end validation for your forms, however there are always cases where the front-end validation passes just fine, whereas the back-end throws a validation error &ndash; maybe the username is already taken, for instance. In those cases we need to feed the API validation messages back into the `Form` component by using the `Error.Validation` exception that Formv exports.
 
-The validation messages need to be flattened and should map to your field names &ndash; for cases where you have an array of fields, we recommend you name these `names.0.firstName`, `names.1.firstName`, etc...
+The validation messages need to be flattened and should map to your field names &ndash; for cases where you have an array of fields, we recommend you name these `names.0.firstName`, `names.1.firstName`, etc... Note that we have a flattening helper for Django Rest Framework (DRF) under `parse.django.flatten`.
 
 Continuing from the above example, we'll implement the `handleSubmitted` function which handles the submitting of the data to the API.
 
