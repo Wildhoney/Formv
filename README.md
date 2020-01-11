@@ -21,9 +21,8 @@
 5. [API Validation](#api-validation)
 6. [Success Messages](#success-messages)
 7. [Managing State](#managing-state)
-8. [Custom Renderer](#custom-renderer)
-9. [Default Behaviours](#default-behaviours)
-10. [Form Architecture](#form-architecture)
+8. [Default Behaviours](#default-behaviours)
+9. [Form Architecture](#form-architecture)
 
 ## Getting Started
 
