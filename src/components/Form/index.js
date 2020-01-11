@@ -20,6 +20,10 @@ export default function Form(props) {
     const children = utils.isFunction(props.children) ? props.children(state) : props.children;
 
     // Setup all of the event listeners passing in the necessary props.
+    const handleInvalid = utils.handleInvalid(props);
+    const handleClick = utils.handleClick({ button });
+    const handleReset = utils.handleReset({ ...props, actions });
+    const handleChange = utils.handleChange({ ...props, form, actions });
     const handleSubmit = utils.handleSubmit({
         ...props,
         form,
@@ -29,14 +33,6 @@ export default function Form(props) {
         actions,
         isMounted,
     });
-    const handleChange = utils.handleChange({
-        form,
-        dirtyCheck: props.dirtyCheck,
-        setDirty: actions.setDirty,
-    });
-    const handleInvalid = utils.handleInvalid(props);
-    const handleClick = utils.handleClick({ button });
-    const handleReset = utils.handleReset({ actions, onReset: props.onReset });
 
     useEffect(
         // Set the state of the initial form validity.

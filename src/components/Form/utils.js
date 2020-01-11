@@ -163,13 +163,13 @@ export function getFormData(form) {
     return [...[...data.keys()].sort(), ...data.values()];
 }
 
-export function handleChange({ form, dirtyCheck, setDirty }) {
+export function handleChange({ form, dirtyCheck, actions }) {
     const [state, setState] = useState(null);
 
     // Set the initial form state.
     useEffectOnce(() => {
         if (dirtyCheck) {
-            setDirty(false);
+            actions.setDirty(false);
             setState(getFormData(form.current));
         }
     }, [form, dirtyCheck]);
@@ -179,7 +179,7 @@ export function handleChange({ form, dirtyCheck, setDirty }) {
             if (dirtyCheck) {
                 // Handle the dirty checking of the form.
                 const newState = getFormData(event.target.form);
-                setDirty(!equals(newState, state));
+                actions.setDirty(!equals(newState, state));
             }
 
             // Reset the form validity.
