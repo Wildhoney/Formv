@@ -282,7 +282,14 @@ function Form() {
 
     return (
         <fv.Form onSubmitted={handleSubmitted}>
-            <Fieldset onChange={set} />
+            {fieldState => (
+                <>
+                    <fv.Messages value={formState.feedback.success} />
+                    <fv.Messages value={formState.feedback.error} />
+
+                    <Fieldset onChange={set} />
+                </>
+            )}
         </fv.Form>
     );
 }
