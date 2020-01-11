@@ -43,13 +43,13 @@ export default function MyForm() {
             {formState => (
                 <>
                     <input type="text" name="name" required />
-                    <Messages values={formState.feedback.name} />
+                    <Messages values={formState.feedback.field.name} />
 
                     <input type="email" name="email" required />
-                    <Messages values={formState.feedback.email} />
+                    <Messages values={formState.feedback.field.email} />
 
                     <input name="age" required min={18} />
-                    <Messages values={formState.feedback.age} />
+                    <Messages values={formState.feedback.field.age} />
 
                     <button type="submit">Submit</button>
                 </>
@@ -86,13 +86,13 @@ export default function MyForm() {
             {formState => (
                 <>
                     <input type="text" name="name" required />
-                    <Messages values={formState.feedback.name} />
+                    <Messages values={formState.feedback.field.name} />
 
                     <input type="email" name="email" required />
-                    <Messages values={formState.feedback.email} />
+                    <Messages values={formState.feedback.field.email} />
 
                     <input name="age" required min={18} />
-                    <Messages values={formState.feedback.age} />
+                    <Messages values={formState.feedback.field.age} />
 
                     <button type="submit">Submit</button>
                 </>
