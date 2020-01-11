@@ -21,10 +21,9 @@
 5. [API Validation](#api-validation)
 6. [Success Messages](#success-messages)
 7. [Managing State](#managing-state)
-8. [Applying Styles](#applying-styles)
-9. [Custom Renderer](#custom-renderer)
-10. [Default Behaviours](#default-behaviours)
-11. [Form Architecture](#form-architecture)
+8. [Custom Renderer](#custom-renderer)
+9. [Default Behaviours](#default-behaviours)
+10. [Form Architecture](#form-architecture)
 
 ## Getting Started
 
@@ -32,29 +31,30 @@ Formv utilises the native [form validation](https://developer.mozilla.org/en-US/
 
 Formv has a philosophy that it should be easy to opt-out of form validation if and when you want to use another technique in the future. That means not coupling your validation to a particular method, which makes it easily reversible &ndash; that is why Formv comes with only two simple React components &ndash; `Form` and `Field`.
 
-To get started you need to append the form to the DOM. Formv's `Form` component is a plain `form` element that intercepts the `onSubmit` function. We then nest all of our input fields in the `Form` component as you would normally, and encapsulate each field in the `Field` component which simply wraps your form fields with any corresponding validation messages.
+To get started you need to append the form to the DOM. Formv's `Form` component is a plain `form` element that intercepts the `onSubmit` function. We then nest all of our input fields in the `Form` component as you would normally. `Form` takes an optional function child as a function to pass the form's state &ndash; you can also use the context API for more complex forms.
 
 In the examples below we'll take a simple form that requires a name, email and an age. We'll add the front-end validation, capture any back-end validation errors, and show a success message when everything has been submitted.
 
 ```jsx
-import { Form, Field } from 'formv';
+import { Form, Messages } from 'formv';
 
 export default function MyForm() {
     return (
         <Form onSubmitted={handleSubmitted}>
-            <Field>
-                <input type="text" name="name" required />
-            </Field>
+            {formState => (
+                <>
+                    <input type="text" name="name" required />
+                    <Messages values={formState.feedback.name} />
 
-            <Field>
-                <input type="email" name="email" required />
-            </Field>
+                    <input type="email" name="email" required />
+                    <Messages values={formState.feedback.email} />
 
-            <Field>
-                <input name="age" required min={18} />
-            </Field>
+                    <input name="age" required min={18} />
+                    <Messages values={formState.feedback.age} />
 
-            <button type="submit">Submit</button>
+                    <button type="submit">Submit</button>
+                </>
+            )}
         </Form>
     );
 }
@@ -64,37 +64,40 @@ Voila! Using the above code you have everything you need to validate your form. 
 
 ## Customising Messages
 
-It's good and well relying on the native validation, but if you were to look in different browsers, each validation message would read slightly differently &ndash; which is awful for applications that strive for consistency! In those cases the `Field` component accepts a `messages` which is a map of [the `ValidityState` object](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState). By using the `messages` prop we can provide consistent messages across all browsers.
+It's good and well relying on the native validation, but if you were to look in different browsers, each validation message would read slightly differently &ndash; which is awful for applications that strive for consistency! In those cases the `Form` component accepts a `messages` which is a map of [the `ValidityState` object](https://developer.mozilla.org/en-US/docs/Web/API/ValidityState). By using the `messages` prop we can provide consistent messages across all browsers.
 
 ```jsx
-import { Form, Field } from 'formv';
+import { Form, Messages } from 'formv';
+
+const messages = {
+    name: { valueMissing: 'Please enter your first and last name.' },
+    email: {
+        valueMissing: 'Please enter your email address.',
+        typeMismatch: 'Please enter a valid email address.',
+    },
+    age: {
+        valueMissing: 'Please enter your age.',
+        rangeUnderflow: 'You must be 18 or over to use this form.',
+    },
+};
 
 export default function MyForm() {
     return (
-        <Form onSubmitted={handleSubmitted}>
-            <Field messages={{ valueMissing: 'Please enter your first and last name.' }}>
-                <input type="text" name="name" required />
-            </Field>
+        <Form messages={messages} onSubmitted={handleSubmitted}>
+            {formState => (
+                <>
+                    <input type="text" name="name" required />
+                    <Messages values={formState.feedback.name} />
 
-            <Field
-                messages={{
-                    valueMissing: 'Please enter your email address.',
-                    typeMismatch: 'Please enter a valid email address.',
-                }}
-            >
-                <input type="email" name="emailAddress" required />
-            </Field>
+                    <input type="email" name="email" required />
+                    <Messages values={formState.feedback.email} />
 
-            <Field
-                messages={{
-                    valueMissing: 'Please enter your age.',
-                    rangeUnderflow: 'You must be 18 or over to use this form.',
-                }}
-            >
-                <input name="age" required min={18} />
-            </Field>
+                    <input name="age" required min={18} />
+                    <Messages values={formState.feedback.age} />
 
-            <button type="submit">Submit</button>
+                    <button type="submit">Submit</button>
+                </>
+            )}
         </Form>
     );
 }
@@ -180,8 +183,8 @@ async function handleSubmitted() {
     try {
         await api.post('/send', data);
     } catch (error) {
-        const isAxiosError = error.isAxiosError;
         const isBadRequest = error.response.status === 400;
+        const isAxiosError = error.isAxiosError;
 
         if (isBadRequest) throw new Error.Validation(error.response.data);
         if (isAxiosError) throw new Error.Generic(error.response.data);
@@ -208,8 +211,8 @@ async function handleSubmitted() {
         await api.post('/send', data);
         return new Success('Everything went swimmingly!');
     } catch (error) {
-        const isAxiosError = error.isAxiosError;
         const isBadRequest = error.response.status === 400;
+        const isAxiosError = error.isAxiosError;
 
         if (isBadRequest) throw new Error.Validation(error.response.data);
         if (isAxiosError) throw new Error.Generic(error.response.data);
@@ -251,67 +254,6 @@ In contrast, if you were to use the non-curried version &ndash; which works perf
 ```
 
 You'll also notice that nested objects are handled with the dot notation thanks to [`Lodash`](https://lodash.com/).
-
-## Applying Styles
-
-Although Formv uses the [`display: contents`](https://caniuse.com/#feat=css-display-contents) on the `form`, `fieldset` and `Field` container to make styling easier, support is still lacking in pre-Chromium versions of Edge. Therefore to support those browsers you'll need to _normalise_ the `form`, `fieldset` and `Field` container elements by passing the `legacy` prop to the `Form` component.
-
-You can then style consistently across all browsers regardless of `contents` support.
-
-By default Formv applies the `Messages` component after your `children` in the `Field` component &ndash; for cases where styling is easier if the `Messages` appears before, you can use the `position` prop on `Field` &ndash; it accepts two possible options: `before` and `after` (default).
-
-```jsx
-<Field position="before">
-    <input type="text" name="firstName" required />
-</Field>
-```
-
-One of the great things about the `display: contents` is that by default **all** of the `Formv` elements are styled that way, and as such you can take full advantage of CSS grids to style your forms. With the elements in the `Field` component being the first set of elements that will be styled according to your grid layout.
-
-```jsx
-import { Form, Field } from 'formv';
-import styled from 'styled-components';
-
-const Container = styled.div`
-    display: grid;
-    grid-auto-flow: row;
-    grid-gap: 10px;
-`;
-
-export default function MyForm() {
-    return (
-        <Container>
-            <Form onSubmitted={handleSubmitted}>
-                <Field>
-                    <input type="text" name="name" required />
-                </Field>
-
-                <Field>
-                    <input type="email" name="email" required />
-                </Field>
-
-                <Field>
-                    <input name="age" required min={18} />
-                </Field>
-
-                <button type="submit">Submit</button>
-            </Form>
-        </Container>
-    );
-}
-```
-
-## Custom Renderer
-
-By default `Formv` uses its own renderer for displaying error messages, and provides appropriate class names for you to style. Nevertheless it may be easier to style if you provide your own `renderer` prop to the `Form` component, which allows you take full control over the messages. It's especially useful if you use styling techniques such as `styled-components`.
-
-Taking advantage of your own custom `renderer` requires setting up a component that accepts three props: `message`, `messages` and `type` where `type` can be one of the three values: `success`, `error-generic` and `error-validation`. The `messages` prop is populated for error messages, and the `message` prop is populated for success messages.
-
-```jsx
-<Form renderer={props => <Messages {...props} />} />
-```
-
-We provide an [example of the custom `Messages` renderer](/example/js/components/Messages/index.js) in the `example/` directory.
 
 ## Default Behaviours
 
@@ -358,21 +300,33 @@ function Fieldset({ onChange }) {
 ```
 
 ```jsx
+import * as fv from 'formv';
+import { useContext } from 'react';
+
 function FieldName({ onChange }) {
+    const formState = useContext(fv.Context);
+
     return (
-        <fv.Field>
-            <input type="text" onChange={({ target }) => onChange(target.value)} />
-        </fv.Field>
+        <>
+            <input name="name" type="text" onChange={({ target }) => onChange(target.value)} />
+            <fv.Messages values={formState.feedback.field.name} />
+        </>
     );
 }
 ```
 
 ```jsx
+import * as fv from 'formv';
+import { useContext } from 'react';
+
 function FieldAge({ onChange }) {
+    const formState = useContext(fv.Context);
+
     return (
-        <fv.Field>
-            <input type="number" onChange={({ target }) => onChange(target.value)} />
-        </fv.Field>
+        <>
+            <input name="age" type="number" onChange={({ target }) => onChange(target.value)} />
+            <fv.Messages values={formState.feedback.field.age} />
+        </>
     );
 }
 ```
