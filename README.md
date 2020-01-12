@@ -40,21 +40,23 @@ import { Form, Messages } from 'formv';
 export default function MyForm() {
     return (
         <Form onSubmitted={handleSubmitted}>
-            {formState => (
+            {({ feedback, isLoading, isDirty }) => (
                 <>
-                    <Messages value={formState.feedback.success} />
-                    <Messages value={formState.feedback.error} />
+                    <Messages value={feedback.success} />
+                    <Messages value={feedback.error} />
 
                     <input type="text" name="name" required />
-                    <Messages values={formState.feedback.field.name} />
+                    <Messages values={feedback.field.name} />
 
                     <input type="email" name="email" required />
-                    <Messages values={formState.feedback.field.email} />
+                    <Messages values={feedback.field.email} />
 
                     <input name="age" required min={18} />
-                    <Messages values={formState.feedback.field.age} />
+                    <Messages values={feedback.field.age} />
 
-                    <button type="submit">Submit</button>
+                    <button disabled={!isDirty} type="submit">
+                        {isLoading ? 'Submitting...' : 'Submit'}
+                    </button>
                 </>
             )}
         </Form>
@@ -62,7 +64,7 @@ export default function MyForm() {
 }
 ```
 
-Voila! Using the above code you have everything you need to validate your form. By clicking the `button` all validation rules will be checked, and if you've not filled in the required fields then you'll see a message appear next to the relevant `input` fields.
+Voila! Using the above code you have everything you need to validate your form. By clicking the `button` all validation rules will be checked, and if you've not filled in the required fields then you'll see a message appear next to the relevant `input` fields. We are also using the `isLoading` to determine when the form is in the process of being submitted &ndash; including any async API requests, and also a dirty check to determine if the form data has been modified from its original state.
 
 ## Customising Messages
 
@@ -83,29 +85,7 @@ const messages = {
     },
 };
 
-export default function MyForm() {
-    return (
-        <Form messages={messages} onSubmitted={handleSubmitted}>
-            {formState => (
-                <>
-                    <Messages value={formState.feedback.success} />
-                    <Messages value={formState.feedback.error} />
-
-                    <input type="text" name="name" required />
-                    <Messages values={formState.feedback.field.name} />
-
-                    <input type="email" name="email" required />
-                    <Messages values={formState.feedback.field.email} />
-
-                    <input name="age" required min={18} />
-                    <Messages values={formState.feedback.field.age} />
-
-                    <button type="submit">Submit</button>
-                </>
-            )}
-        </Form>
-    );
-}
+<Form messages={messages} onSubmitted={handleSubmitted} />;
 ```
 
 Now when you submit the form in Chrome, Firefox, Edge, Safari, Opera, etc... you will note that all of the messages appear the same &ndash; you're no longer allowing the browser to control the content of the validation messages.
@@ -285,10 +265,10 @@ function Form() {
 
     return (
         <fv.Form onSubmitted={handleSubmitted}>
-            {fieldState => (
+            {({ feedback }) => (
                 <>
-                    <fv.Messages value={formState.feedback.success} />
-                    <fv.Messages value={formState.feedback.error} />
+                    <fv.Messages value={feedback.success} />
+                    <fv.Messages value={feedback.error} />
 
                     <Fieldset onChange={set} />
                 </>
@@ -313,12 +293,12 @@ function Fieldset({ onChange }) {
 import * as fv from 'formv';
 
 function FieldName({ onChange }) {
-    const formState = fv.useFormContext();
+    const { feedback } = fv.useFormContext();
 
     return (
         <>
             <input name="name" type="text" onChange={({ target }) => onChange(target.value)} />
-            <fv.Messages values={formState.feedback.field.name} />
+            <fv.Messages values={feedback.field.name} />
         </>
     );
 }
@@ -328,12 +308,12 @@ function FieldName({ onChange }) {
 import * as fv from 'formv';
 
 function FieldAge({ onChange }) {
-    const formState = fv.useFormContext();
+    const { feedback } = fv.useFormContext();
 
     return (
         <>
             <input name="age" type="number" onChange={({ target }) => onChange(target.value)} />
-            <fv.Messages values={formState.feedback.field.age} />
+            <fv.Messages values={feedback.field.age} />
         </>
     );
 }
