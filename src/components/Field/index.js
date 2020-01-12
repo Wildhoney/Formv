@@ -1,12 +1,18 @@
 import React, { useContext, createContext, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import * as utils from './utils';
+import { useMount } from 'react-use';
 
 export const Context = createContext(() => {});
 
-export default function Field({ children }) {
+export default function Field({ messages, children }) {
     const fieldset = useRef(null);
     const fieldState = useContext(Context);
+
+    useMount(() => {
+        // Apply any custom field messages.
+        if (messages) fieldState.setMessages(messages);
+    });
 
     useEffect(() => {
         fieldset.current && fieldState.addField(fieldset.current);
@@ -30,8 +36,9 @@ export default function Field({ children }) {
     );
 }
 
-Field.propTypes = { children: PropTypes.node };
+Field.propTypes = { messages: PropTypes.object, children: PropTypes.node };
 
 Field.defaultProps = {
+    messages: null,
     children: <></>,
 };

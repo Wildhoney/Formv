@@ -14,7 +14,13 @@ export default function Form(props) {
     const [state, actions] = utils.useDuck(duck, duck.getInitialState(props));
     const [highestField, setHighestField] = useState(null);
     const [fields, { push: addField }] = useList([]);
-    const context = useMemo(() => ({ highestField, addField }), [highestField, addField]);
+    const [fieldMessages, { push: setMessages }] = useList([]);
+    const messages = utils.mergeMessages(props.messages, fieldMessages);
+    const context = useMemo(() => ({ highestField, addField, setMessages }), [
+        highestField,
+        addField,
+        setMessages,
+    ]);
 
     // Either use children as-is, or call it as a function passing in the form's state.
     const children = utils.isFunction(props.children) ? props.children(state) : props.children;
@@ -31,6 +37,7 @@ export default function Form(props) {
         state,
         setHighestField,
         actions,
+        messages,
         isMounted,
     });
 

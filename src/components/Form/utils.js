@@ -1,5 +1,5 @@
 import { useCallback, useReducer, useMemo, useState } from 'react';
-import { equals } from 'ramda';
+import { equals, isEmpty } from 'ramda';
 import * as feedback from '../../helpers/feedback';
 import { useEffectOnce } from 'react-use';
 
@@ -132,7 +132,7 @@ export function handleSubmit({
                 actions.id();
             }
         },
-        [form, button, actions, setHighestField, onInvalid, onSubmitting, onSubmitted],
+        [form, button, actions, messages, setHighestField, onInvalid, onSubmitting, onSubmitted],
     );
 }
 
@@ -209,6 +209,14 @@ export function isRelatedException(error) {
         error instanceof feedback.FormvGenericError ||
         error instanceof feedback.FormvValidationError
     );
+}
+
+export function mergeMessages(formMessages, fieldMessages) {
+    if (isEmpty(fieldMessages)) return formMessages;
+    const a = { ...formMessages, ...Object.assign(...fieldMessages) };
+
+    console.log(a);
+    return a;
 }
 
 export function getValidationKey(field) {

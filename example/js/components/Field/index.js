@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import * as fv from 'formv';
 import * as e from './styles';
 
-export default function Field({ children }) {
+export default function Field({ children, ...props }) {
     return (
-        <fv.Field>
+        <fv.Field {...props}>
             <e.Container>{children}</e.Container>
         </fv.Field>
     );
