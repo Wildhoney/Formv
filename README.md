@@ -40,22 +40,22 @@ import { Form, Messages } from 'formv';
 export default function MyForm() {
     return (
         <Form onSubmitted={handleSubmitted}>
-            {({ feedback, isLoading, isDirty }) => (
+            {form => (
                 <>
-                    <Messages value={feedback.success} />
-                    <Messages value={feedback.error} />
+                    <Messages value={form.feedback.success} />
+                    <Messages value={form.feedback.error} />
 
                     <input type="text" name="name" required />
-                    <Messages values={feedback.field.name} />
+                    <Messages values={form.feedback.field.name} />
 
                     <input type="email" name="email" required />
-                    <Messages values={feedback.field.email} />
+                    <Messages values={form.feedback.field.email} />
 
                     <input name="age" required min={18} />
-                    <Messages values={feedback.field.age} />
+                    <Messages values={form.feedback.field.age} />
 
-                    <button disabled={!isDirty} type="submit">
-                        {isLoading ? 'Submitting...' : 'Submit'}
+                    <button disabled={!form.isDirty} type="submit">
+                        {form.isLoading ? 'Submitting...' : 'Submit'}
                     </button>
                 </>
             )}
@@ -265,10 +265,10 @@ function Form() {
 
     return (
         <fv.Form onSubmitted={handleSubmitted}>
-            {({ feedback }) => (
+            {form => (
                 <>
-                    <fv.Messages value={feedback.success} />
-                    <fv.Messages value={feedback.error} />
+                    <fv.Messages value={form.feedback.success} />
+                    <fv.Messages value={form.feedback.error} />
 
                     <Fieldset onChange={set} />
                 </>
@@ -293,12 +293,12 @@ function Fieldset({ onChange }) {
 import * as fv from 'formv';
 
 function FieldName({ onChange }) {
-    const { feedback } = fv.useFormContext();
+    const form = fv.useFormContext();
 
     return (
         <>
             <input name="name" type="text" onChange={({ target }) => onChange(target.value)} />
-            <fv.Messages values={feedback.field.name} />
+            <fv.Messages values={form.feedback.field.name} />
         </>
     );
 }
@@ -308,12 +308,12 @@ function FieldName({ onChange }) {
 import * as fv from 'formv';
 
 function FieldAge({ onChange }) {
-    const { feedback } = fv.useFormContext();
+    const form = fv.useFormContext();
 
     return (
         <>
             <input name="age" type="number" onChange={({ target }) => onChange(target.value)} />
-            <fv.Messages values={feedback.field.age} />
+            <fv.Messages values={form.feedback.field.age} />
         </>
     );
 }
