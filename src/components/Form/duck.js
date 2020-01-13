@@ -44,6 +44,7 @@ export function reducer(state, event) {
             return {
                 ...defaultState,
                 isDirty: state.isDirty,
+                isValid: state.isValid,
                 utils: { ...defaultState.utils, id: state.utils.id },
             };
         }
