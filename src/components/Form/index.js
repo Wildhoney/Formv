@@ -1,5 +1,5 @@
-import React, { forwardRef, useRef, useState, useLayoutEffect, useMemo, useEffect } from 'react';
-import { useMountedState, useList, useEffectOnce } from 'react-use';
+import React, { forwardRef, useRef, useState, useMemo, useEffect } from 'react';
+import { useMountedState, useList, useEffectOnce, useIsomorphicLayoutEffect } from 'react-use';
 import PropTypes from 'prop-types';
 import * as utils from './utils';
 import * as duck from './duck';
@@ -53,7 +53,7 @@ const Form = forwardRef((props, ref) => {
         [form],
     );
 
-    useLayoutEffect(() => {
+    useIsomorphicLayoutEffect(() => {
         // Ensure that we want the computation for the highest field to occur.
         if (props.noScroll) return;
         const isInvalidField = state.utils.invalidFields.length > 0;
