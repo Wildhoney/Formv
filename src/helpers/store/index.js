@@ -2,7 +2,7 @@ import id from 'nanoid';
 
 export const initialState = {
     id: id(),
-    isLoading: false,
+    isSubmitting: false,
     invalidFields: [],
     successMessage: null,
     validityMessages: {},
@@ -12,7 +12,7 @@ export const initialState = {
 
 const actionTypes = {
     reset: Symbol('formv/reset'),
-    isLoading: Symbol('formv/is-loading'),
+    isSubmitting: Symbol('formv/is-loading'),
     invalidFields: Symbol('formv/invalid-fields'),
     successMessage: Symbol('formv/success-message'),
     validityMessages: Symbol('formv/validity-messages'),
@@ -22,7 +22,7 @@ const actionTypes = {
 
 export const unboundActions = dispatch => ({
     reset: () => dispatch({ type: actionTypes.reset }),
-    isLoading: loading => dispatch({ type: actionTypes.isLoading, payload: loading }),
+    isSubmitting: loading => dispatch({ type: actionTypes.isSubmitting, payload: loading }),
     setInvalid: payload =>
         dispatch({
             type: actionTypes.invalidFields,
@@ -46,8 +46,8 @@ export function reducer(state, action) {
                 id: id(),
             };
 
-        case actionTypes.isLoading:
-            return { ...state, isLoading: action.payload };
+        case actionTypes.isSubmitting:
+            return { ...state, isSubmitting: action.payload };
 
         case actionTypes.invalidFields:
             return { ...state, id: id(), invalidFields: action.payload };

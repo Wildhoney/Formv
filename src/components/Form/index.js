@@ -1,5 +1,5 @@
-import React, { useRef, useState, useLayoutEffect, useMemo, useEffect } from 'react';
-import { useMountedState, useList } from 'react-use';
+import React, { forwardRef, useRef, useState, useLayoutEffect, useMemo, useEffect } from 'react';
+import { useMountedState, useList, useEffectOnce } from 'react-use';
 import PropTypes from 'prop-types';
 import * as utils from './utils';
 import * as duck from './duck';
@@ -7,7 +7,7 @@ import { Context as FormContext } from '../Context';
 import { Context as FieldContext } from '../Field';
 import { getHighestField } from '../Field/utils';
 
-export default function Form(props) {
+const Form = forwardRef((props, ref) => {
     const form = useRef(null);
     const button = useRef(null);
     const isMounted = useMountedState();
@@ -21,6 +21,12 @@ export default function Form(props) {
         addField,
         setMessages,
     ]);
+
+    // Apply the forwarded ref if required.
+    useEffectOnce(() => {
+        ref && typeof ref === 'function' && ref(form);
+        ref && 'current' in ref && (ref.current = form);
+    }, [form]);
 
     // Either use children as-is, or call it as a function passing in the form's state.
     const children = utils.isFunction(props.children) ? props.children(state) : props.children;
@@ -64,6 +70,7 @@ export default function Form(props) {
             <FieldContext.Provider value={context}>
                 <form
                     ref={form}
+                    className={props.className}
                     style={utils.getStyles()}
                     noValidate={props.noValidate}
                     onReset={handleReset}
@@ -73,7 +80,7 @@ export default function Form(props) {
                     onSubmit={handleSubmit}
                 >
                     <fieldset
-                        disabled={props.noDisable ? false : state.isLoading}
+                        disabled={props.noDisable ? false : state.isSubmitting}
                         style={utils.getStyles()}
                     >
                         {children}
@@ -82,13 +89,14 @@ export default function Form(props) {
             </FieldContext.Provider>
         </FormContext.Provider>
     );
-}
+});
 
 Form.propTypes = {
     noScroll: PropTypes.bool,
     noDisable: PropTypes.bool,
     noValidate: PropTypes.bool,
     messages: PropTypes.object,
+    className: PropTypes.string,
     dirtyCheck: PropTypes.bool,
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
     onInvalid: PropTypes.func,
@@ -98,11 +106,11 @@ Form.propTypes = {
 };
 
 Form.defaultProps = {
-    className: '',
     noScroll: false,
     noDisable: false,
     noValidate: true,
     messages: {},
+    className: null,
     dirtyCheck: true,
     children: <></>,
     onInvalid: () => {},
@@ -110,3 +118,5 @@ Form.defaultProps = {
     onSubmitting: () => {},
     onSubmitted: () => {},
 };
+
+export default Form;

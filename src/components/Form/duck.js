@@ -23,7 +23,8 @@ export function bindActions(dispatch) {
     return {
         id: () => dispatch({ type: actionTypes.id }),
         reset: () => dispatch({ type: actionTypes.reset }),
-        isLoading: isLoading => dispatch({ type: actionTypes.loading, payload: { isLoading } }),
+        isSubmitting: isSubmitting =>
+            dispatch({ type: actionTypes.loading, payload: { isSubmitting } }),
         setValidity: isValid => dispatch({ type: actionTypes.validity, payload: { isValid } }),
         setDirty: isDirty => dispatch({ type: actionTypes.dirty, payload: { isDirty } }),
         setInvalidFields: fields =>
@@ -50,7 +51,7 @@ export function reducer(state, event) {
             return { ...state, utils: { ...state.utils, id: id() } };
         }
         case actionTypes.loading: {
-            return { ...state, isLoading: event.payload.isLoading };
+            return { ...state, isSubmitting: event.payload.isSubmitting, isSubmitted: true };
         }
         case actionTypes.validity: {
             return { ...state, isValid: event.payload.isValid };

@@ -2,7 +2,8 @@ import { createContext } from 'react';
 import id from 'nanoid';
 
 export const defaultState = {
-    isLoading: false,
+    isSubmitting: false,
+    isSubmitted: false,
     isValid: null,
     isDirty: null,
     feedback: {

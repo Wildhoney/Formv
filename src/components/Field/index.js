@@ -5,7 +5,7 @@ import { useMount } from 'react-use';
 
 export const Context = createContext(() => {});
 
-export default function Field({ messages, children }) {
+export default function Field({ className, messages, children }) {
     const fieldset = useRef(null);
     const fieldState = useContext(Context);
 
@@ -30,15 +30,20 @@ export default function Field({ messages, children }) {
     }, [fieldState.highestField, fieldset]);
 
     return (
-        <fieldset ref={fieldset} style={utils.getStyles()}>
+        <fieldset ref={fieldset} style={utils.getStyles()} className={className}>
             {children}
         </fieldset>
     );
 }
 
-Field.propTypes = { messages: PropTypes.object, children: PropTypes.node };
+Field.propTypes = {
+    messages: PropTypes.object,
+    className: PropTypes.string,
+    children: PropTypes.node,
+};
 
 Field.defaultProps = {
     messages: null,
+    className: null,
     children: <></>,
 };

@@ -62,7 +62,7 @@ export default function Form({ ...props }) {
                                 Reset
                             </e.Button>
                             <e.Button type="submit">
-                                {formState.isLoading ? <>Submitting&hellip;</> : 'Submit'}
+                                {formState.isSubmitting ? <>Submitting&hellip;</> : 'Submit'}
                             </e.Button>
                         </e.Buttons>
                     </e.Container>

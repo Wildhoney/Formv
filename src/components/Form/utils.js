@@ -49,7 +49,7 @@ export function handleSubmit({
 
             // Clear all of the previous invalid messages and initiate the loading.
             actions.reset();
-            actions.isLoading(true);
+            actions.isSubmitting(true);
 
             // Reset the highest field computation.
             setHighestField(null);
@@ -126,7 +126,7 @@ export function handleSubmit({
             } finally {
                 // Modify the state to show that everything has completed, and we're in either a
                 // success or error state.
-                isMounted() && actions.isLoading(false);
+                isMounted() && actions.isSubmitting(false);
 
                 // Finally modify the ID to signify a change in state.
                 actions.id();
