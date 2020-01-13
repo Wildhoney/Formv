@@ -9,7 +9,7 @@ import * as e from './styles';
 import * as utils from './utils';
 
 export default function Form({ ...props }) {
-    const [state, { set, reset }] = fv.useFormState({
+    const [state, { set, reset }] = fv.useFormMap({
         name: '',
         email: '',
         message: '',
@@ -17,12 +17,12 @@ export default function Form({ ...props }) {
 
     return (
         <fv.Form {...props} messages={utils.getMessages()} onSubmitting={props.onSubmitting(state)}>
-            {form => (
+            {formState => (
                 <>
                     <e.Container>
-                        <Messages value={form.feedback.success} type="success" />
+                        <Messages value={formState.feedback.success} type="success" />
 
-                        <Messages value={form.feedback.error} type="generic" />
+                        <Messages value={formState.feedback.error} type="generic" />
 
                         <Field>
                             <Input
@@ -32,7 +32,7 @@ export default function Form({ ...props }) {
                                 required
                                 onChange={set('name')}
                             />
-                            <Messages value={form.feedback.field.name} type="validation" />
+                            <Messages value={formState.feedback.field.name} type="validation" />
                         </Field>
 
                         <Field>
@@ -43,7 +43,7 @@ export default function Form({ ...props }) {
                                 required
                                 onChange={set('email')}
                             />
-                            <Messages value={form.feedback.field.email} type="validation" />
+                            <Messages value={formState.feedback.field.email} type="validation" />
                         </Field>
 
                         <Field>
@@ -54,7 +54,7 @@ export default function Form({ ...props }) {
                                 required
                                 onChange={set('message')}
                             />
-                            <Messages value={form.feedback.field.message} type="validation" />
+                            <Messages value={formState.feedback.field.message} type="validation" />
                         </Field>
 
                         <e.Buttons>
@@ -62,7 +62,7 @@ export default function Form({ ...props }) {
                                 Reset
                             </e.Button>
                             <e.Button type="submit">
-                                {form.isLoading ? <>Submitting&hellip;</> : 'Submit'}
+                                {formState.isLoading ? <>Submitting&hellip;</> : 'Submit'}
                             </e.Button>
                         </e.Buttons>
                     </e.Container>

@@ -40,22 +40,22 @@ import { Form, Messages } from 'formv';
 export default function MyForm() {
     return (
         <Form onSubmitted={handleSubmitted}>
-            {form => (
+            {formState => (
                 <>
-                    <Messages value={form.feedback.success} />
-                    <Messages value={form.feedback.error} />
+                    <Messages value={formState.feedback.success} />
+                    <Messages value={formState.feedback.error} />
 
                     <input type="text" name="name" required />
-                    <Messages values={form.feedback.field.name} />
+                    <Messages values={formState.feedback.field.name} />
 
                     <input type="email" name="email" required />
-                    <Messages values={form.feedback.field.email} />
+                    <Messages values={formState.feedback.field.email} />
 
                     <input name="age" required min={18} />
-                    <Messages values={form.feedback.field.age} />
+                    <Messages values={formState.feedback.field.age} />
 
-                    <button disabled={!form.isDirty} type="submit">
-                        {form.isLoading ? 'Submitting...' : 'Submit'}
+                    <button disabled={!formState.isDirty} type="submit">
+                        {formState.isLoading ? 'Submitting...' : 'Submit'}
                     </button>
                 </>
             )}
@@ -208,12 +208,12 @@ async function handleSubmitted() {
 
 ## Managing State
 
-Managing the state for your forms is not typically an arduous task, nevertheless there are techniques that can make everything just a little bit easier, which is why `Formv` exports a `useFormState` hook that has the same interface as [`react-use`'s `useMap` hook](https://github.com/streamich/react-use/blob/master/docs/useMap.md) with a handful of differences &ndash; currying, memoization and nested properties.
+Managing the state for your forms is not typically an arduous task, nevertheless there are techniques that can make everything just a little bit easier, which is why `Formv` exports a `useFormMap` hook that has the same interface as [`react-use`'s `useMap` hook](https://github.com/streamich/react-use/blob/master/docs/useMap.md) with a handful of differences &ndash; currying, memoization and nested properties.
 
 ```javascript
-import { useFormState } from 'formv';
+import { useFormMap } from 'formv';
 
-const [state, { set }] = useFormState({
+const [state, { set }] = useFormMap({
     username: null,
     profile: {
         age: null,
@@ -222,7 +222,7 @@ const [state, { set }] = useFormState({
 });
 ```
 
-Using the `set` function provided by `useFormState` you can use a curried function to pass to your `Input` component. Interestingly if you use the approach below rather than creating a new function every time, the `set('username')` will never change, and as such makes everything a whole lot easier when it comes to wrapping your `Input` field in [`memo`](https://reactjs.org/docs/react-api.html#reactmemo).
+Using the `set` function provided by `useFormMap` you can use a curried function to pass to your `Input` component. Interestingly if you use the approach below rather than creating a new function every time, the `set('username')` will never change, and as such makes everything a whole lot easier when it comes to wrapping your `Input` field in [`memo`](https://reactjs.org/docs/react-api.html#reactmemo).
 
 ```jsx
 <Input value={state.username} onChange={set('username')} />
@@ -258,17 +258,17 @@ Using `Formv` it's easy to have the aforementioned setup as illustrated below.
 import * as fv from 'formv';
 
 function Form() {
-    const [state, { set }] = fv.useFormState({
+    const [state, { set }] = fv.useFormMap({
         name: null,
         age: null,
     });
 
     return (
         <fv.Form onSubmitted={handleSubmitted}>
-            {form => (
+            {formState => (
                 <>
-                    <fv.Messages value={form.feedback.success} />
-                    <fv.Messages value={form.feedback.error} />
+                    <fv.Messages value={formState.feedback.success} />
+                    <fv.Messages value={formState.feedback.error} />
 
                     <Fieldset onChange={set} />
                 </>
@@ -293,12 +293,12 @@ function Fieldset({ onChange }) {
 import * as fv from 'formv';
 
 function FieldName({ onChange }) {
-    const form = fv.useFormContext();
+    const formState = fv.useFormContext();
 
     return (
         <>
             <input name="name" type="text" onChange={({ target }) => onChange(target.value)} />
-            <fv.Messages values={form.feedback.field.name} />
+            <fv.Messages values={formState.feedback.field.name} />
         </>
     );
 }
@@ -308,12 +308,12 @@ function FieldName({ onChange }) {
 import * as fv from 'formv';
 
 function FieldAge({ onChange }) {
-    const form = fv.useFormContext();
+    const formState = fv.useFormContext();
 
     return (
         <>
             <input name="age" type="number" onChange={({ target }) => onChange(target.value)} />
-            <fv.Messages values={form.feedback.field.age} />
+            <fv.Messages values={formState.feedback.field.age} />
         </>
     );
 }

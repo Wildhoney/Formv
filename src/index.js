@@ -11,7 +11,7 @@ export { Context } from './components/Context';
 
 export { parse };
 
-export { useFormState, useFormContext } from './helpers/hook';
+export { useFormMap, useFormContext } from './helpers/hook';
 
 export const Error = {
     Generic: feedback.FormvGenericError,
