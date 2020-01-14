@@ -86,7 +86,8 @@ export function handleSubmit({
                 // Check to see whether the validation passes the native validation, and if not
                 // throw an empty validation error to collect the error messages directly from
                 // each of the fields.
-                if (requiresValidation && !form.current.checkValidity())
+                const clonedForm = form.current.cloneNode(true);
+                if (requiresValidation && !clonedForm.checkValidity())
                     throw new feedback.FormvValidationError({});
 
                 // Both the custom validation and native validation have passed successfully. We
@@ -210,7 +211,8 @@ export function collateInvalidFields(form, messages = {}) {
     const keys = Object.keys(messages);
 
     return Array.from(form.current.elements).filter(element => {
-        return !element.validity.valid || keys.includes(element.name);
+        const clonedField = element.cloneNode(true);
+        return !clonedField.validity.valid || keys.includes(clonedField.name);
     });
 }
 
