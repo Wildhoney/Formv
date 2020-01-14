@@ -85,7 +85,7 @@ export function handleSubmit({
                 // Check to see whether the validation passes the native validation, and if not
                 // throw an empty validation error to collect the error messages directly from
                 // each of the fields.
-                if (requiresValidation && !form.current.cloneNode(true).checkValidity())
+                if (requiresValidation && !form.current.checkValidity())
                     throw new feedback.FormvValidationError({});
 
                 // Both the custom validation and native validation have passed successfully. We
@@ -138,6 +138,10 @@ export function handleSubmit({
     );
 }
 
+export function handleInvalid({ onInvalid }) {
+    return useCallback(onInvalid, [onInvalid]);
+}
+
 export function handleReset({ actions, onReset }) {
     return useCallback(
         event => {
@@ -146,20 +150,6 @@ export function handleReset({ actions, onReset }) {
             onReset(event);
         },
         [onReset],
-    );
-}
-
-export function handleInvalid({ messages: refinedMessages, onInvalid }) {
-    return useCallback(
-        event => {
-            const field = event.target;
-
-            if (field && isFunction(field.setCustomValidity)) {
-                const message = getValidationMessages(field, refinedMessages);
-                field.setCustomValidity(message);
-            }
-        },
-        [refinedMessages, onInvalid],
     );
 }
 
@@ -181,17 +171,10 @@ export function handleChange({ form, dirtyCheck, actions }) {
 
     return useCallback(
         event => {
-            const field = event.target;
-
             if (dirtyCheck) {
                 // Handle the dirty checking of the form.
                 const newState = getFormData(event.target.form);
                 actions.setDirty(!equals(newState, state));
-            }
-
-            if (field && isFunction(field.setCustomValidity)) {
-                // Reset the form validity.
-                field.setCustomValidity('');
             }
         },
         [state, dirtyCheck],
@@ -209,8 +192,7 @@ export function collateInvalidFields(form, messages = {}) {
     const keys = Object.keys(messages);
 
     return Array.from(form.current.elements).filter(element => {
-        const clonedField = element.cloneNode(false);
-        return !clonedField.validity.valid || keys.includes(clonedField.name);
+        return !element.validity.valid || keys.includes(element.name);
     });
 }
 
