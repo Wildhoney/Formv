@@ -67,26 +67,24 @@ const Form = forwardRef((props, ref) => {
 
     return (
         <FormContext.Provider value={state}>
-            <FieldContext.Provider value={context}>
-                <form
-                    ref={form}
-                    className={props.className}
+            <form
+                ref={form}
+                className={props.className}
+                style={utils.getStyles()}
+                noValidate={props.noValidate}
+                onReset={handleReset}
+                onInvalid={handleInvalid}
+                onClick={handleClick}
+                onChange={handleChange}
+                onSubmit={handleSubmit}
+            >
+                <fieldset
+                    disabled={props.noDisable ? false : state.isSubmitting}
                     style={utils.getStyles()}
-                    noValidate={props.noValidate}
-                    onReset={handleReset}
-                    onInvalid={handleInvalid}
-                    onClick={handleClick}
-                    onChange={handleChange}
-                    onSubmit={handleSubmit}
                 >
-                    <fieldset
-                        disabled={props.noDisable ? false : state.isSubmitting}
-                        style={utils.getStyles()}
-                    >
-                        {children}
-                    </fieldset>
-                </form>
-            </FieldContext.Provider>
+                    <FieldContext.Provider value={context}>{children}</FieldContext.Provider>
+                </fieldset>
+            </form>
         </FormContext.Provider>
     );
 });
