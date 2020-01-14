@@ -166,7 +166,7 @@ export function handleInvalid({ messages: refinedMessages, onInvalid }) {
 
 export function getFormData(form) {
     const data = new FormData(form);
-    return [...[...data.keys()].sort(), ...data.values()];
+    return [...data.keys(), ...data.values()];
 }
 
 export function handleChange({ form, dirtyCheck, actions }) {
