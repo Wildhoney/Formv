@@ -210,7 +210,7 @@ export function collateInvalidFields(form, messages = {}) {
     const keys = Object.keys(messages);
 
     return Array.from(form.current.elements).filter(element => {
-        const clonedField = element.cloneNode(true);
+        const clonedField = element.cloneNode(false);
         return !clonedField.validity.valid || keys.includes(clonedField.name);
     });
 }
