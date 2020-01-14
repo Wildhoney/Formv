@@ -153,8 +153,11 @@ export function handleInvalid({ messages: refinedMessages, onInvalid }) {
     return useCallback(
         event => {
             const field = event.target;
-            const message = getValidationMessages(field, refinedMessages);
-            field.setCustomValidity(message);
+
+            if (field) {
+                const message = getValidationMessages(field, refinedMessages);
+                field.setCustomValidity(message);
+            }
         },
         [refinedMessages, onInvalid],
     );
@@ -185,7 +188,7 @@ export function handleChange({ form, dirtyCheck, actions }) {
             }
 
             // Reset the form validity.
-            event.target.setCustomValidity('');
+            event.target && event.target.setCustomValidity('');
         },
         [state, dirtyCheck],
     );
