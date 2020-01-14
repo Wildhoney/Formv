@@ -1,7 +1,6 @@
 import { useCallback, useReducer, useMemo, useState } from 'react';
 import { useEffectOnce } from 'react-use';
 import { equals, isEmpty } from 'ramda';
-import * as utils from './utils';
 import * as feedback from '../../helpers/feedback';
 
 export function getStyles() {
@@ -156,7 +155,7 @@ export function handleInvalid({ messages: refinedMessages, onInvalid }) {
         event => {
             const field = event.target;
 
-            if (field && utils.isFunction(field.setCustomValidity)) {
+            if (field && isFunction(field.setCustomValidity)) {
                 const message = getValidationMessages(field, refinedMessages);
                 field.setCustomValidity(message);
             }
@@ -191,7 +190,7 @@ export function handleChange({ form, dirtyCheck, actions }) {
                 actions.setDirty(!equals(newState, state));
             }
 
-            if (field && utils.isFunction(field.setCustomValidity)) {
+            if (field && isFunction(field.setCustomValidity)) {
                 // Reset the form validity.
                 field.setCustomValidity('');
             }
