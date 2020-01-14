@@ -224,10 +224,7 @@ export function isRelatedException(error) {
 
 export function mergeMessages(formMessages, fieldMessages) {
     if (isEmpty(fieldMessages)) return formMessages;
-    const a = { ...formMessages, ...Object.assign(...fieldMessages) };
-
-    console.log(a);
-    return a;
+    return { ...formMessages, ...Object.assign(...fieldMessages) };
 }
 
 export function getValidationKey(field) {
