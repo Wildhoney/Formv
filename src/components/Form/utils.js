@@ -85,8 +85,7 @@ export function handleSubmit({
                 // Check to see whether the validation passes the native validation, and if not
                 // throw an empty validation error to collect the error messages directly from
                 // each of the fields.
-                const clonedForm = form.current.cloneNode(true);
-                if (requiresValidation && !clonedForm.checkValidity())
+                if (requiresValidation && !form.current.cloneNode(true).checkValidity())
                     throw new feedback.FormvValidationError({});
 
                 // Both the custom validation and native validation have passed successfully. We
