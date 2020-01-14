@@ -55,10 +55,12 @@ export function handleSubmit({
             setHighestField(null);
 
             // Remove the invalid class name from all form fields.
-            Array.from(form.current.elements).forEach(field => field.classList.remove('invalid'));
+            Array.from(form.current.elements).forEach(
+                field => field && field.classList.remove('invalid'),
+            );
 
             // Remove the invalid class name from the form.
-            form.current.classList.remove('invalid');
+            form.current && form.current.classList.remove('invalid');
 
             // Determine if the form requires validation based on the `formnovalidate` field.
             const requiresValidation =
@@ -99,7 +101,7 @@ export function handleSubmit({
 
                     invalidFields.forEach(field => {
                         // Apply the invalid class name to each invalid field.
-                        field.classList.add('invalid');
+                        field && field.classList.add('invalid');
                     });
 
                     // Hand over the invalid fields to the state, and set the validation messages.
@@ -119,7 +121,7 @@ export function handleSubmit({
                 onInvalid(event);
 
                 // Apply the invalid class name to the form.
-                form.current.classList.add('invalid');
+                form.current && form.current.classList.add('invalid');
 
                 // Otherwise we'll re-throw any other exceptions.
                 throw error;
