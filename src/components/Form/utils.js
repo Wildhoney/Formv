@@ -1,7 +1,8 @@
 import { useCallback, useReducer, useMemo, useState } from 'react';
-import { equals, isEmpty } from 'ramda';
-import * as feedback from '../../helpers/feedback';
 import { useEffectOnce } from 'react-use';
+import { equals, isEmpty } from 'ramda';
+import * as utils from './utils';
+import * as feedback from '../../helpers/feedback';
 
 export function getStyles() {
     return { border: 0, padding: 0, margin: 0 };
@@ -154,7 +155,7 @@ export function handleInvalid({ messages: refinedMessages, onInvalid }) {
         event => {
             const field = event.target;
 
-            if (field) {
+            if (field && utils.isFunction(field.setCustomValidity)) {
                 const message = getValidationMessages(field, refinedMessages);
                 field.setCustomValidity(message);
             }
@@ -181,14 +182,18 @@ export function handleChange({ form, dirtyCheck, actions }) {
 
     return useCallback(
         event => {
+            const field = event.target;
+
             if (dirtyCheck) {
                 // Handle the dirty checking of the form.
                 const newState = getFormData(event.target.form);
                 actions.setDirty(!equals(newState, state));
             }
 
-            // Reset the form validity.
-            event.target && event.target.setCustomValidity('');
+            if (field && utils.isFunction(field.setCustomValidity)) {
+                // Reset the form validity.
+                field.setCustomValidity('');
+            }
         },
         [state, dirtyCheck],
     );
