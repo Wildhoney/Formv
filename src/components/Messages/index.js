@@ -26,8 +26,8 @@ export default function Messages({ className, style, ...props }) {
 Messages.propTypes = {
     className: PropTypes.string,
     style: PropTypes.object,
-    value: PropTypes.string,
-    values: PropTypes.arrayOf(PropTypes.string),
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+    values: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
 };
 
 Messages.defaultProps = { className: null, style: {}, value: null, values: [] };
