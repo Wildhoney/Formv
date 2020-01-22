@@ -131,7 +131,7 @@ export function handleSubmit({
                 isMounted() && actions.isSubmitting(false);
 
                 // Finally modify the ID to signify a change in state.
-                actions.id();
+                isMounted() && actions.id();
             }
         },
         [form, button, actions, messages, setHighestField, onInvalid, onSubmitting, onSubmitted],
