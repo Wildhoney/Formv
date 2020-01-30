@@ -91,6 +91,7 @@ export function handleSubmit({
                 // Both the custom validation and native validation have passed successfully. We
                 // do a check on whether the developer provided a success message which we can render.
                 const result = await onSubmitted(event);
+                actions.setValidity(true);
                 isMounted() &&
                     result instanceof feedback.FormvSuccess &&
                     actions.setSuccessMessages(result.message);
@@ -106,6 +107,7 @@ export function handleSubmit({
 
                     // Hand over the invalid fields to the state, and set the validation messages.
                     actions.setInvalidFields(invalidFields);
+                    actions.setValidity(false);
                     return void actions.setValidityMessages(
                         getMessages(invalidFields, messages, error.messages),
                     );
@@ -113,6 +115,7 @@ export function handleSubmit({
 
                 if (error instanceof feedback.FormvGenericError) {
                     // Feed any generic API error messages back into the component.
+                    actions.setValidity(false);
                     return void actions.setGenericMessages(error.messages);
                 }
 
@@ -142,12 +145,12 @@ export function handleInvalid({ onInvalid }) {
     return useCallback(onInvalid, [onInvalid]);
 }
 
-export function handleReset({ actions, onReset }) {
+export function handleReset({ form, actions, onReset }) {
     return useCallback(
-        event => {
-            actions.reset();
+        async event => {
             event.preventDefault();
-            onReset(event);
+            await onReset(event);
+            actions.reset(form.current.checkValidity());
         },
         [onReset],
     );

@@ -22,7 +22,7 @@ export const getInitialState = ({ dirtyCheck }) => {
 export function bindActions(dispatch) {
     return {
         id: () => dispatch({ type: actionTypes.id }),
-        reset: () => dispatch({ type: actionTypes.reset }),
+        reset: isValid => dispatch({ type: actionTypes.reset, payload: { isValid } }),
         isSubmitting: isSubmitting =>
             dispatch({ type: actionTypes.loading, payload: { isSubmitting } }),
         setValidity: isValid => dispatch({ type: actionTypes.validity, payload: { isValid } }),
@@ -44,7 +44,7 @@ export function reducer(state, event) {
             return {
                 ...defaultState,
                 isDirty: state.isDirty,
-                isValid: state.isValid,
+                isValid: event.payload.isValid,
                 utils: { ...defaultState.utils, id: state.utils.id },
             };
         }

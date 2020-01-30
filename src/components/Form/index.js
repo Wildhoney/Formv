@@ -34,7 +34,7 @@ const Form = forwardRef((props, ref) => {
     // Setup all of the event listeners passing in the necessary props.
     const handleInvalid = utils.handleInvalid(props);
     const handleClick = utils.handleClick({ button });
-    const handleReset = utils.handleReset({ ...props, actions });
+    const handleReset = utils.handleReset({ ...props, form, actions });
     const handleChange = utils.handleChange({ ...props, form, actions });
     const handleSubmit = utils.handleSubmit({
         ...props,
