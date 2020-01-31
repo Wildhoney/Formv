@@ -69,6 +69,7 @@ const Form = forwardRef((props, ref) => {
         <FormContext.Provider value={state}>
             <form
                 ref={form}
+                {...props}
                 className={props.className}
                 style={utils.getStyles()}
                 noValidate={props.noValidate}
