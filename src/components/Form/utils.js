@@ -1,6 +1,6 @@
 import { useCallback, useReducer, useMemo, useState } from 'react';
 import { useEffectOnce } from 'react-use';
-import { equals, isEmpty, omit } from 'ramda';
+import { equals, isEmpty, omit, flatten } from 'ramda';
 import * as feedback from '../../helpers/feedback';
 
 export function getStyles() {
@@ -224,8 +224,7 @@ export function getMessages(fields, refinedMessages, customErrorMessages) {
     fields.forEach(field => {
         const messages = (() => getValidationMessages(field, refinedMessages))();
 
-        [messages, customErrorMessages[field.name]]
-            .flat()
+        flatten([messages, customErrorMessages[field.name]])
             .filter(uniqueList)
             .filter(Boolean)
             .forEach(message => {
