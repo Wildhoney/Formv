@@ -243,6 +243,7 @@ function uniqueList(value, index, list) {
 
 export function sanitiseProps(props) {
     const sanitise = omit([
+        'noScroll',
         'noDisable',
         'noValidate',
         'messages',
