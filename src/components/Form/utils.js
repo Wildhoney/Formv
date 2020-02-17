@@ -96,6 +96,8 @@ export function handleSubmit({
                     result instanceof feedback.FormvSuccess &&
                     actions.setSuccessMessages(result.message);
             } catch (error) {
+                if (!isMounted()) return null;
+
                 if (error instanceof feedback.FormvValidationError) {
                     // Feed the API validation errors back into the component.
                     const invalidFields = collateInvalidFields(form, error.messages);

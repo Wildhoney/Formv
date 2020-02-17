@@ -49,7 +49,7 @@ const Form = forwardRef((props, ref) => {
 
     useEffect(
         // Set the state of the initial form validity.
-        () => actions.setValidity(form.current.checkValidity()),
+        () => isMounted() && actions.setValidity(form.current.checkValidity()),
         [form],
     );
 
@@ -60,9 +60,13 @@ const Form = forwardRef((props, ref) => {
         if (isInvalidField && !props.noValidate) return;
 
         // Determine which field is the highest in the DOM.
-        setHighestField(
-            getHighestField(isInvalidField ? state.utils.invalidFields : fields, !isInvalidField),
-        );
+        isMounted() &&
+            setHighestField(
+                getHighestField(
+                    isInvalidField ? state.utils.invalidFields : fields,
+                    !isInvalidField,
+                ),
+            );
     }, [state.utils.id]);
 
     return (

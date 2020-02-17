@@ -1,20 +1,23 @@
 import React, { useContext, createContext, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useMount, useMountedState } from 'react-use';
 import * as utils from './utils';
-import { useMount } from 'react-use';
 
 export const Context = createContext(() => {});
 
 export default function Field({ className, messages, children }) {
     const fieldset = useRef(null);
+    const isMounted = useMountedState();
     const fieldState = useContext(Context);
 
     useMount(() => {
         // Apply any custom field messages.
-        if (messages) fieldState.setMessages(messages);
+        if (messages) isMounted() && fieldState.setMessages(messages);
     });
 
     useEffect(() => {
+        if (!isMounted()) return;
+
         fieldset.current && fieldState.addField(fieldset.current);
         if (!fieldState.highestField) return;
 
