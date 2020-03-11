@@ -91,12 +91,12 @@ export function handleSubmit({
                 // Both the custom validation and native validation have passed successfully. We
                 // do a check on whether the developer provided a success message which we can render.
                 const result = await onSubmitted(event);
-                actions.setValidity(true);
+                isMounted() && actions.setValidity(true);
                 isMounted() &&
                     result instanceof feedback.FormvSuccess &&
                     actions.setSuccessMessages(result.message);
             } catch (error) {
-                if (!isMounted()) return null;
+                if (!isMounted()) return;
 
                 if (error instanceof feedback.FormvValidationError) {
                     // Feed the API validation errors back into the component.
@@ -131,12 +131,14 @@ export function handleSubmit({
                 // Otherwise we'll re-throw any other exceptions.
                 throw error;
             } finally {
-                // Modify the state to show that everything has completed, and we're in either a
-                // success or error state.
-                isMounted() && actions.isSubmitting(false);
+                if (isMounted()) {
+                    // Modify the state to show that everything has completed, and we're in either a
+                    // success or error state.
+                    actions.isSubmitting(false);
 
-                // Finally modify the ID to signify a change in state.
-                isMounted() && actions.id();
+                    // Finally modify the ID to signify a change in state.
+                    actions.id();
+                }
             }
         },
         [form, button, actions, messages, setHighestField, onInvalid, onSubmitting, onSubmitted],
@@ -147,12 +149,12 @@ export function handleInvalid({ onInvalid }) {
     return useCallback(onInvalid, [onInvalid]);
 }
 
-export function handleReset({ form, actions, onReset }) {
+export function handleReset({ form, actions, isMounted, onReset }) {
     return useCallback(
         async event => {
             event.preventDefault();
             await onReset(event);
-            actions.reset(form.current.checkValidity());
+            isMounted() && actions.reset(form.current.checkValidity());
         },
         [onReset],
     );
@@ -163,13 +165,13 @@ export function getFormData(form) {
     return [...data.keys(), ...data.values()];
 }
 
-export function handleChange({ form, dirtyCheck, actions }) {
+export function handleChange({ form, dirtyCheck, actions, isMounted }) {
     const [state, setState] = useState(null);
 
     // Set the initial form state.
     useEffectOnce(() => {
         if (dirtyCheck) {
-            actions.setDirty(false);
+            isMounted() && actions.setDirty(false);
             setState(getFormData(form.current));
         }
     }, [form, dirtyCheck]);
@@ -179,7 +181,7 @@ export function handleChange({ form, dirtyCheck, actions }) {
             if (dirtyCheck) {
                 // Handle the dirty checking of the form.
                 const newState = getFormData(event.target.form);
-                actions.setDirty(!equals(newState, state));
+                isMounted() && actions.setDirty(!equals(newState, state));
             }
         },
         [state, dirtyCheck],
