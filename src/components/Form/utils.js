@@ -4,6 +4,12 @@ export async function submitForm({ button, event, ...args }) {
     const form = { current: args.form.current.cloneNode(true) };
     form.current.querySelector('fieldset').removeAttribute('disabled');
 
+    const active =
+        (document.activeElement &&
+            document.activeElement.form === args.form.current &&
+            document.activeElement) ||
+        null;
+
     const data = getFormData(form.current);
 
     // Remove the invalid class name from the form.
@@ -36,7 +42,7 @@ export async function submitForm({ button, event, ...args }) {
         return {
             isValid: true,
             isDirty: false,
-            meta: { fields: [], data, highest: null },
+            meta: { fields: [], data, highest: null, active },
             feedback: {
                 success: result instanceof feedback.FormvSuccess ? result.message : null,
                 errors: [],
@@ -57,7 +63,7 @@ export async function submitForm({ button, event, ...args }) {
             // Feed any generic API error messages back into the component.
             return {
                 isValid: false,
-                meta: { fields: [], data: [], highest: null },
+                meta: { fields: [], data: [], highest: null, active },
                 feedback: {
                     success: null,
                     error: [].concat(error.messages).flat(),
@@ -84,7 +90,7 @@ export async function submitForm({ button, event, ...args }) {
 
             return {
                 isValid: false,
-                meta: { fields, data: [], highest },
+                meta: { fields, data: [], highest, active },
                 feedback: {
                     success: null,
                     errors: null,

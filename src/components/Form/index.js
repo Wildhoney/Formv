@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useMountedState, useMount } from 'react-use';
+import { useMountedState, useMount, useIsomorphicLayoutEffect } from 'react-use';
 import { identity, equals } from 'ramda';
 import { useTracked, actionTypes } from '../Store';
 import * as utils from './utils';
@@ -38,6 +38,10 @@ export default function Form({
             payload: { isValid: form.current.checkValidity() },
         });
     });
+
+    useIsomorphicLayoutEffect(() => {
+        state.meta.active && state.meta.active.focus();
+    }, [state.meta.active]);
 
     const handleSubmitting = useCallback(
         async (event) => {
@@ -127,7 +131,7 @@ export default function Form({
                 disabled={disableFields ? state.isSubmitting : false}
                 style={{ display: 'contents' }}
             >
-                {utils.isFunction(children) ? children(state) : state}
+                {utils.isFunction(children) ? children(state) : children}
             </fieldset>
         </form>
     );

@@ -18,6 +18,7 @@ const initialState = {
         fields: [],
         data: [],
         highest: null,
+        active: null,
     },
 };
 
