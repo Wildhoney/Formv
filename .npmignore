@@ -13,3 +13,4 @@ helpers/
 ava.config.js
 rollup.config.js
 yarn-error.log
+dist/example/
