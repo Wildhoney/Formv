@@ -9,9 +9,9 @@ addons:
     chrome: stable
 
 deploy:
-    provider: heroku
-    api_key:
-        secure: eksbRKqvVoirgjoZ9UDomKaliOvjAr1NJjJLQps+vaodYojds0wu0XS811dqotaKL2gxnw+xtVgxp+7+XwHjEZBHZZvgc0mAq4NvHu7qFYUXItYI1GJ2AWx4Gu9SWspcD+cwmpDKiQTvzNa4u+E5Nhn2isr9XN5xE+6USzNhL2W+YKU6tqHslUavH966GyUagwOeOglA04Aw5mQGjhcwlbYhla2CixiSWY9XYUBhXt+hU0hVrWG9AUjfKENkwtzlemkpy+Jb7F6g6aeqaJXuPnleZIzKZ1/lytjYHOVeu1Ax9KrGR9uz/H+fEG29OzcBMVAWz5sAHxOuJ4OVQ4L1OtluakP2Fy+DVrUtQ5N+sMUqRf94r+jWs4YIJW31WGDgqueY2+mJesstbyGq7pSZxOcGesbpCXVVGZP3pfdWck1v+r5bY5M03sxKpttWG0GOVnSUS7Noj8bJRLV/pPLSl3YNT1V+N76c7RxNIiQRG4RXTBdPI/YF1KYTQW85FgoAzYL+gQzhVSemZkD/5PZpTPERxiZ3tbPI3TmfE3Ni+eLSruvdYo8ap4xgYNHHX29EHTvw0cvuT5+i2iUlYF6WQcIkJ/AU9z/qENK583a2FlwPVeBbUgg/61f7HqKaRf7tP79G0Ym1uVz3G3YTSdNiW4jFrVFdGE1eA6SzhwSnLes=
-    app: formv
-    on:
-        repo: Wildhoney/Formv
+  provider: heroku
+  api_key:
+    secure: GngOWXaxIreuywPA/NJk7+YtD1Prev7QVhYGK/dIvZVbtoJWt34ywfR0zT4qybKc+NON/c79x5gc+nOfQiU83Ft6WYSPKYYolAg/VeSrKuo92sWUz8JxYtUDyMkYxZs1JgzKaKedSDLtTgENmlSuSSi7bMw001xrxzcplENGvnlrw8viMtpE1vPZ9Z1W0JV+byAWkXMLNNe/qNVkljGmil1fZK2naXGGtjQLgMVpYRNO/zieTtbK3FFXKrKN+wFnkWej6fIjFEMXvL8unKpVBcKor8hS4dqyq3Pdef6clP7jspWy4YIK9Y2NZbQffCB1vHnfdaME6cdSHmLOhi+3RJNykl01oPucDP7zq5VfZJnUn3sgaKcP8UZNgYjWg1ZrvYSDCNpnOHLtWG1BnuziHF8vnmsidmlJGK9yrH1xbSkMjMYeTPNqRjq2KbsYWgzOcl2tL6OVr7bxTGTeO9l8ERLK2IkIAmK9gtaHsEwk7tj6uhICEkvz9MuPAlVDEFsuJPQkK6X6bpaMKX/4+GqwC5Bv+r14uUMWIyPLdbgFSukx7kRh7ibJPHbnuJNrN5G0IWjPhTVc/n3pu6Uu1mzrd1aq9lMQqY0/jGQbupPWV3UnvKvU/JCl9nDQ51BOtDJcB2KeGz5I7bQ3V3WXzRbEIiL3GruBhFkR9WwKgrN2xZs=
+  app: formv
+  on:
+    repo: Wildhoney/Formv
