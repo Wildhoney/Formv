@@ -1,0 +1,15 @@
+.history/
+example/
+media/
+tests/
+helpers/
+
+.travis.yml
+.babelrc
+.eslintignore
+.eslintrc
+.prettierignore
+.prettierrc.json
+ava.config.js
+rollup.config.js
+yarn-error.log

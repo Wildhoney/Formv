@@ -210,12 +210,12 @@ async function handleSubmitted() {
 
 ## Managing State
 
-Managing the state for your forms is not typically an arduous task, nevertheless there are techniques that can make everything just a little bit easier, which is why `Formv` exports a `useFormMap` hook that has the same interface as [`react-use`'s `useMap` hook](https://github.com/streamich/react-use/blob/master/docs/useMap.md) with a handful of differences &ndash; currying, memoization and nested properties.
+Managing the state for your forms is not typically an arduous task, nevertheless there are techniques that can make everything just a little bit easier, which is why `Formv` exports a `useMap` hook that has the same interface as [`react-use`'s `useMap` hook](https://github.com/streamich/react-use/blob/master/docs/useMap.md) with a handful of differences &ndash; currying, memoization and nested properties.
 
 ```javascript
-import { useFormMap } from 'formv';
+import { useMap } from 'formv';
 
-const [state, { set }] = useFormMap({
+const [state, { set }] = useMap({
     username: null,
     profile: {
         age: null,
@@ -224,7 +224,7 @@ const [state, { set }] = useFormMap({
 });
 ```
 
-Using the `set` function provided by `useFormMap` you can use a curried function to pass to your `Input` component. Interestingly if you use the approach below rather than creating a new function every time, the `set('username')` will never change, and as such makes everything a whole lot easier when it comes to wrapping your `Input` field in [`memo`](https://reactjs.org/docs/react-api.html#reactmemo).
+Using the `set` function provided by `useMap` you can use a curried function to pass to your `Input` component. Interestingly if you use the approach below rather than creating a new function every time, the `set('username')` will never change, and as such makes everything a whole lot easier when it comes to wrapping your `Input` field in [`memo`](https://reactjs.org/docs/react-api.html#reactmemo).
 
 ```jsx
 <Input value={state.username} onChange={set('username')} />
@@ -260,7 +260,7 @@ Using `Formv` it's easy to have the aforementioned setup as illustrated below.
 import * as fv from 'formv';
 
 function Form() {
-    const [state, { set }] = fv.useFormMap({
+    const [state, { set }] = fv.useMap({
         name: null,
         age: null,
     });
@@ -295,7 +295,7 @@ function Fieldset({ onChange }) {
 import * as fv from 'formv';
 
 function FieldName({ onChange }) {
-    const formState = fv.useFormContext();
+    const formState = fv.useState();
 
     return (
         <>
@@ -310,7 +310,7 @@ function FieldName({ onChange }) {
 import * as fv from 'formv';
 
 function FieldAge({ onChange }) {
-    const formState = fv.useFormContext();
+    const formState = fv.useState();
 
     return (
         <>
