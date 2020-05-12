@@ -40,7 +40,7 @@ import { Form, Messages } from 'formv';
 export default function MyForm() {
     return (
         <Form onSubmitted={handleSubmitted}>
-            {formState => (
+            {(formState) => (
                 <>
                     <Messages value={formState.feedback.success} />
                     <Messages value={formState.feedback.error} />
@@ -63,6 +63,8 @@ export default function MyForm() {
     );
 }
 ```
+
+**Note:** `isDirty` is an opt-in with the `dirtyCheck` prop as it causes form data comparisons upon form change.
 
 Voila! Using the above code you have everything you need to validate your form. By clicking the `button` all validation rules will be checked, and if you've not filled in the required fields then you'll see a message appear next to the relevant `input` fields. We are also using the `isSubmitting` to determine when the form is in the process of being submitted &ndash; including any async API requests, and also a dirty check to determine if the form data has been modified from its original state.
 
@@ -240,7 +242,7 @@ You'll also notice that nested objects are handled with the dot notation thanks 
 
 ## Default Behaviours
 
-By default Formv disables the form when it's being submitted, which includes the buttons you attach to your form which can be styled with the `:disabled` pseudo-class &ndash; you can disable this by adding `noDisable` to the `Form`. Likewise with the scrolling to the highest invalid element &ndash; that functionality can be disabled by adding `noScroll` to `Form`.
+By default Formv disables the form when it's being submitted, which includes the buttons you attach to your form which can be styled with the `:disabled` pseudo-class &ndash; you can disable this by adding `disableFields: false` to the `Form`. With scrolling to the highest element, we don't introduce any behaviour for that as it's difficult to calculate precisely where to scroll to, however the highest element is provided in the context via `meta.highest`.
 
 You can also skip the front-end validation entirely on a button-by-button basis with the native `formNoValidate` attribute on your chosen button.
 
@@ -265,7 +267,7 @@ function Form() {
 
     return (
         <fv.Form onSubmitted={handleSubmitted}>
-            {formState => (
+            {(formState) => (
                 <>
                     <fv.Messages value={formState.feedback.success} />
                     <fv.Messages value={formState.feedback.error} />
