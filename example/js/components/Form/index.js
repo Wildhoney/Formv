@@ -50,7 +50,6 @@ export default function Form({ ...props }) {
                             <Textarea
                                 value={state.message}
                                 name="message"
-                                minLength={20}
                                 required
                                 onChange={set('message')}
                             />

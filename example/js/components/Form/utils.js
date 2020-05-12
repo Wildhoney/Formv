@@ -8,7 +8,7 @@ export function getMessages() {
             typeMismatch: 'Please enter a valid email address.',
         },
         message: {
-            valueMissing: 'Please ensure your message is at least 20 characters.',
+            valueMissing: 'Please enter your message.',
         },
     };
 }
