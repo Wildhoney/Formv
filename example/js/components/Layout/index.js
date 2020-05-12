@@ -20,7 +20,7 @@ export default function Layout() {
 
         if (mockGenericErrors) {
             throw new fv.Error.Generic(
-                'An unexpected occurred when pretending to send your message.',
+                'An expected error occurred when pretending to send your message.',
             );
         }
 
