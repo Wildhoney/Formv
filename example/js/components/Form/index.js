@@ -9,7 +9,7 @@ import * as e from './styles';
 import * as utils from './utils';
 
 export default function Form({ ...props }) {
-    const [state, { set, reset }] = fv.useFormMap({
+    const [state, { set, reset }] = fv.useMap({
         name: '',
         email: '',
         message: '',
@@ -17,7 +17,7 @@ export default function Form({ ...props }) {
 
     return (
         <fv.Form {...props} messages={utils.getMessages()} onSubmitting={props.onSubmitting(state)}>
-            {formState => (
+            {(formState) => (
                 <>
                     <e.Container>
                         <Messages value={formState.feedback.success} type="success" />

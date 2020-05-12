@@ -24,7 +24,7 @@ export default function Messages({ type, value }) {
         case 'validation':
             return (
                 <e.ValidationError>
-                    {value.map(message => (
+                    {value.map((message) => (
                         <li key={`message_${message}`}>{message}</li>
                     ))}
                 </e.ValidationError>

@@ -38,18 +38,18 @@ export function withPage(debug = false) {
 export function getHelpers(page) {
     async function getSuccessMessage() {
         await page.waitFor('.formv-message');
-        return page.$eval('.formv-message', node => node.innerHTML);
+        return page.$eval('.formv-message', (node) => node.innerHTML);
     }
 
     function getValidationMessages() {
-        return page.$$eval('.formv-messages li', nodes => {
-            return Array.from(nodes).map(node => node.innerHTML);
+        return page.$$eval('.formv-messages li', (nodes) => {
+            return Array.from(nodes).map((node) => node.innerHTML);
         });
     }
 
     async function getGenericMessages() {
         await page.waitFor('.formv-message');
-        return page.$eval('.formv-message', node => node.innerHTML);
+        return page.$eval('.formv-message', (node) => node.innerHTML);
     }
 
     async function includesClassName(selector, className) {

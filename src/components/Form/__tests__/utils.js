@@ -1,18 +1,8 @@
 import test from 'ava';
-import * as utils from './utils';
-import { Error } from '../../';
+import { Error } from '../../../';
+import * as utils from '../utils';
 
-test('It should be able to determine if the exception is related;', t => {
-    const syntaxError = new SyntaxError();
-    const genericError = new Error.Generic();
-    const validationError = new Error.Validation();
-
-    t.false(utils.isRelatedException(syntaxError));
-    t.true(utils.isRelatedException(genericError));
-    t.true(utils.isRelatedException(validationError));
-});
-
-test('It should be able to determine if a button is a form submit button;', t => {
+test('It should be able to determine if a button is a form submit button;', (t) => {
     t.false(utils.isSubmitButton(document.createElement('div')));
 
     const input = document.createElement('input');
@@ -29,7 +19,17 @@ test('It should be able to determine if a button is a form submit button;', t =>
     t.true(utils.isSubmitButton(button));
 });
 
-test('It should be able to yield a collection of the invalid form fields;', t => {
+test('It should be able to determine if the exception is related;', (t) => {
+    const syntaxError = new SyntaxError();
+    const genericError = new Error.Generic();
+    const validationError = new Error.Validation();
+
+    t.false(utils.isRelatedException(syntaxError));
+    t.true(utils.isRelatedException(genericError));
+    t.true(utils.isRelatedException(validationError));
+});
+
+test('It should be able to yield a collection of the invalid form fields;', (t) => {
     const form = document.createElement('form');
     const first = document.createElement('input');
     const second = document.createElement('input');
@@ -44,13 +44,10 @@ test('It should be able to yield a collection of the invalid form fields;', t =>
     form.append(third);
 
     t.deepEqual(
-        utils.collateInvalidFields(
-            { current: form },
-            {
-                first: 'invalid',
-                third: 'invalid',
-            },
-        ),
+        utils.collateInvalidFields(form, {
+            first: 'invalid',
+            third: 'invalid',
+        }),
         [first, third],
     );
 });

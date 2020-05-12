@@ -10,7 +10,7 @@ export default function Messages({ className, style, ...props }) {
     if (Array.isArray(value))
         return (
             <ul className={className} style={style}>
-                {value.map(value => (
+                {value.map((value) => (
                     <li key={`message_${value}`}>{value}</li>
                 ))}
             </ul>

@@ -1,125 +1,160 @@
-import React, { forwardRef, useRef, useState, useMemo, useEffect } from 'react';
-import { useMountedState, useList, useEffectOnce, useIsomorphicLayoutEffect } from 'react-use';
+import React, { useCallback, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useMountedState, useMount } from 'react-use';
+import { identity, equals } from 'ramda';
+import { useTracked, actionTypes } from '../Store';
 import * as utils from './utils';
-import * as duck from './duck';
-import { Context as FormContext } from '../Context';
-import { Context as FieldContext } from '../Field';
-import { getHighestField } from '../Field/utils';
 
-const Form = forwardRef((props, ref) => {
-    const form = useRef(null);
-    const button = useRef(null);
+export default function Form({
+    messages,
+    dirtyCheck,
+    disableFields,
+    onClick,
+    onChange,
+    onReset,
+    onInvalid,
+    onSubmitting,
+    onSubmitted,
+    children,
+    ...props
+}) {
+    const form = useRef();
+    const fieldset = useRef();
+    const button = useRef();
+
+    // Used for tracking the state of the form.
+    const [formData, setFormData] = useState();
+
     const isMounted = useMountedState();
-    const [state, actions] = utils.useDuck(duck, duck.getInitialState(props));
-    const [highestField, setHighestField] = useState(null);
-    const [fields, { push: addField }] = useList([]);
-    const [fieldMessages, { push: setMessages }] = useList([]);
-    const messages = utils.mergeMessages(props.messages, fieldMessages);
-    const context = useMemo(() => ({ highestField, addField, setMessages }), [
-        highestField,
-        addField,
-        setMessages,
-    ]);
+    const [state, dispatch] = useTracked();
 
-    // Apply the forwarded ref if required.
-    useEffectOnce(() => {
-        ref && typeof ref === 'function' && ref(form);
-        ref && 'current' in ref && (ref.current = form);
-    }, [form]);
+    useMount(() => {
+        // Set the initial state of the form data.
+        setFormData(utils.getFormData(form.current));
 
-    // Either use children as-is, or call it as a function passing in the form's state.
-    const children = utils.isFunction(props.children) ? props.children(state) : props.children;
-
-    // Setup all of the event listeners passing in the necessary props.
-    const handleInvalid = utils.handleInvalid(props);
-    const handleClick = utils.handleClick({ button });
-    const handleReset = utils.handleReset({ ...props, form, actions, isMounted });
-    const handleChange = utils.handleChange({ ...props, form, actions, isMounted });
-    const handleSubmit = utils.handleSubmit({
-        ...props,
-        form,
-        button,
-        state,
-        setHighestField,
-        actions,
-        messages,
-        isMounted,
+        // Set the current state of the form on DOM load.
+        dispatch({
+            type: actionTypes.initialise,
+            payload: { isValid: form.current.checkValidity() },
+        });
     });
 
-    useEffect(
-        // Set the state of the initial form validity.
-        () => isMounted() && actions.setValidity(form.current.checkValidity()),
-        [form],
+    const handleSubmitting = useCallback(
+        async (event) => {
+            event.preventDefault();
+            dispatch({ type: actionTypes.submitting });
+
+            const result = await utils.submitForm({
+                form,
+                button,
+                messages,
+                event,
+                onInvalid,
+                onSubmitting,
+                onSubmitted,
+            });
+
+            if (!isMounted()) return;
+
+            result.isValid && setFormData(result.meta.data);
+            dispatch({ type: actionTypes.submitted, payload: result });
+            button.current = null;
+        },
+        [form, fieldset, button, onSubmitting],
     );
 
-    useIsomorphicLayoutEffect(() => {
-        // Ensure that we want the computation for the highest field to occur.
-        if (props.noScroll) return;
-        const isInvalidField = state.utils.invalidFields.length > 0;
-        if (isInvalidField && !props.noValidate) return;
+    const handleClick = useCallback(
+        (event) => {
+            onClick(event);
 
-        // Determine which field is the highest in the DOM.
-        isMounted() &&
-            setHighestField(
-                getHighestField(
-                    isInvalidField ? state.utils.invalidFields : fields,
-                    !isInvalidField,
-                ),
+            // Handle the clicks on the form to determine what was used to submit the form, if any.
+            utils.isSubmitButton(event.target) && (button.current = event.target);
+        },
+        [onClick],
+    );
+
+    const handleChange = useCallback(
+        (event) => {
+            onChange(event);
+
+            if (!dirtyCheck || !isMounted()) return;
+
+            const newState = utils.getFormData(form.current);
+
+            dispatch({
+                type: actionTypes.dirtyCheck,
+                payload: { isDirty: !equals(newState, formData) },
+            });
+        },
+        [formData, dirtyCheck, onChange],
+    );
+
+    const handleReset = useCallback(
+        async (event) => {
+            event.preventDefault();
+            await onReset(event);
+
+            if (!isMounted()) return;
+
+            // Remove the invalid class name from the form.
+            form.current && form.current.classList.remove('invalid');
+
+            // Remove the invalid class name from all form fields.
+            Array.from(form.current.elements).forEach(
+                (field) => field && field.classList.remove('invalid'),
             );
-    }, [state.utils.id]);
+
+            dispatch({
+                type: actionTypes.reset,
+                payload: { isValid: form.current.checkValidity() },
+            });
+        },
+        [form, onReset],
+    );
 
     return (
-        <FormContext.Provider value={state}>
-            <form
-                ref={form}
-                {...utils.sanitiseProps(props)}
-                className={props.className}
-                style={utils.getStyles()}
-                noValidate={props.noValidate}
-                onReset={handleReset}
-                onInvalid={handleInvalid}
-                onClick={handleClick}
-                onChange={handleChange}
-                onSubmit={handleSubmit}
+        <form
+            ref={form}
+            noValidate
+            {...props}
+            onSubmit={handleSubmitting}
+            onReset={handleReset}
+            onClick={handleClick}
+            onChange={handleChange}
+        >
+            <fieldset
+                ref={fieldset}
+                disabled={disableFields ? state.isSubmitting : false}
+                style={{ display: 'contents' }}
             >
-                <fieldset
-                    disabled={props.noDisable ? false : state.isSubmitting}
-                    style={utils.getStyles()}
-                >
-                    <FieldContext.Provider value={context}>{children}</FieldContext.Provider>
-                </fieldset>
-            </form>
-        </FormContext.Provider>
+                {utils.isFunction(children) ? children(state) : state}
+            </fieldset>
+        </form>
     );
-});
+}
 
 Form.propTypes = {
-    noScroll: PropTypes.bool,
-    noDisable: PropTypes.bool,
-    noValidate: PropTypes.bool,
-    messages: PropTypes.object,
-    className: PropTypes.string,
+    messages: PropTypes.shape(
+        PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]).isRequired,
+    ),
     dirtyCheck: PropTypes.bool,
-    children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
-    onInvalid: PropTypes.func,
+    disableFields: PropTypes.bool,
+    children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+    onClick: PropTypes.func,
+    onChange: PropTypes.func,
     onReset: PropTypes.func,
+    onInvalid: PropTypes.func,
     onSubmitting: PropTypes.func,
     onSubmitted: PropTypes.func,
 };
 
 Form.defaultProps = {
-    noScroll: false,
-    noDisable: false,
-    noValidate: true,
-    messages: {},
-    className: null,
-    dirtyCheck: true,
-    children: <></>,
-    onInvalid: () => {},
-    onReset: () => {},
-    onSubmitting: () => {},
-    onSubmitted: () => {},
+    dirtyCheck: false,
+    disableFields: true,
+    onClick: identity,
+    onChange: identity,
+    onReset: identity,
+    onInvalid: identity,
+    onSubmitting: identity,
+    onSubmitted: identity,
 };
-
-export default Form;

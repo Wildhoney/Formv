@@ -8,7 +8,7 @@ export default function Layout() {
     const [mockGenericErrors, setMockGenericErrors] = useState(false);
     const [mockValidationErrors, setMockValidationErrors] = useState(false);
 
-    const handleSubmitting = useCallback(state => () => {
+    const handleSubmitting = useCallback((state) => () => {
         if (state.name.toLowerCase().trim() === 'bot')
             throw new fv.Error.Validation({
                 name: 'Bots are not allowed to send messages.',
