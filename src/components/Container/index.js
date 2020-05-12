@@ -1,11 +1,14 @@
 import React from 'react';
+import { ensuredForwardRef } from 'react-use';
 import Store from '../Store';
 import Form from '../Form';
 
-export default function Container(props) {
+function Container(props, ref) {
     return (
         <Store>
-            <Form {...props} />
+            <Form ref={ref} {...props} />
         </Store>
     );
 }
+
+export default ensuredForwardRef(Container);

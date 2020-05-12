@@ -16,7 +16,7 @@ export default function Form({ ...props }) {
     });
 
     return (
-        <fv.Form {...props} messages={utils.getMessages()} onSubmitting={props.onSubmitting(state)}>
+        <fv.Form  {...props} messages={utils.getMessages()} onSubmitting={props.onSubmitting(state)}>
             {(formState) => (
                 <>
                     <e.Container>

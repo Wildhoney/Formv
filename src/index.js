@@ -2,6 +2,8 @@ import * as feedback from './utils/feedback';
 
 export { default as Form } from './components/Container';
 
+export { default as Field } from './components/Field';
+
 export { default as Messages } from './components/Messages';
 
 export { default as useMap } from './utils/useMap';
