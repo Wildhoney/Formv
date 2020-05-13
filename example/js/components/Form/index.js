@@ -17,67 +17,63 @@ export default function Form({ ...props }) {
 
     return (
         <fv.Form
-            dirtyCheck
             {...props}
+            dirtyCheck
             messages={utils.getMessages()}
             onSubmitting={props.onSubmitting(state)}
         >
-            {(formState) => (
+            {({ isSubmitting, feedback }) => (
                 <>
                     <e.Container>
-                        <Messages value={formState.feedback.success} type="success" />
+                        <Messages value={feedback.success} type="success" />
 
-                        <Messages value={formState.feedback.error} type="generic" />
+                        <Messages value={feedback.error} type="generic" />
 
                         <Field>
                             <Input
                                 value={state.name}
-                                className={formState.feedback.field.name && 'invalid'}
-                                readOnly={formState.isSubmitting}
+                                className={feedback.field.name && 'invalid'}
+                                readOnly={isSubmitting}
                                 type="text"
                                 name="name"
                                 required
                                 onChange={set('name')}
                             />
-                            <Messages value={formState.feedback.field.name} type="validation" />
+                            <Messages value={feedback.field.name} type="validation" />
                         </Field>
 
                         <Field>
                             <Input
                                 value={state.email}
-                                className={formState.feedback.field.email && 'invalid'}
-                                readOnly={formState.isSubmitting}
+                                className={feedback.field.email && 'invalid'}
+                                readOnly={isSubmitting}
                                 type="email"
                                 name="email"
                                 required
                                 onChange={set('email')}
                             />
-                            <Messages value={formState.feedback.field.email} type="validation" />
+                            <Messages value={feedback.field.email} type="validation" />
                         </Field>
 
                         <Field>
                             <Textarea
                                 value={state.message}
-                                className={formState.feedback.field.message && 'invalid'}
-                                readOnly={formState.isSubmitting}
+                                className={feedback.field.message && 'invalid'}
+                                readOnly={isSubmitting}
                                 name="message"
                                 required
                                 onChange={set('message')}
                             />
-                            <Messages value={formState.feedback.field.message} type="validation" />
+                            <Messages value={feedback.field.message} type="validation" />
                         </Field>
 
                         <e.Buttons>
-                            <e.Button
-                                type="reset"
-                                disabled={formState.isSubmitting}
-                                onClick={reset}
-                            >
+                            <e.Button type="reset" disabled={isSubmitting} onClick={reset}>
                                 Reset
                             </e.Button>
 
-                            <e.Button type="submit" disabled={formState.isSubmitting}>
-                                {formState.isSubmitting ? <>Submitting&hellip;</> : 'Submit'}
+                            <e.Button type="submit" disabled={isSubmitting}>
+                                {isSubmitting ? <>Submitting&hellip;</> : 'Submit'}
                             </e.Button>
                         </e.Buttons>
                     </e.Container>
@@ -89,4 +85,5 @@ export default function Form({ ...props }) {
 
 Form.propTypes = {
     onSubmitting: PropTypes.func.isRequired,
+    onSubmitted: PropTypes.func.isRequired,
 };
