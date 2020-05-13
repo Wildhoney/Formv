@@ -16,7 +16,12 @@ export default function Form({ ...props }) {
     });
 
     return (
-        <fv.Form  {...props} messages={utils.getMessages()} onSubmitting={props.onSubmitting(state)}>
+        <fv.Form
+            dirtyCheck
+            {...props}
+            messages={utils.getMessages()}
+            onSubmitting={props.onSubmitting(state)}
+        >
             {(formState) => (
                 <>
                     <e.Container>
@@ -27,6 +32,8 @@ export default function Form({ ...props }) {
                         <Field>
                             <Input
                                 value={state.name}
+                                className={formState.feedback.field.name && 'invalid'}
+                                disabled={formState.isSubmitting}
                                 type="text"
                                 name="name"
                                 required
@@ -38,6 +45,8 @@ export default function Form({ ...props }) {
                         <Field>
                             <Input
                                 value={state.email}
+                                className={formState.feedback.field.email && 'invalid'}
+                                disabled={formState.isSubmitting}
                                 type="email"
                                 name="email"
                                 required
@@ -49,6 +58,8 @@ export default function Form({ ...props }) {
                         <Field>
                             <Textarea
                                 value={state.message}
+                                className={formState.feedback.field.message && 'invalid'}
+                                disabled={formState.isSubmitting}
                                 name="message"
                                 required
                                 onChange={set('message')}
@@ -57,10 +68,14 @@ export default function Form({ ...props }) {
                         </Field>
 
                         <e.Buttons>
-                            <e.Button type="reset" onClick={reset}>
+                            <e.Button
+                                type="reset"
+                                disabled={formState.isSubmitting}
+                                onClick={reset}
+                            >
                                 Reset
                             </e.Button>
-                            <e.Button type="submit">
+                            <e.Button type="submit" disabled={formState.isSubmitting}>
                                 {formState.isSubmitting ? <>Submitting&hellip;</> : 'Submit'}
                             </e.Button>
                         </e.Buttons>

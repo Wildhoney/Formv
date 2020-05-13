@@ -22,7 +22,6 @@ const Form = ensuredForwardRef(
         },
         form,
     ) => {
-        const fieldset = useRef();
         const button = useRef();
 
         // Used for tracking the state of the form.
@@ -43,8 +42,12 @@ const Form = ensuredForwardRef(
         });
 
         useIsomorphicLayoutEffect(() => {
-            state.meta.active && state.meta.active.focus();
-        }, [state.meta.active]);
+            state.meta.highest &&
+                state.meta.highest.firstChild.scrollIntoView({
+                    block: 'start',
+                    behavior: 'smooth',
+                });
+        }, [state.meta.active, state.meta.highest]);
 
         const handleSubmitting = useCallback(
             async (event) => {
@@ -56,6 +59,7 @@ const Form = ensuredForwardRef(
                     button,
                     messages,
                     event,
+                    id: state.meta.id,
                     onInvalid,
                     onSubmitting,
                     onSubmitted,
@@ -67,7 +71,7 @@ const Form = ensuredForwardRef(
                 dispatch({ type: actionTypes.submitted, payload: result });
                 button.current = null;
             },
-            [form, fieldset, button, onSubmitting],
+            [form, button, onSubmitting],
         );
 
         const handleClick = useCallback(
@@ -101,20 +105,11 @@ const Form = ensuredForwardRef(
                 event.preventDefault();
                 await onReset(event);
 
-                if (!isMounted()) return;
-
-                // Remove the invalid class name from the form.
-                form.current && form.current.classList.remove('invalid');
-
-                // Remove the invalid class name from all form fields.
-                Array.from(form.current.elements).forEach(
-                    (field) => field && field.classList.remove('invalid'),
-                );
-
-                dispatch({
-                    type: actionTypes.reset,
-                    payload: { isValid: form.current.checkValidity() },
-                });
+                isMounted() &&
+                    dispatch({
+                        type: actionTypes.reset,
+                        payload: { isValid: form.current.checkValidity() },
+                    });
             },
             [form, onReset],
         );
@@ -129,13 +124,7 @@ const Form = ensuredForwardRef(
                 onClick={handleClick}
                 onChange={handleChange}
             >
-                <fieldset
-                    ref={fieldset}
-                    disabled={disableFields ? state.isSubmitting : false}
-                    style={{ display: 'contents' }}
-                >
-                    {utils.isFunction(children) ? children(state) : children}
-                </fieldset>
+                {utils.isFunction(children) ? children(state) : children}
             </form>
         );
     },
@@ -145,7 +134,7 @@ Form.propTypes = {
     messages: PropTypes.shape(
         PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]).isRequired,
     ),
-    dirtyCheck: PropTypes.bool,
+    dirtyCheck: PropTypes.bool.isRequired,
     disableFields: PropTypes.bool,
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
     onClick: PropTypes.func,
@@ -157,7 +146,6 @@ Form.propTypes = {
 };
 
 Form.defaultProps = {
-    dirtyCheck: false,
     disableFields: true,
     onClick: identity,
     onChange: identity,

@@ -1,5 +1,6 @@
 import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
+import { nanoid } from 'nanoid';
 import { createContainer } from 'react-tracked';
 
 const useValue = ({ reducer, initialState }) => useReducer(reducer, initialState);
@@ -15,6 +16,7 @@ const initialState = {
         field: {},
     },
     meta: {
+        id: `fv_${nanoid()}`,
         fields: [],
         data: [],
         highest: null,
@@ -37,6 +39,7 @@ const reducer = (state, action) => {
 
         case actionTypes.reset:
             return {
+                ...state,
                 ...initialState,
                 isValid: action.payload.isValid,
                 isDirty: action.payload.isDirty,
@@ -45,6 +48,7 @@ const reducer = (state, action) => {
 
         case actionTypes.submitting:
             return {
+                ...state,
                 ...initialState,
                 isDirty: state.isDirty,
                 isSubmitted: state.isSubmitted,
@@ -57,6 +61,10 @@ const reducer = (state, action) => {
                 isSubmitting: false,
                 isSubmitted: true,
                 ...action.payload,
+                meta: {
+                    ...state.meta,
+                    ...action.payload.meta,
+                },
             };
 
         case actionTypes.dirtyCheck:
@@ -67,12 +75,18 @@ const reducer = (state, action) => {
     }
 };
 
-export default function Store({ children }) {
+export default function Store({ dirtyCheck, children, ...props }) {
     return (
-        <Provider reducer={reducer} initialState={initialState}>
+        <Provider
+            reducer={reducer}
+            initialState={{ ...initialState, isDirty: dirtyCheck ? false : null }}
+        >
             {children}
         </Provider>
     );
 }
 
-Store.propTypes = { children: PropTypes.node.isRequired };
+Store.propTypes = {
+    dirtyCheck: PropTypes.bool.isRequired,
+    children: PropTypes.node.isRequired,
+};

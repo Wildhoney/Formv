@@ -1,24 +1,15 @@
 import * as feedback from '../../utils/feedback';
 
-export async function submitForm({ button, event, ...args }) {
-    const form = { current: args.form.current.cloneNode(true) };
-    form.current.querySelector('fieldset').removeAttribute('disabled');
+export async function submitForm({ button, event, ...props }) {
+    // Clone the form in its current state, because if fields are disabled when submitting then
+    // the validity will pass because they are not considered part of the form.
+    const form = { current: props.form.current.cloneNode(true) };
 
-    const active =
-        (document.activeElement &&
-            document.activeElement.form === args.form.current &&
-            document.activeElement) ||
-        null;
-
+    // Obtain the form data as it was submitting.
     const data = getFormData(form.current);
 
-    // Remove the invalid class name from the form.
-    args.form.current && form.current.classList.remove('invalid');
-
-    // Remove the invalid class name from all form fields.
-    [...form.current.elements].forEach(
-        (field) => field && getFieldFromClone(args.form.current, field).classList.remove('invalid'),
-    );
+    // Also yield a function that will allow us to grab the actual input field from the clone.
+    const getField = fromClone(props.form.current);
 
     // Determine if the form requires validation based on the `formnovalidate` field.
     const requiresValidation = !button.current || !button.current.hasAttribute('formnovalidate');
@@ -27,7 +18,7 @@ export async function submitForm({ button, event, ...args }) {
         // Invoke the `onSubmitting` callback so the user can handle the form state
         // change, and have an opportunity to raise early generic and/or validation
         // errors.
-        await args.onSubmitting(event);
+        await props.onSubmitting(event);
 
         // Check to see whether the validation passes the native validation, and if not
         // throw an empty validation error to collect the error messages directly from
@@ -37,17 +28,14 @@ export async function submitForm({ button, event, ...args }) {
 
         // Finally invoked the `onSubmitted` event after passing the client-side validation. If this
         // invocation doesn't throw any errors, then we'll consider the submission a success.
-        const result = await args.onSubmitted(event);
+        const result = await props.onSubmitted(event);
+        const success = result instanceof feedback.FormvSuccess ? result.message : null;
 
         return {
             isValid: true,
             isDirty: false,
-            meta: { fields: [], data, highest: null, active },
-            feedback: {
-                success: result instanceof feedback.FormvSuccess ? result.message : null,
-                errors: [],
-                field: {},
-            },
+            meta: { fields: [], data, highest: null },
+            feedback: { success, errors: [], field: {} },
         };
     } catch (error) {
         // We'll only re-throw errors if they are non-Formv errors.
@@ -55,54 +43,34 @@ export async function submitForm({ button, event, ...args }) {
 
         // We always invoke the `onInvalid` callback even if the errors are not necessarily
         // applicable to Formv validation.
-        args.onInvalid(event);
+        props.onInvalid(event);
 
         if (error instanceof feedback.FormvGenericError) {
-            args.form.current && args.form.current.classList.add('invalid');
-
             // Feed any generic API error messages back into the component.
             return {
                 isValid: false,
-                meta: { fields: [], data: [], highest: null, active },
-                feedback: {
-                    success: null,
-                    error: [].concat(error.messages).flat(),
-                    field: {},
-                },
+                meta: { fields: [], data: [], highest: null },
+                feedback: { success: null, error: [].concat(error.messages).flat(), field: {} },
             };
         }
 
         if (error instanceof feedback.FormvValidationError) {
             // Feed the API validation errors back into the component.
             const fields = collateInvalidFields(form.current, error.messages);
-            const messages = mergeValidationMessages(fields, [args.messages, error.messages]);
-            const highest = getHighestField(
-                args.form.current,
-                fields.map((field) => getFieldFromClone(args.form.current, field)),
-            );
-
-            args.form.current && args.form.current.classList.add('invalid');
-
-            fields.forEach((field) => {
-                // Apply the invalid class name to each invalid field.
-                field && getFieldFromClone(args.form.current, field).classList.add('invalid');
-            });
+            const messages = mergeValidationMessages(fields, [props.messages, error.messages]);
+            const highest = getHighestFieldset(fields.map(getField), props.id);
 
             return {
                 isValid: false,
-                meta: { fields, data: [], highest, active },
-                feedback: {
-                    success: null,
-                    errors: null,
-                    field: messages,
-                },
+                meta: { fields: fields.map(getField), data: [], highest },
+                feedback: { success: null, errors: null, field: messages },
             };
         }
     }
 }
 
-export function getFieldFromClone(form, field) {
-    return [...form.elements].find(({ name }) => field.name === name);
+export function fromClone(form) {
+    return (field) => [...form.elements].find(({ name }) => field.name === name);
 }
 
 export function isFunction(x) {
@@ -171,13 +139,20 @@ export function getFormData(form) {
     return [...data.keys(), ...data.values()];
 }
 
-export function getHighestField(form, fields) {
+export function getHighestFieldset(fields, id) {
     const [node] = fields.reduce(
         ([hidhestNode, nodePosition], node) => {
-            const position = node.getBoundingClientRect();
-            const isFieldsetDescendant = node === form.firstChild;
-            return position.top < nodePosition && !isFieldsetDescendant
-                ? [node, position.top]
+            // Attempt to obtain the fieldset closest to the discovered form field, and ensure
+            // if it's not available that the application doesn't panic.
+            const fieldset = node.closest(`fieldset[data-id="${id}"]`);
+            if (!fieldset) return [hidhestNode, nodePosition];
+
+            // Determine the position of the fieldset in the DOM, and then calculate whether it's
+            // positioned higher than the current highest.
+            const position = fieldset.getBoundingClientRect();
+
+            return position.top < nodePosition
+                ? [fieldset, position.top]
                 : [hidhestNode, nodePosition];
         },
         [null, Infinity],

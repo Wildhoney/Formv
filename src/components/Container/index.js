@@ -1,14 +1,19 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { ensuredForwardRef } from 'react-use';
 import Store from '../Store';
 import Form from '../Form';
 
-function Container(props, ref) {
+const Container = ensuredForwardRef((props, ref) => {
     return (
-        <Store>
+        <Store dirtyCheck={props.dirtyCheck}>
             <Form ref={ref} {...props} />
         </Store>
     );
-}
+});
 
-export default ensuredForwardRef(Container);
+Container.propTypes = { dirtyCheck: PropTypes.bool };
+
+Container.defaultProps = { dirtyCheck: false };
+
+export default Container;
