@@ -21,8 +21,7 @@
 5. [API Validation](#api-validation)
 6. [Success Messages](#success-messages)
 7. [Managing State](#managing-state)
-8. [Default Behaviours](#default-behaviours)
-9. [Form Architecture](#form-architecture)
+8. [Form Architecture](#form-architecture)
 
 ## Getting Started
 
@@ -40,22 +39,22 @@ import { Form, Messages } from 'formv';
 export default function MyForm() {
     return (
         <Form onSubmitted={handleSubmitted}>
-            {(formState) => (
+            {({ isDirty, isSubmitting, feedback }) => (
                 <>
-                    <Messages value={formState.feedback.success} />
-                    <Messages value={formState.feedback.error} />
+                    <Messages value={feedback.success} />
+                    <Messages value={feedback.error} />
 
                     <input type="text" name="name" required />
-                    <Messages values={formState.feedback.field.name} />
+                    <Messages values={feedback.field.name} />
 
                     <input type="email" name="email" required />
-                    <Messages values={formState.feedback.field.email} />
+                    <Messages values={feedback.field.email} />
 
                     <input name="age" required min={18} />
-                    <Messages values={formState.feedback.field.age} />
+                    <Messages values={feedback.field.age} />
 
-                    <button disabled={!formState.isDirty} type="submit">
-                        {formState.isSubmitting ? 'Submitting...' : 'Submit'}
+                    <button disabled={!isDirty} type="submit">
+                        {isSubmitting ? 'Submitting...' : 'Submit'}
                     </button>
                 </>
             )}
@@ -240,14 +239,6 @@ In contrast, if you were to use the non-curried version &ndash; which works perf
 
 You'll also notice that nested objects are handled with the dot notation thanks to [`Lodash`](https://lodash.com/).
 
-## Default Behaviours
-
-By default Formv disables the form when it's being submitted, which includes the buttons you attach to your form which can be styled with the `:disabled` pseudo-class &ndash; you can disable this by adding `disableFields: false` to the `Form`. With scrolling to the highest element, we don't introduce any behaviour for that as it's difficult to calculate precisely where to scroll to, however the highest element is provided in the context via `meta.highest`.
-
-You can also skip the front-end validation entirely on a button-by-button basis with the native `formNoValidate` attribute on your chosen button.
-
-> Note that if you need anything from state, Formv exports the `Context` which you can use in the `useContext` hook, a utility hook called `useFormContext`, or via the more traditional `Context.Consumer` approach.
-
 ## Form Architecture
 
 When deciding on an architecture for your forms, it's recommended to think about them as three separate layers. The first and most simple layer is the field which handles logic pertaining to an individual input field; it can maintain its own state such as a country selector maintains its state for a list of countries, but it does **not** maintain state for its value. Secondly there is the fieldset layer which composes many field components and is again stateless. Last of all there is the parent form component which maintains state for the entire form.
@@ -267,10 +258,10 @@ function Form() {
 
     return (
         <fv.Form onSubmitted={handleSubmitted}>
-            {(formState) => (
+            {({ feedback }) => (
                 <>
-                    <fv.Messages value={formState.feedback.success} />
-                    <fv.Messages value={formState.feedback.error} />
+                    <fv.Messages value={feedback.success} />
+                    <fv.Messages value={feedback.error} />
 
                     <Fieldset onChange={set} />
                 </>
@@ -295,12 +286,12 @@ function Fieldset({ onChange }) {
 import * as fv from 'formv';
 
 function FieldName({ onChange }) {
-    const formState = fv.useState();
+    const { feedback } = fv.useState();
 
     return (
         <>
             <input name="name" type="text" onChange={({ target }) => onChange(target.value)} />
-            <fv.Messages values={formState.feedback.field.name} />
+            <fv.Messages values={feedback.field.name} />
         </>
     );
 }
@@ -310,12 +301,12 @@ function FieldName({ onChange }) {
 import * as fv from 'formv';
 
 function FieldAge({ onChange }) {
-    const formState = fv.useState();
+    const { feedback } = fv.useState();
 
     return (
         <>
             <input name="age" type="number" onChange={({ target }) => onChange(target.value)} />
-            <fv.Messages values={formState.feedback.field.age} />
+            <fv.Messages values={feedback.field.age} />
         </>
     );
 }
