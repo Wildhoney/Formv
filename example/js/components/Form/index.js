@@ -33,7 +33,7 @@ export default function Form({ ...props }) {
                             <Input
                                 value={state.name}
                                 className={formState.feedback.field.name && 'invalid'}
-                                disabled={formState.isSubmitting}
+                                readOnly={formState.isSubmitting}
                                 type="text"
                                 name="name"
                                 required
@@ -46,7 +46,7 @@ export default function Form({ ...props }) {
                             <Input
                                 value={state.email}
                                 className={formState.feedback.field.email && 'invalid'}
-                                disabled={formState.isSubmitting}
+                                readOnly={formState.isSubmitting}
                                 type="email"
                                 name="email"
                                 required
@@ -59,7 +59,7 @@ export default function Form({ ...props }) {
                             <Textarea
                                 value={state.message}
                                 className={formState.feedback.field.message && 'invalid'}
-                                disabled={formState.isSubmitting}
+                                readOnly={formState.isSubmitting}
                                 name="message"
                                 required
                                 onChange={set('message')}
@@ -75,6 +75,7 @@ export default function Form({ ...props }) {
                             >
                                 Reset
                             </e.Button>
+
                             <e.Button type="submit" disabled={formState.isSubmitting}>
                                 {formState.isSubmitting ? <>Submitting&hellip;</> : 'Submit'}
                             </e.Button>

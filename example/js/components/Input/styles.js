@@ -7,4 +7,8 @@ export const Input = styled.input`
     border: none;
     border-radius: 0;
     font-size: 1rem;
+
+    &:read-only {
+        color: darkgray;
+    }
 `;

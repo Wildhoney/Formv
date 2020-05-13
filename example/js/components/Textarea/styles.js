@@ -8,4 +8,8 @@ export const Textarea = styled.textarea`
     resize: none;
     border-radius: 0;
     font-size: 1rem;
+
+    &:read-only {
+        color: darkgray;
+    }
 `;
