@@ -10,7 +10,6 @@ const Form = ensuredForwardRef(
         {
             messages,
             dirtyCheck,
-            disableFields,
             onClick,
             onChange,
             onReset,
@@ -135,7 +134,6 @@ Form.propTypes = {
         PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]).isRequired,
     ),
     dirtyCheck: PropTypes.bool.isRequired,
-    disableFields: PropTypes.bool,
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
     onClick: PropTypes.func,
     onChange: PropTypes.func,
@@ -146,7 +144,6 @@ Form.propTypes = {
 };
 
 Form.defaultProps = {
-    disableFields: true,
     onClick: identity,
     onChange: identity,
     onReset: identity,
