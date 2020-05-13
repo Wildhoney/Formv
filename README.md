@@ -185,7 +185,7 @@ Using the above example we throw `Error.Validation` errors when the request yiel
 
 ## Success Messages
 
-With all the talk of validation errors and generic errors, it may have slipped your mind that sometimes forms submit successfully! In your `onSubmitted` callback all you need to do is yield a `Success` class with the content set to some kind of success message.
+With all the talk of validation errors and generic errors, it may have slipped your mind that sometimes forms submit successfully! In your `onSubmitted` callback all you need to do is instantiate `Success` with the content set to some kind of success message.
 
 ```jsx
 import { Form, Success, Error } from 'formv';

@@ -24,7 +24,7 @@ export default function Layout() {
             );
         }
 
-        if (!mockGenericErrors && mockValidationErrors) {
+        if (mockValidationErrors) {
             throw new fv.Error.Validation({
                 email:
                     'We were unable to validate the supplied e-mail address. Please try again later.',
