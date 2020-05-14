@@ -97,10 +97,10 @@ const Form = ensuredForwardRef(
                 ref={form}
                 noValidate
                 {...props}
-                onSubmit={handleSubmitting}
-                onReset={handleReset}
                 onClick={handleClick}
                 onChange={handleChange}
+                onReset={handleReset}
+                onSubmit={handleSubmitting}
             >
                 {utils.isFunction(children) ? children(state) : children}
             </form>
