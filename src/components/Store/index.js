@@ -1,7 +1,9 @@
 import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
+import { equals } from 'ramda';
 import { createContainer } from 'react-tracked';
+import * as utils from '../Form/utils';
 
 const useValue = ({ reducer, initialState }) => useReducer(reducer, initialState);
 
@@ -23,36 +25,64 @@ const initialState = {
     },
 };
 
-export const actionTypes = {
+const actionTypes = {
     initialise: Symbol('initialise'),
-    data: Symbol('data'),
+    dirtyCheck: Symbol('dirty-check'),
     reset: Symbol('reset'),
     submitting: Symbol('submitting'),
     submitted: Symbol('submitted'),
-    withDirtyCheck: Symbol('withDirtyCheck'),
 };
 
-const reducer = (state, action) => {
-    switch (action.type) {
+export const actions = {
+    initialise: (form) => ({
+        type: actionTypes.initialise,
+        payload: {
+            isValid: form.current.checkValidity(),
+            meta: { data: utils.getFormData(form.current) },
+        },
+    }),
+
+    dirtyCheck: (form, currentState) => {
+        const newState = utils.getFormData(form.current);
+
+        return {
+            type: actionTypes.dirtyCheck,
+            payload: {
+                isDirty: !equals(newState, currentState),
+            },
+        };
+    },
+    reset: (form) => ({
+        type: actionTypes.reset,
+        payload: { isValid: form.current.checkValidity() },
+    }),
+
+    submitting: () => ({ type: actionTypes.submitting }),
+
+    submitted: (validityState) => ({ type: actionTypes.submitted, payload: validityState }),
+};
+
+const reducer = (state, event) => {
+    switch (event.type) {
         case actionTypes.initialise:
             return {
                 ...state,
-                isValid: action.payload.isValid,
-                meta: { ...state.meta, data: action.payload.meta.data },
+                isValid: event.payload.isValid,
+                meta: { ...state.meta, data: event.payload.meta.data },
             };
 
-        case actionTypes.data:
+        case actionTypes.dirtyCheck:
             return {
                 ...state,
-                meta: { ...state.meta, data: action.payload.meta.data },
+                isDirty: event.payload.isDirty,
             };
 
         case actionTypes.reset:
             return {
                 ...state,
                 ...initialState,
-                isValid: action.payload.isValid,
-                isDirty: action.payload.isDirty,
+                isValid: event.payload.isValid,
+                isDirty: event.payload.isDirty,
                 isSubmitted: state.isSubmitted,
             };
 
@@ -70,23 +100,20 @@ const reducer = (state, action) => {
                 ...state,
                 isSubmitting: false,
                 isSubmitted: true,
-                ...action.payload,
+                ...event.payload,
                 feedback: {
                     ...state.feedback,
-                    ...action.payload.feedback,
+                    ...event.payload.feedback,
                 },
                 meta: {
                     ...state.meta,
-                    ...action.payload.meta,
+                    ...event.payload.meta,
+                    data: event.payload.isValid ? event.payload.meta.data : state.meta.data,
                 },
             };
-
-        case actionTypes.withDirtyCheck:
-            return {
-                ...state,
-                isDirty: action.payload.isDirty,
-            };
     }
+
+    return state;
 };
 
 export default function Store({ withDirtyCheck, children }) {

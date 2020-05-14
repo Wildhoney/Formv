@@ -1,8 +1,8 @@
 import React, { useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useMountedState, useMount, useIsomorphicLayoutEffect, ensuredForwardRef } from 'react-use';
-import { identity, equals } from 'ramda';
-import { useTracked, actionTypes } from '../Store';
+import { identity } from 'ramda';
+import { useTracked, actions } from '../Store';
 import * as utils from './utils';
 
 const Form = ensuredForwardRef(
@@ -28,13 +28,7 @@ const Form = ensuredForwardRef(
 
         useMount(() => {
             // Set the current state of the form on DOM load, and the initial state of the form data.
-            dispatch({
-                type: actionTypes.initialise,
-                payload: {
-                    isValid: form.current.checkValidity(),
-                    meta: { data: utils.getFormData(form.current) },
-                },
-            });
+            dispatch(actions.initialise(form));
         });
 
         useIsomorphicLayoutEffect(() => {
@@ -49,7 +43,7 @@ const Form = ensuredForwardRef(
         const handleSubmitting = useCallback(
             async (event) => {
                 event.preventDefault();
-                dispatch({ type: actionTypes.submitting });
+                dispatch(actions.submitting());
 
                 const validityState = await utils.submitForm({
                     form,
@@ -63,16 +57,7 @@ const Form = ensuredForwardRef(
                 });
 
                 button.current = null;
-
-                if (!isMounted()) return;
-
-                validityState.isValid &&
-                    dispatch({
-                        type: actionTypes.data,
-                        payload: { meta: { data: validityState.meta.data } },
-                    });
-
-                dispatch({ type: actionTypes.submitted, payload: validityState });
+                isMounted() && dispatch(actions.submitted(validityState));
             },
             [form, button, onSubmitting],
         );
@@ -93,12 +78,7 @@ const Form = ensuredForwardRef(
 
                 withDirtyCheck &&
                     isMounted() &&
-                    dispatch({
-                        type: actionTypes.withDirtyCheck,
-                        payload: {
-                            isDirty: !equals(utils.getFormData(form.current), state.meta.data),
-                        },
-                    });
+                    dispatch(actions.dirtyCheck(form, state.meta.data));
             },
             [state.meta.data, withDirtyCheck, onChange],
         );
@@ -107,11 +87,7 @@ const Form = ensuredForwardRef(
             (event) => {
                 onReset(event);
 
-                isMounted() &&
-                    dispatch({
-                        type: actionTypes.reset,
-                        payload: { isValid: form.current.checkValidity() },
-                    });
+                isMounted() && dispatch(actions.reset(form));
             },
             [form, onReset],
         );
