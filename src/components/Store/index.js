@@ -9,7 +9,7 @@ const useValue = ({ reducer, initialState }) => useReducer(reducer, initialState
 
 export const { Provider, useTracked, useTrackedState, useSelector } = createContainer(useValue);
 
-const initialState = {
+export const initialState = {
     isValid: true,
     isDirty: false,
     isSubmitting: false,
@@ -62,7 +62,7 @@ export const actions = {
     submitted: (validityState) => ({ type: actionTypes.submitted, payload: validityState }),
 };
 
-const reducer = (state, event) => {
+export const reducer = (state, event) => {
     switch (event.type) {
         case actionTypes.initialise:
             return {
