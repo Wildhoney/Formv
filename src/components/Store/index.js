@@ -61,6 +61,10 @@ const reducer = (state, action) => {
                 isSubmitting: false,
                 isSubmitted: true,
                 ...action.payload,
+                feedback: {
+                    ...state.feedback,
+                    ...action.payload.feedback,
+                },
                 meta: {
                     ...state.meta,
                     ...action.payload.meta,
