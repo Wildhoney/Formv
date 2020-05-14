@@ -3,9 +3,9 @@ import { isNil, isEmpty } from 'ramda';
 import PropTypes from 'prop-types';
 
 export default function Messages({ className, style, ...props }) {
-    const value = isNil(props.value) && isEmpty(props.value) ? props.values : props.value;
+    const value = isNil(props.value) || isEmpty(props.value) ? props.values : props.value;
 
-    if (isNil(value) && isEmpty(value)) return null;
+    if (isNil(value) || isEmpty(value)) return null;
 
     if (Array.isArray(value))
         return (
