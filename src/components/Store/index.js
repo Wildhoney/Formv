@@ -5,7 +5,7 @@ import { createContainer } from 'react-tracked';
 
 const useValue = ({ reducer, initialState }) => useReducer(reducer, initialState);
 
-export const { Provider, useTracked } = createContainer(useValue);
+export const { Provider, useTracked, useTrackedState, useSelector } = createContainer(useValue);
 
 const initialState = {
     isValid: true,
@@ -79,7 +79,7 @@ const reducer = (state, action) => {
     }
 };
 
-export default function Store({ withDirtyCheck, children, ...props }) {
+export default function Store({ withDirtyCheck, children }) {
     return (
         <Provider
             reducer={reducer}

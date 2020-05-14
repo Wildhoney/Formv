@@ -1,6 +1,6 @@
-import { useTracked } from '../components/Store';
+import { useTrackedState } from '../components/Store';
 
 export default function useState() {
-    const [state] = useTracked();
+    const state = useTrackedState();
     return state;
 }
