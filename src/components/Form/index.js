@@ -9,7 +9,8 @@ const Form = ensuredForwardRef(
     (
         {
             messages,
-            dirtyCheck,
+            withDirtyCheck,
+            withoutScroll,
             onClick,
             onChange,
             onReset,
@@ -41,7 +42,8 @@ const Form = ensuredForwardRef(
         });
 
         useIsomorphicLayoutEffect(() => {
-            state.meta.highest &&
+            !withoutScroll &&
+                state.meta.highest &&
                 state.meta.highest.firstChild.scrollIntoView({
                     block: 'start',
                     behavior: 'smooth',
@@ -87,16 +89,16 @@ const Form = ensuredForwardRef(
             (event) => {
                 onChange(event);
 
-                if (!dirtyCheck || !isMounted()) return;
+                if (!withDirtyCheck || !isMounted()) return;
 
                 const newState = utils.getFormData(form.current);
 
                 dispatch({
-                    type: actionTypes.dirtyCheck,
+                    type: actionTypes.withDirtyCheck,
                     payload: { isDirty: !equals(newState, formData) },
                 });
             },
-            [formData, dirtyCheck, onChange],
+            [formData, withDirtyCheck, onChange],
         );
 
         const handleReset = useCallback(
@@ -133,7 +135,8 @@ Form.propTypes = {
     messages: PropTypes.shape(
         PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]).isRequired,
     ),
-    dirtyCheck: PropTypes.bool.isRequired,
+    withDirtyCheck: PropTypes.bool.isRequired,
+    withoutScroll: PropTypes.bool,
     children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
     onClick: PropTypes.func,
     onChange: PropTypes.func,
@@ -144,6 +147,7 @@ Form.propTypes = {
 };
 
 Form.defaultProps = {
+    withoutScroll: false,
     onClick: identity,
     onChange: identity,
     onReset: identity,

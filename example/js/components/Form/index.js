@@ -18,7 +18,7 @@ export default function Form({ ...props }) {
     return (
         <fv.Form
             {...props}
-            dirtyCheck
+            withDirtyCheck
             messages={utils.getMessages()}
             onSubmitting={props.onSubmitting(state)}
         >

@@ -63,7 +63,7 @@ export default function MyForm() {
 }
 ```
 
-**Note:** `isDirty` is an opt-in with the `dirtyCheck` prop as it causes form data comparisons upon form change.
+**Note:** `isDirty` is an opt-in with the `withDirtyCheck` prop as it causes form data comparisons upon form change.
 
 Voila! Using the above code you have everything you need to validate your form. By clicking the `button` all validation rules will be checked, and if you've not filled in the required fields then you'll see a message appear next to the relevant `input` fields. We are also using the `isSubmitting` to determine when the form is in the process of being submitted &ndash; including any async API requests, and also a dirty check to determine if the form data has been modified from its original state.
 

@@ -49,7 +49,7 @@ export async function submitForm({ button, event, ...props }) {
             // Feed any generic API error messages back into the component.
             return {
                 isValid: false,
-                meta: { fields: [], data: [], highest: null },
+                meta: { fields: [], data: null, highest: null },
                 feedback: { success: null, error: [].concat(error.messages).flat(), field: {} },
             };
         }
@@ -62,7 +62,7 @@ export async function submitForm({ button, event, ...props }) {
 
             return {
                 isValid: false,
-                meta: { fields: fields.map(getField), data: [], highest },
+                meta: { fields: fields.map(getField), data: null, highest },
                 feedback: { success: null, errors: null, field: messages },
             };
         }

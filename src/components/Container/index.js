@@ -6,14 +6,14 @@ import Form from '../Form';
 
 const Container = ensuredForwardRef((props, ref) => {
     return (
-        <Store dirtyCheck={props.dirtyCheck}>
+        <Store withDirtyCheck={props.withDirtyCheck}>
             <Form ref={ref} {...props} />
         </Store>
     );
 });
 
-Container.propTypes = { dirtyCheck: PropTypes.bool };
+Container.propTypes = { withDirtyCheck: PropTypes.bool };
 
-Container.defaultProps = { dirtyCheck: false };
+Container.defaultProps = { withDirtyCheck: false };
 
 export default Container;

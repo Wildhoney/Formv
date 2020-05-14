@@ -29,7 +29,7 @@ export const actionTypes = {
     reset: Symbol('reset'),
     submitting: Symbol('submitting'),
     submitted: Symbol('submitted'),
-    dirtyCheck: Symbol('dirtyCheck'),
+    withDirtyCheck: Symbol('withDirtyCheck'),
 };
 
 const reducer = (state, action) => {
@@ -71,7 +71,7 @@ const reducer = (state, action) => {
                 },
             };
 
-        case actionTypes.dirtyCheck:
+        case actionTypes.withDirtyCheck:
             return {
                 ...state,
                 isDirty: action.payload.isDirty,
@@ -79,11 +79,11 @@ const reducer = (state, action) => {
     }
 };
 
-export default function Store({ dirtyCheck, children, ...props }) {
+export default function Store({ withDirtyCheck, children, ...props }) {
     return (
         <Provider
             reducer={reducer}
-            initialState={{ ...initialState, isDirty: dirtyCheck ? false : null }}
+            initialState={{ ...initialState, isDirty: withDirtyCheck ? false : null }}
         >
             {children}
         </Provider>
@@ -91,6 +91,6 @@ export default function Store({ dirtyCheck, children, ...props }) {
 }
 
 Store.propTypes = {
-    dirtyCheck: PropTypes.bool.isRequired,
+    withDirtyCheck: PropTypes.bool.isRequired,
     children: PropTypes.node.isRequired,
 };
