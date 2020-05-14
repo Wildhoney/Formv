@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useMountedState, useMount, useIsomorphicLayoutEffect, ensuredForwardRef } from 'react-use';
 import { identity, equals } from 'ramda';
@@ -24,20 +24,17 @@ const Form = ensuredForwardRef(
     ) => {
         const button = useRef();
 
-        // Used for tracking the state of the form.
-        const [formData, setFormData] = useState();
-
         const isMounted = useMountedState();
         const [state, dispatch] = useTracked();
 
         useMount(() => {
-            // Set the initial state of the form data.
-            setFormData(utils.getFormData(form.current));
-
-            // Set the current state of the form on DOM load.
+            // Set the current state of the form on DOM load, and the initial state of the form data.
             dispatch({
                 type: actionTypes.initialise,
-                payload: { isValid: form.current.checkValidity() },
+                payload: {
+                    isValid: form.current.checkValidity(),
+                    meta: { data: utils.getFormData(form.current) },
+                },
             });
         });
 
@@ -68,7 +65,12 @@ const Form = ensuredForwardRef(
 
                 if (!isMounted()) return;
 
-                result.isValid && setFormData(result.meta.data);
+                result.isValid &&
+                    dispatch({
+                        type: actionTypes.data,
+                        payload: { meta: { data: result.meta.data } },
+                    });
+
                 dispatch({ type: actionTypes.submitted, payload: result });
                 button.current = null;
             },
@@ -95,10 +97,10 @@ const Form = ensuredForwardRef(
 
                 dispatch({
                     type: actionTypes.withDirtyCheck,
-                    payload: { isDirty: !equals(newState, formData) },
+                    payload: { isDirty: !equals(newState, state.meta.data) },
                 });
             },
-            [formData, withDirtyCheck, onChange],
+            [state.meta.data, withDirtyCheck, onChange],
         );
 
         const handleReset = useCallback(

@@ -20,12 +20,12 @@ const initialState = {
         fields: [],
         data: [],
         highest: null,
-        active: null,
     },
 };
 
 export const actionTypes = {
     initialise: Symbol('initialise'),
+    data: Symbol('data'),
     reset: Symbol('reset'),
     submitting: Symbol('submitting'),
     submitted: Symbol('submitted'),
@@ -35,7 +35,17 @@ export const actionTypes = {
 const reducer = (state, action) => {
     switch (action.type) {
         case actionTypes.initialise:
-            return { ...state, isValid: action.payload.isValid };
+            return {
+                ...state,
+                isValid: action.payload.isValid,
+                meta: { ...state.meta, data: action.payload.meta.data },
+            };
+
+        case actionTypes.data:
+            return {
+                ...state,
+                meta: { ...state.meta, data: action.payload.meta.data },
+            };
 
         case actionTypes.reset:
             return {
