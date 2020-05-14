@@ -10,7 +10,7 @@ const Form = ensuredForwardRef(
         {
             messages,
             withDirtyCheck,
-            withoutScroll,
+            withScroll,
             onClick,
             onChange,
             onReset,
@@ -23,7 +23,6 @@ const Form = ensuredForwardRef(
         form,
     ) => {
         const button = useRef();
-
         const isMounted = useMountedState();
         const [state, dispatch] = useTracked();
 
@@ -39,20 +38,20 @@ const Form = ensuredForwardRef(
         });
 
         useIsomorphicLayoutEffect(() => {
-            !withoutScroll &&
+            withScroll &&
                 state.meta.highest &&
                 state.meta.highest.firstChild.scrollIntoView({
                     block: 'start',
                     behavior: 'smooth',
                 });
-        }, [state.meta.active, state.meta.highest]);
+        }, [state.meta.active, state.meta.highest, withScroll]);
 
         const handleSubmitting = useCallback(
             async (event) => {
                 event.preventDefault();
                 dispatch({ type: actionTypes.submitting });
 
-                const result = await utils.submitForm({
+                const validityState = await utils.submitForm({
                     form,
                     button,
                     messages,
@@ -63,16 +62,17 @@ const Form = ensuredForwardRef(
                     onSubmitted,
                 });
 
+                button.current = null;
+
                 if (!isMounted()) return;
 
-                result.isValid &&
+                validityState.isValid &&
                     dispatch({
                         type: actionTypes.data,
-                        payload: { meta: { data: result.meta.data } },
+                        payload: { meta: { data: validityState.meta.data } },
                     });
 
-                dispatch({ type: actionTypes.submitted, payload: result });
-                button.current = null;
+                dispatch({ type: actionTypes.submitted, payload: validityState });
             },
             [form, button, onSubmitting],
         );
@@ -91,22 +91,21 @@ const Form = ensuredForwardRef(
             (event) => {
                 onChange(event);
 
-                if (!withDirtyCheck || !isMounted()) return;
-
-                const newState = utils.getFormData(form.current);
-
-                dispatch({
-                    type: actionTypes.withDirtyCheck,
-                    payload: { isDirty: !equals(newState, state.meta.data) },
-                });
+                withDirtyCheck &&
+                    isMounted() &&
+                    dispatch({
+                        type: actionTypes.withDirtyCheck,
+                        payload: {
+                            isDirty: !equals(utils.getFormData(form.current), state.meta.data),
+                        },
+                    });
             },
             [state.meta.data, withDirtyCheck, onChange],
         );
 
         const handleReset = useCallback(
-            async (event) => {
-                event.preventDefault();
-                await onReset(event);
+            (event) => {
+                onReset(event);
 
                 isMounted() &&
                     dispatch({
@@ -137,9 +136,9 @@ Form.propTypes = {
     messages: PropTypes.shape(
         PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]).isRequired,
     ),
+    withScroll: PropTypes.bool,
     withDirtyCheck: PropTypes.bool.isRequired,
-    withoutScroll: PropTypes.bool,
-    children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+    children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
     onClick: PropTypes.func,
     onChange: PropTypes.func,
     onReset: PropTypes.func,
@@ -149,7 +148,9 @@ Form.propTypes = {
 };
 
 Form.defaultProps = {
-    withoutScroll: false,
+    messages: {},
+    withScroll: false,
+    children: <></>,
     onClick: identity,
     onChange: identity,
     onReset: identity,
