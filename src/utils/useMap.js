@@ -6,6 +6,7 @@ export default function useMap(initialState) {
     const [state, setState] = useState(initialState);
 
     const get = useCallback((name) => _.get(state, name), [state]);
+
     const set = useCallback(
         (name, value) => {
             const setter = (value) => setState((state) => _.cloneDeep(_.set(state, name, value)));
@@ -17,11 +18,7 @@ export default function useMap(initialState) {
     );
 
     const remove = useCallback(
-        (name) =>
-            setState((state) => {
-                _.unset(state, name);
-                return _.cloneDeep(state);
-            }),
+        (name) => setState((state) => (_.unset(state, name), _.cloneDeep(state))),
         [state],
     );
 
