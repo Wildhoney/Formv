@@ -3,6 +3,7 @@ node_js: stable
 script:
     - yarn
     - yarn test
+    - yarn coverage
     - yarn build
 
 addons:
