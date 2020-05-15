@@ -4,4 +4,5 @@ yarn-error.log
 
 # build
 dist/
+.nyc_output/
 example/js/build.js

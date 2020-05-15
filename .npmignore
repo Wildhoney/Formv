@@ -1,8 +1,10 @@
 .history/
+.nyc_output/
 example/
 media/
 tests/
 helpers/
+dist/example/
 
 .travis.yml
 .babelrc
@@ -13,4 +15,3 @@ helpers/
 ava.config.js
 rollup.config.js
 yarn-error.log
-dist/example/

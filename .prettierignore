@@ -1,3 +1,4 @@
 .history/
+.nyc_output/
 dist/
 example/js/build.js
