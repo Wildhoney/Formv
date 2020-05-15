@@ -22,6 +22,11 @@ test('It should be able to handle the form state for initialise;', (t) => {
     t.snapshot(getState(state));
 });
 
+test('It should be able to yield the current state if action is not handled;', (t) => {
+    const state = reducer(initialState, { type: null });
+    t.snapshot(getState(state));
+});
+
 test('It should be able to handle the form state for dirty check;', (t) => {
     const state = reducer(initialState, actions.dirtyCheck(t.context.form, ['field', 'Imogen!']));
     t.snapshot(getState(state));
