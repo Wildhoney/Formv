@@ -5433,10 +5433,10 @@ nano-css@^5.2.1:
     stacktrace-js "^2.0.0"
     stylis "3.5.0"
 
-nanoid@^3.1.8:
-  version "3.1.8"
-  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.1.8.tgz#de6460f6609e8031c161a12f7dfb09bcdf7449a7"
-  integrity sha512-+kITo+bixOrnHjsPsrVa4gvWRxoSugEvCVygQ1q2NprxQcPHI+v9iID2zaGWFKBPkfuUiARIdWWIQonKdf6aQg==
+nanoid@^3.1.9:
+  version "3.1.9"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.1.9.tgz#1f148669c70bb2072dc5af0666e46edb6cd31fb2"
+  integrity sha512-fFiXlFo4Wkuei3i6w9SQI6yuzGRTGi8Z2zZKZpUxv/bQlBi4jtbVPBSNFZHQA9PNjofWqtIa8p+pnsc0kgZrhQ==
 
 nanomatch@^1.2.9:
   version "1.2.13"
@@ -6315,10 +6315,10 @@ pupa@^2.0.1:
   dependencies:
     escape-goat "^2.0.0"
 
-puppeteer@^3.0.4:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-3.0.4.tgz#f445aae0a6732c65bbb90e963dcd6fd8fde0d780"
-  integrity sha512-1QEb4tJXXbNId7WSHlcDkS3B4GklTIebKn8Y9D6B7tAdUjQncb+8QlTjbQsAgGX5dhRG32Qycuk5XKzJgLs0sg==
+puppeteer@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-3.1.0.tgz#d44efdc5410809025f38bca2de106c3ae5c85a52"
+  integrity sha512-jLa9sqdVx0tPnr2FcwAq+8DSjGhSM4YpkwOf3JE22Ycyqm71SW7B5uGfTyMGFoLCmbCozbLZclCjasPb0flTRw==
   dependencies:
     debug "^4.1.0"
     extract-zip "^2.0.0"
@@ -6453,10 +6453,10 @@ react-universal-interface@^0.6.0:
   dependencies:
     tslib "^1.9.3"
 
-react-use@^15.0.1:
-  version "15.0.1"
-  resolved "https://registry.yarnpkg.com/react-use/-/react-use-15.0.1.tgz#917506c4b01e463ff7aec892fcd16a9b96a98cb9"
-  integrity sha512-NQPn8lbdadyhwbQ3OLJEPPZ0Gi2WNlDI9Xpv6h6Z2JHHhYG9udRS0OBzqJxgdlVewDRMJ/5Fewhz0RDsFBQcTA==
+react-use@^15.0.2:
+  version "15.0.2"
+  resolved "https://registry.yarnpkg.com/react-use/-/react-use-15.0.2.tgz#10e3dc9b0f740e867bd379829c53b31be6f1905b"
+  integrity sha512-SDlbuS14yYeAEUo84gIwNMFZi3zEMhlki7QPS2ObF8/RAjqFk2E//BkMb+VchK939ZvNeUey6L6bbwO6cRxkjA==
   dependencies:
     "@types/js-cookie" "2.2.6"
     "@xobotyi/scrollbar-width" "1.9.5"
