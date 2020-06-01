@@ -7,10 +7,6 @@ import Form from '../../Container';
 import { actions } from '../../Store';
 import * as utils from '../../Form/utils';
 
-function getState(state) {
-    return { ...state, meta: { ...state.meta, id: 'abc' } };
-}
-
 test('It should be able to handle the onChange event;', (t) => {
     const spies = { onChange: sinon.spy() };
     sinon.stub(actions, 'dirtyCheck').callThrough();
@@ -115,9 +111,7 @@ test('It should be able to handle both standard children and function as childre
 
     {
         const wrapper = mount(
-            <Form>
-                {(formState) => <code>{JSON.stringify(getState(formState), null, '\t')}</code>}
-            </Form>,
+            <Form>{(formState) => <code>{JSON.stringify(formState, null, '\t')}</code>}</Form>,
         );
         t.snapshot(wrapper.html());
     }
