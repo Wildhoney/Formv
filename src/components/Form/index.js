@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useMountedState, useMount, useIsomorphicLayoutEffect, ensuredForwardRef } from 'react-use';
 import { identity } from 'ramda';
@@ -14,6 +14,7 @@ const Form = ensuredForwardRef(
             onClick,
             onChange,
             onReset,
+            onUpdate,
             onInvalid,
             onSubmitting,
             onSubmitted,
@@ -30,6 +31,12 @@ const Form = ensuredForwardRef(
             // Set the current state of the form on DOM load, and the initial state of the form data.
             dispatch(actions.initialise(form));
         });
+
+        useEffect(() => {
+            // Useful callback for rare occasions where you need the state in a parent above the <Form /> component.
+            // Such as when the form has an ID and the input's have form attributes to connect them to the form.
+            onUpdate(state);
+        }, [state]);
 
         useIsomorphicLayoutEffect(() => {
             withScroll &&
@@ -118,6 +125,7 @@ Form.propTypes = {
     onClick: PropTypes.func,
     onChange: PropTypes.func,
     onReset: PropTypes.func,
+    onUpdate: PropTypes.func,
     onInvalid: PropTypes.func,
     onSubmitting: PropTypes.func,
     onSubmitted: PropTypes.func,
@@ -130,6 +138,7 @@ Form.defaultProps = {
     onClick: identity,
     onChange: identity,
     onReset: identity,
+    onUpdate: identity,
     onInvalid: identity,
     onSubmitting: identity,
     onSubmitted: identity,
