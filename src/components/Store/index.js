@@ -1,6 +1,5 @@
 import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
-import { nanoid } from 'nanoid';
 import { equals } from 'ramda';
 import { createContainer } from 'react-tracked';
 import * as utils from '../Form/utils';
@@ -17,12 +16,7 @@ export const initialState = {
     feedback: {
         field: {},
     },
-    meta: {
-        id: `fv_${nanoid()}`,
-        fields: [],
-        data: [],
-        highest: null,
-    },
+    meta: { fields: [], data: [], highest: null },
 };
 
 const actionTypes = {
