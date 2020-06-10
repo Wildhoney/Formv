@@ -26,7 +26,7 @@ export async function submitForm({ button, event, ...props }) {
         if (requiresValidation && !form.current.checkValidity())
             throw new feedback.FormvValidationError({});
 
-        // Finally invoked the `onSubmitted` event after passing the client-side validation. If this
+        // Finally invoke the `onSubmitted` event after passing the client-side validation. If this
         // invocation doesn't throw any errors, then we'll consider the submission a success.
         const result = await props.onSubmitted(event);
         const success = result instanceof feedback.FormvSuccess ? result.message : null;
@@ -55,7 +55,8 @@ export async function submitForm({ button, event, ...props }) {
         }
 
         if (error instanceof feedback.FormvValidationError) {
-            // Feed the API validation errors back into the component.
+            // Feed the API validation errors back into the component after collating all of the
+            // invalid field and their associated validation messages.
             const fields = collateInvalidFields(form.current, error.messages);
             const messages = mergeValidationMessages(fields, [props.messages, error.messages]);
             const highest = getHighestFieldset(fields.map(getField), props.id);
