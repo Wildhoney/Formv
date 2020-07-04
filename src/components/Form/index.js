@@ -66,7 +66,7 @@ const Form = ensuredForwardRef(
                 button.current = null;
                 isMounted() && dispatch(actions.submitted(validityState));
             },
-            [form, button, onSubmitting],
+            [form, button, onSubmitting, onInvalid, onSubmitted],
         );
 
         const handleClick = useCallback(
